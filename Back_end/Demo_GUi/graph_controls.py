@@ -63,6 +63,8 @@ class MainWindow(QWidget):
         control_layout.addWidget(self.ch2linked_button)
         control_layout.addWidget(self.glue_button)
 
+        control_layout.addWidget(self.export)
+
         # Create layout for the graph
         graph_layout = QVBoxLayout()
 
