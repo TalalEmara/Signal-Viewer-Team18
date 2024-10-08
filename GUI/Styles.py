@@ -22,23 +22,33 @@ QWidget{
 signalControlButtonStyle = """
 QPushButton{
     background-color: #2d2d2d;
-    border: 1px solid #76D4D4;
-    border-radius: 5px;
+    border: 3px solid #76D4D4;
+    border-radius: 10px;
 }
 """
 rewindButtonStyle = """
 QPushButton{
     background-color: #76D4D4;
-    border: 1px solid #76D4D4;
-    border-radius: 5px;
+    border: 3px solid #76D4D4;
+    border-radius: 10px;
     
 }
 """
-timeLabelStyle = """
+labelStyle = """
 QLabel {
     color: #76D4D4;
     font-family: Sofia sans;
     font-weight: semiBold;
     font-size: 20px;
+}
+"""
+linkedButtonStyle = """
+QPushButton {
+    color: #76D4D4;
+    font-family: Sofia sans;
+    font-weight: semiBold;
+    font-size: 20px;
+    border: 3px solid #76D4D4;
+    border-radius: 10px;
 }
 """
