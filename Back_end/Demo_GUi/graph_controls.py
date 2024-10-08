@@ -14,6 +14,14 @@ from PyQt5.QtWidgets import (
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
 
+import sys
+import os
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Append the path to the Core directory
+sys.path.append(os.path.join(current_dir, '..', 'Core'))
+
+from live_signal import fetch_solar_wind_data
 
 class MainWindow(QWidget):
     def __init__(self):
@@ -69,13 +77,12 @@ class MainWindow(QWidget):
         graph_layout = QVBoxLayout()
 
         # Generate some sample data for the plot
-        x_data = [1, 2, 3, 4, 5]
-        y_data = [2, 5, 1, 8, 3]
+        time, kp = fetch_solar_wind_data()
 
         # Create a Matplotlib figure and plot data
         self.fig = Figure(figsize=(5, 3))  # Adjust figure size as needed
         ax = self.fig.add_subplot(111)
-        ax.plot(x_data, y_data)
+        ax.plot(time, kp)
 
         # Create a Matplotlib canvas for embedding in the layout
         self.canvas = FigureCanvasQTAgg(self.fig)
@@ -83,8 +90,8 @@ class MainWindow(QWidget):
 
         # Combine all layouts
         main_layout = QHBoxLayout()
-        main_layout.addLayout(folder_layout)
-        main_layout.addLayout(control_layout)
+        # main_layout.addLayout(folder_layout)
+        # main_layout.addLayout(control_layout)
         main_layout.addLayout(graph_layout)
 
         self.setLayout(main_layout)
