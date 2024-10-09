@@ -42,17 +42,31 @@ class ToolBar(QWidget):
         self.stopIcon = QIcon("Assets/ControlsButtons/stop.png")
         self.stopButton.setIcon(self.stopIcon)
 
+
+        self.stopButton.pressed.connect(lambda: self.handleButtonPress(self.stopButton))
+        self.stopButton.released.connect(lambda: self.handleButtonRelease(self.stopButton))
+
+
         self.toStartButton = QPushButton()
         self.toStartButton.setStyleSheet(signalControlButtonStyle)
         self.toStartButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         self.toStartIcon = QIcon("Assets/ControlsButtons/start.png")
         self.toStartButton.setIcon(self.toStartIcon)
 
+
+        self.toStartButton.pressed.connect(lambda: self.handleButtonPress(self.toStartButton))
+        self.toStartButton.released.connect(lambda: self.handleButtonRelease(self.toStartButton))
+
+
         self.toEndButton = QPushButton()
         self.toEndButton.setStyleSheet(signalControlButtonStyle)
         self.toEndButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         self.toEndIcon = QIcon("Assets/ControlsButtons/end.png")
         self.toEndButton.setIcon(self.toEndIcon)
+
+
+        self.toEndButton.pressed.connect(lambda: self.handleButtonPress(self.toEndButton))
+        self.toEndButton.released.connect(lambda: self.handleButtonRelease(self.toEndButton))
 
         self.rewindButton = QPushButton()
         self.rewindButton.setStyleSheet(rewindOffButtonStyle)
@@ -82,11 +96,20 @@ class ToolBar(QWidget):
         self.zoomIcon = QIcon("Assets/ToolBox/zoom.png")
         self.zoomButton.setIcon(self.zoomIcon)
 
+        self.zoomButton.pressed.connect(lambda: self.handleButtonPress(self.zoomButton))
+        self.zoomButton.released.connect(lambda: self.handleButtonRelease(self.zoomButton))
+
+
         self.glueButton = QPushButton()
         self.glueButton.setStyleSheet(signalControlButtonStyle)
         self.glueButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         self.glueIcon = QIcon("Assets/ToolBox/glue.png")
         self.glueButton.setIcon(self.glueIcon)
+
+
+        self.glueButton.pressed.connect(lambda: self.handleButtonPress(self.glueButton))
+        self.glueButton.released.connect(lambda: self.handleButtonRelease(self.glueButton))
+
 
 
 
