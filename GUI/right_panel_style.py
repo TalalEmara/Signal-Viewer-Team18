@@ -73,25 +73,20 @@ QComboBox QAbstractItemView {
 
 sliderStyle = """
 QSlider::handle {
-            background-color: #ef233c;
-            border: 1px solid #ef233c;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-        }
-
-        QSlider::groove:horizontal {
-            border: 0px solid #606060;
-            height: 30px;
-            background-color: white;
-            margin-top: 7.5px;
-        }
-
-        QSlider:hover {
-            --brightness-hover: 180%;
-        }
-
-        QSlider:pressed {
-            --brightness-down: 80%;
+            background-color: #76D4D4;
+            width: 5px;
+            height: 7px;
+            border-radius: 5px;
         }
         """
+valueBoxStyle = """
+QLineEdit{
+    background-color: #242424;
+    color: #EFEFEF;
+    border: none;
+    font-family: Sofia sans;
+    font-weight: semiBold;
+    font-size: 12px;
+    height:26px;
+}
+"""

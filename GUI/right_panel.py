@@ -1,7 +1,8 @@
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QPushButton, QLabel, QHBoxLayout, QVBoxLayout, QComboBox, QWidget, QSizePolicy, QSlider
+from PyQt5.QtWidgets import QPushButton, QLabel, QHBoxLayout, QVBoxLayout, QComboBox, QWidget, QSizePolicy, QSlider, \
+    QLineEdit
 from PyQt5.QtGui import QIcon, QPixmap, QColor
-from right_panel_style import signalChooseStyle, labelStyle, titleStyle, colorSignalChooseStyle, sliderStyle
+from right_panel_style import signalChooseStyle, labelStyle, titleStyle, colorSignalChooseStyle, sliderStyle, valueBoxStyle
 
 
 class RightPanel(QWidget):
@@ -63,12 +64,22 @@ class RightPanel(QWidget):
         self.thicknessSlider.setMinimum(0)
         self.thicknessSlider.setMaximum(30)
         self.thicknessSlider.setSingleStep(3)
+        self.thicknessSlider.valueChanged.connect(self.update_thickness_value)
+
+        self.thicknessValueBox = QLineEdit("0")
+        self.thicknessValueBox.setStyleSheet(valueBoxStyle)
+        self.thicknessValueBox.setFixedWidth(40)
+        self.thicknessValueBox.setAlignment(Qt.AlignCenter)
+
+
+
 
         thicknessPropertyRow1 = QHBoxLayout()
         thicknessPropertyRow1.addWidget(self.thicknessLabel)
 
         thicknessPropertyRow2 = QHBoxLayout()
         thicknessPropertyRow2.addWidget(self.thicknessSlider)
+        thicknessPropertyRow2.addWidget(self.thicknessValueBox)
 
 
 
@@ -78,15 +89,30 @@ class RightPanel(QWidget):
         propertiesPanel.addLayout(colorPropertyRow2)
         propertiesPanel.addLayout(thicknessPropertyRow1)
         propertiesPanel.addLayout(thicknessPropertyRow2)
-        propertiesPanel.addStretch()
 
-        statsPanel = QHBoxLayout()
+        #Statistics
+        self.statsTitle = QLabel("Statistics")
+        self.statsTitle.setStyleSheet(titleStyle)
+        #self.statsTitle.setStyleSheet("""border-top: 1px solid #242424;""")
+
+        statsTitleRow = QHBoxLayout()
+        statsTitleRow.addWidget(self.statsTitle)
+
+
+
+
+        statsPanel = QVBoxLayout()
+        statsPanel.addLayout(statsTitleRow)
 
         mainLayout = QVBoxLayout()
         mainLayout.addLayout(signalTitlePanel)
         mainLayout.addLayout(propertiesPanel)
-        mainLayout.addLayout(statsPanel)
+        mainLayout.addLayout(statsPanel )
+        mainLayout.addStretch()
         self.setLayout(mainLayout)
 
         # Set the size policy to expand horizontally
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
+
+    def update_thickness_value(self, value):
+        self.thicknessValueBox.setText(str(value))
