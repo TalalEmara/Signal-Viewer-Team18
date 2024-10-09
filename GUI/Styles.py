@@ -26,7 +26,15 @@ QPushButton{
     border-radius: 10px;
 }
 """
-rewindButtonStyle = """
+rewindOffButtonStyle = """
+QPushButton{
+    background-color: #efefef;
+    border: 3px solid #efefef;
+    border-radius: 10px;
+    
+}
+"""
+rewindOnButtonStyle = """
 QPushButton{
     background-color: #76D4D4;
     border: 3px solid #76D4D4;
@@ -42,7 +50,18 @@ QLabel {
     font-size: 20px;
 }
 """
-linkedButtonStyle = """
+linkedButtonOffStyle = """
+QPushButton {
+    color: #2D2D2D;
+    background-color: #efefef;
+    font-family: Sofia sans;
+    font-weight: semiBold;
+    font-size: 20px;
+    border: 3px solid #efefef;
+    border-radius: 10px;
+}
+"""
+linkedButtonOnStyle = """
 QPushButton {
     color: #76D4D4;
     font-family: Sofia sans;
