@@ -1,7 +1,7 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QPushButton, QLabel, QHBoxLayout, QVBoxLayout, QCheckBox, QWidget, QSizePolicy
 from PyQt5.QtGui import QIcon
-from Styles import boxStyle, signalControlButtonStyle, labelStyle, rewindButtonStyle,linkedButtonStyle
+from Styles import boxStyle, signalControlButtonStyle, labelStyle, rewindOffButtonStyle, rewindOnButtonStyle, linkedButtonOffStyle, linkedButtonOnStyle
 
 
 class ToolBar(QWidget):
@@ -24,11 +24,17 @@ class ToolBar(QWidget):
         self.pauseIcon = QIcon("Assets/ControlsButtons/pause.png")
         self.pauseButton.setIcon(self.pauseIcon)
 
+        self.pauseButton.pressed.connect(lambda: self.handleButtonPress(self.pauseButton))
+        self.pauseButton.released.connect(lambda: self.handleButtonRelease(self.pauseButton))
+
         self.playButton = QPushButton()
         self.playButton.setStyleSheet(signalControlButtonStyle)
         self.playButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         self.playIcon = QIcon("Assets/ControlsButtons/play.png")
         self.playButton.setIcon(self.playIcon)
+
+        self.playButton.pressed.connect(lambda: self.handleButtonPress(self.playButton))
+        self.playButton.released.connect(lambda: self.handleButtonRelease(self.playButton))
 
         self.stopButton = QPushButton()
         self.stopButton.setStyleSheet(signalControlButtonStyle)
@@ -46,13 +52,16 @@ class ToolBar(QWidget):
         self.toEndButton.setStyleSheet(signalControlButtonStyle)
         self.toEndButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         self.toEndIcon = QIcon("Assets/ControlsButtons/end.png")
-        self.toEndButton.setIcon(self.pauseIcon)
+        self.toEndButton.setIcon(self.toEndIcon)
 
         self.rewindButton = QPushButton()
-        self.rewindButton.setStyleSheet(rewindButtonStyle)
+        self.rewindButton.setStyleSheet(rewindOffButtonStyle)
         self.rewindButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         self.rewindIcon = QIcon("Assets/ControlsButtons/rewindOff.png")
         self.rewindButton.setIcon(self.rewindIcon)
+
+        self.isRewind = False
+        self.rewindButton.clicked.connect(lambda: self.handleRewindClick())
 
         signalControl = QWidget()
         signalControl.setStyleSheet(boxStyle)
@@ -95,7 +104,9 @@ class ToolBar(QWidget):
 
 
         self.linkedButton = QPushButton("Linked")
-        self.linkedButton.setStyleSheet(linkedButtonStyle)
+        self.linkedButton.setStyleSheet(linkedButtonOnStyle)
+        self.isLinked =True
+        self.linkedButton.clicked.connect(lambda: self.handleLinkedClick())
 
         #self.channel2LinkOption = QPushButton("Channel 2")
 
@@ -116,3 +127,34 @@ class ToolBar(QWidget):
         toolBarLayout.addWidget(linkedGroup,10)
 
         self.setLayout(toolBarLayout)
+
+
+    def handleRewindClick(self):
+        if self.isRewind:
+            self.isRewind = False
+            self.rewindButton.setStyleSheet(rewindOffButtonStyle)
+        else:
+            self.isRewind = True
+            self.rewindButton.setStyleSheet(rewindOnButtonStyle)
+
+    def handleLinkedClick(self):
+        if self.isLinked:
+            self.isLinked = False
+            self.linkedButton.setStyleSheet(linkedButtonOffStyle)
+        else:
+            self.isLinked = True
+            self.linkedButton.setStyleSheet(linkedButtonOnStyle)
+
+
+    def handleButtonPress(self, button):
+        button.setStyleSheet("""
+                        QPushButton{
+                            background-color: #efefef;
+                            border: 3px solid #76D4D4;
+                            border-radius: 10px;
+                            Opacity: .7;
+                        }
+                        """)
+
+    def handleButtonRelease(self, button):
+        button.setStyleSheet(signalControlButtonStyle)
