@@ -13,15 +13,7 @@ from PyQt5.QtWidgets import (
 )
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
-
-import sys
-import os
-current_dir = os.path.dirname(os.path.abspath(__file__))
-
-# Append the path to the Core directory
-sys.path.append(os.path.join(current_dir, '..', 'Core'))
-
-from live_signal import fetch_solar_wind_data
+import numpy as np
 
 class MainWindow(QWidget):
     def __init__(self):
@@ -76,13 +68,14 @@ class MainWindow(QWidget):
         # Create layout for the graph
         graph_layout = QVBoxLayout()
 
-        # Generate some sample data for the plot
-        time, kp = fetch_solar_wind_data()
+        # Generate dummy data
+        x = np.linspace(0, 10, 100)  # 100 points between 0 and 10 (could represent time in seconds)
+        y = np.sin(x) + np.random.normal(0, 0.1, x.shape)  # Sine wave with some noise        
 
         # Create a Matplotlib figure and plot data
         self.fig = Figure(figsize=(5, 3))  # Adjust figure size as needed
         ax = self.fig.add_subplot(111)
-        ax.plot(time, kp)
+        ax.plot(x, y)
 
         # Create a Matplotlib canvas for embedding in the layout
         self.canvas = FigureCanvasQTAgg(self.fig)
