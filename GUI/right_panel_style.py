@@ -90,3 +90,18 @@ QLineEdit{
     height:26px;
 }
 """
+tableStyle = """
+QTableWidget {
+    background-color: #242424;
+    color: #EFEFEF;
+    font-family: Sofia sans;
+    font-weight: semiBold;
+    font-size: 12px;
+    border: none;
+    padding: 10px;
+}
+
+QTableWidget::item {
+    border-bottom: 1px solid #2D2D2D;
+}
+"""

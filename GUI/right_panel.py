@@ -1,8 +1,8 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QPushButton, QLabel, QHBoxLayout, QVBoxLayout, QComboBox, QWidget, QSizePolicy, QSlider, \
-    QLineEdit
+    QLineEdit, QTableWidget, QTableWidgetItem, QAbstractItemView
 from PyQt5.QtGui import QIcon, QPixmap, QColor
-from right_panel_style import signalChooseStyle, labelStyle, titleStyle, colorSignalChooseStyle, sliderStyle, valueBoxStyle
+from right_panel_style import signalChooseStyle, labelStyle, titleStyle, colorSignalChooseStyle, sliderStyle, valueBoxStyle, tableStyle
 
 
 class RightPanel(QWidget):
@@ -95,14 +95,52 @@ class RightPanel(QWidget):
         self.statsTitle.setStyleSheet(titleStyle)
         #self.statsTitle.setStyleSheet("""border-top: 1px solid #242424;""")
 
+        self.statsTable = QTableWidget()
+        self.statsTable.setStyleSheet(tableStyle)
+        self.statsTable.setColumnCount(2)
+        self.statsTable.setRowCount(5)
+        self.statsTable.horizontalHeader().setVisible(False)
+        self.statsTable.verticalHeader().setVisible(False)
+        self.statsTable.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.statsTable.setEnabled(False)
+
+        header = self.statsTable.horizontalHeader()
+        header.setStretchLastSection(True)
+
+        statsLabel =["Mean", "Std", "Duration", "Max", "Min"]
+        stats =["12", "223", "22:45", "15", "-2"]
+
+        for row in range(len(statsLabel)):
+
+            self.statsTable.setItem(row,0, QTableWidgetItem(statsLabel[row]))
+            statsValue = QTableWidgetItem(stats[row])
+            statsValue.setTextAlignment(Qt.AlignCenter)
+            self.statsTable.setItem(row, 1, statsValue)
+
         statsTitleRow = QHBoxLayout()
         statsTitleRow.addWidget(self.statsTitle)
 
+        statsTableLayout = QHBoxLayout()
+        statsTableLayout.addWidget(self.statsTable)
 
+        #self.model = QStandardItemModel()
+        #self.statsView = QTreeView()
+        #self.statsView.setModel(self.model)
 
+        #statsLabel = ["Mean", "Std", "Duration", "Max", "Min"]
+
+        #for stat in range(len(statsLabel)):
+         #   self.model.appendRow([QStandardItem(statsLabel[stat]), QStandardItem("55")])
+
+        #statsTitleRow = QHBoxLayout()
+        #statsTitleRow.addWidget(self.statsTitle)
+
+        #statsTableLayout = QHBoxLayout()
+        #statsTableLayout.addWidget(self.statsView)
 
         statsPanel = QVBoxLayout()
         statsPanel.addLayout(statsTitleRow)
+        statsPanel.addLayout(statsTableLayout)
 
         mainLayout = QVBoxLayout()
         mainLayout.addLayout(signalTitlePanel)
