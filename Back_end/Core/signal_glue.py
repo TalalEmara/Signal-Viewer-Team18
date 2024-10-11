@@ -2,7 +2,15 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.interpolate import interp1d
 
+# glue with interpolation
 def interpolation(signal1, signal2):
+    """
+    signal1, signal2 => two signals of [time, amplitude]
+    returning:
+      total_time => time of the new signal
+      new_signal => signal after interpolation
+    """
+
     first_part = signal1[1][-2:]
     second_part = signal2[1][:2]
 
@@ -18,7 +26,40 @@ def interpolation(signal1, signal2):
     # total time
     total_time = np.array([i for i in range(len(signal1[1])+len(signal2[1])-len(first_part))])
     
-    return np.vstack((total_time, new_signal))
+    return total_time, new_signal
+
+
+# glue with ovelapping
+def overlap(signal1, signal2):
+    """
+    signal1, signal2 => two signals of [time, amplitude]
+    returning:
+        new_time[:len(signal1[1])] => time of signal1
+        signal1[1] => amplitude of signal1
+        new_time[:len(signal2[1])] => time of signal2
+        signal2[1] => amplitude of signal2
+    """
+
+    new_time = np.array([i for i in range(max(len(signal1[0]),  len(signal2[0])))])
+
+    return new_time[:len(signal1[1])], signal1[1], new_time[:len(signal2[1])], signal2[1] 
+
+
+# glue with a gap
+def gap(signal1, signal2):
+    """
+    signal1, signal2 => two signals of [time, amplitude]
+    returning:
+        new_time[:len(signal1[1])] => time of signal1
+        signal1[1] => amplitude of signal1
+        new_time[len(signal1[1]):] => time of signal2
+        signal2[1] => amplitude of signal2
+    """
+    
+    new_time = np.array([i for i in range(len(signal1[0]) + len(signal2[0]))])
+
+    return new_time[: len(signal1[1])], signal1[1], new_time[len(signal1[1]):], signal2[1] 
+
 
 # Generate sample signals
 # Signal 1
@@ -31,33 +72,28 @@ time2 = np.array([5, 6, 7, 8, 9, 10, 11, 12, 13])  # Time values for signal 2
 signal_data2 = np.array([10, 9, 8, 7, 6, 5, 4, 3, 2])  # Signal data for signal 2
 two = (time2, signal_data2)  # Tuple of signal data and time
 
-
-new_signal = interpolation(one, two)
+# testing
+xi, yi = interpolation(one, two)
+xo1, yo1, xo2, yo2 = overlap(one, two)
+xg1, yg1, xg2, yg2 = gap(one, two)
 
 # Create a figure and 3 subplots (3 rows, 1 column)
 fig, axs = plt.subplots(3, 1, figsize=(10, 12))
 
-# Plotting the first graph
-axs[0].plot(new_signal[0][:len(one[1])], one[1], color='blue', label='First Signal')
-axs[0].set_title('First Signal')
-# axs[0].set_xlabel('X-axis')
-# axs[0].set_ylabel('Y-axis')
+# Plotting the interpolated signal
+axs[0].plot(xi, yi, color='green', label='Interpolation')
 axs[0].legend()
 axs[0].grid(True)
 
-# Plotting the second graph
-axs[1].plot(new_signal[0][:len(two[1])], two[1], color='orange', label='Second Signal')
-axs[1].set_title('Second Signal')
-# axs[1].set_xlabel('X-axis')
-# axs[1].set_ylabel('Y-axis')
+# Plot the second overlapped signal
+axs[1].plot(xo1, yo1, label='Signal 1 overlapping', color='blue')
+axs[1].plot(xo2, yo2, label='Signal 2 overlapping', color='orange')
 axs[1].legend()
 axs[1].grid(True)
 
-# Plotting the third graph
-axs[2].plot(new_signal[0], new_signal[1], color='green', label='Interpolated Signal')
-axs[2].set_title('Interpotated Signal')
-# axs[2].set_xlabel('X-axis')
-# axs[2].set_ylabel('Y-axis')
+# Plotting the gapped signal
+axs[2].plot(xg1, yg1, color='red', label='Signal 1 Gap')
+axs[2].plot(xg2, yg2, color='brown', label='Signal 2 Gap')
 axs[2].legend()
 axs[2].grid(True)
 
@@ -66,4 +102,3 @@ plt.tight_layout()
 
 # Show the plots
 plt.show()
-
