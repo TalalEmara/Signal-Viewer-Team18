@@ -90,6 +90,20 @@ QLineEdit{
     height:26px;
 }
 """
+
+viewButtonOnStyle = """
+QPushButton{
+    background-color: #2d2d2d;
+    border: 2px solid #EFEFEF;
+}
+"""
+viewButtonOffStyle = """
+QPushButton{
+    background-color: #EFEFEF;
+    border: 2px solid #EFEFEF;
+}
+"""
+
 tableStyle = """
 QTableWidget {
     background-color: #242424;
