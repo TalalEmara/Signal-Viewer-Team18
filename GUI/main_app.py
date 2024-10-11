@@ -11,7 +11,7 @@ from tool_bar import ToolBar  # Import the panel class
 from right_panel import RightPanel
 from Styles import menuBarStyle, toolBarStyle
 from channels import Channels
-#from signals import SignalsMainWindow
+from signals import Signals
 
 
 class MainWindow(QWidget):
@@ -20,14 +20,17 @@ class MainWindow(QWidget):
 
         # Set window properties
         self.setWindowTitle("Demo UI")
-        self.resize(1440, 1080)
+        self.resize(2000, 980)
+        self.setStyleSheet("background-color: #242424;")
+
 
         self.menuBar = MenuBar()
         self.menuBar.setStyleSheet(menuBarStyle)
         self.toolBar = ToolBar()
         self.properties = RightPanel()
+        self.ImportSignal=Channels()
         self.properties.setMinimumWidth(int(.2*1440))
-#       self.signalViewer = SignalsMainWindow()
+        self.signalViewer = Signals()
 
         self.signalListTest = QWidget()
         self.signalListTest.setStyleSheet("background-color: #FFD700;")  # Gold
@@ -54,9 +57,9 @@ class MainWindow(QWidget):
         self.toolBarLayout.addWidget(self.toolBar)
         self.signalShowLayout = QHBoxLayout()
         self.signalsListPanel = QVBoxLayout()
-        self.signalsListPanel.addWidget(self.signalListTest)
+        self.signalsListPanel.addWidget(self.ImportSignal)
         self.channelsLayout = QVBoxLayout()
-        self.channelsLayout.addWidget(self.channels)
+        self.channelsLayout.addWidget(self.signalViewer)
         self.propertiesPanel = QVBoxLayout()
         self.propertiesPanel.addWidget(self.properties)
 
