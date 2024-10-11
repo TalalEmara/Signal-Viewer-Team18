@@ -7,12 +7,7 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 import numpy as np
 from matplotlib.animation import FuncAnimation
-<<<<<<< HEAD
 from PyQt5.QtCore import Qt
-=======
-
-
->>>>>>> dba3ff81d621adcf61d8eafaecfc31e4c5286f9f
 
 class MplCanvas(FigureCanvas):
     def __init__(self, parent=None, width=5, height=4, dpi=100, signal_color="#D55877"):
