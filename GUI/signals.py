@@ -2,13 +2,16 @@ import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QSizePolicy, QWidget, QSpacerItem, QFrame
 from PyQt5.QtGui import QIcon
-from Styles import boxStyle, signalControlButtonStyle, labelStyle, rewindOffButtonStyle, rewindOnButtonStyle, linkedButtonOffStyle, linkedButtonOnStyle
+# edited
+from .Styles import boxStyle, signalControlButtonStyle, labelStyle, rewindOffButtonStyle, rewindOnButtonStyle, linkedButtonOffStyle, linkedButtonOnStyle
+# 
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas, NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
 import numpy as np
 from matplotlib.animation import FuncAnimation
 
-
+# importing live signal function
+from Back_end.Core.live_signal import fetch_solar_wind_data
 
 
 class MplCanvas(FigureCanvas):
@@ -308,9 +311,13 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def init_plot(self):
         t = np.linspace(0, 10, 100)
-        signal1 = np.sin(2 * np.pi * t)  
+        # signal1 = np.sin(2 * np.pi * t)  
         signal2 = np.cos(2 * np.pi * t)  
-        self.update_canvas(self.signals.canvas1, t, signal1)
+
+        # live signal data
+        time, kp, _ = fetch_solar_wind_data()
+
+        self.update_canvas(self.signals.canvas1, time, kp)
         self.update_canvas(self.signals.canvas2, t, signal2)
 
         
@@ -319,8 +326,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def animate1(self, i):
         t = np.linspace(0, 10, 100)
+        time, kp, _ = fetch_solar_wind_data()
         signal1 = np.sin(2 * np.pi * (t + i / 10))  
-        self.signals.canvas1.update_plot(t, signal1)
+        self.signals.canvas1.update_plot(time, kp)
 
     def animate2(self, i):
         t = np.linspace(0, 10, 100)
