@@ -1,29 +1,27 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QPushButton, QLabel, QHBoxLayout, QVBoxLayout, QComboBox, QWidget, QSizePolicy, QSlider, \
-    QLineEdit, QTableWidget, QTableWidgetItem, QAbstractItemView
+    QLineEdit, QTableWidget, QTableWidgetItem, QAbstractItemView,QHeaderView
 from PyQt5.QtGui import QIcon, QPixmap, QColor
 from right_panel_style import signalChooseStyle, labelStyle, titleStyle, colorSignalChooseStyle, sliderStyle, \
     valueBoxStyle, tableStyle, viewButtonOnStyle, viewButtonOffStyle
 from stats_Card import StatsCard
 
-
 class RightPanel(QWidget):
     def __init__(self):
         super().__init__()
-        self.signalNameInput = "ECG Signal"  # variable
+
+        self.signalNameInput = "ECG Signal"  
 
         self.setAttribute(Qt.WA_StyledBackground, True)
         self.setStyleSheet('background-color: #2E2E2E')
 
-        # self.signalName = QLabel(self.signalNameInput)
-        # self.signalName.setStyleSheet("")
 
         self.signalChoose = QComboBox()
         self.signalChoose.setStyleSheet(signalChooseStyle)
         self.signalChoose.addItems(["ECG Signal", "EEG Signal", "Beta Signal"])
 
         signalTitlePanel = QHBoxLayout()
-        # signalTitlePanel.addWidget(self.signalName)
+
         signalTitlePanel.addWidget(self.signalChoose)
 
         # properties settings
@@ -33,15 +31,11 @@ class RightPanel(QWidget):
         self.signalColorLabel = QLabel("Signal Color")
         self.signalColorLabel.setStyleSheet(labelStyle)
 
-        # self.colorSquare = QLabel()
-        # self.square = QPixmap(30, 30)
-        # self.square.fill(QColor("#EFEFEF"))
-        # self.colorSquare.setPixmap(self.square)
-
+        
         self.signalColorChoose = QComboBox()
         self.signalColorChoose.setStyleSheet(colorSignalChooseStyle)
         self.signalColorChoose.addItems(["Red", "Cyan", "Orange", "Add Color"])
-        # Setting Color Icons
+        
         self.signalColorChoose.setItemIcon(0, QIcon("Assets/RightPanel/ColorsIcon/red.png"))
         self.signalColorChoose.setItemIcon(1, QIcon("Assets/RightPanel/ColorsIcon/cyan.png"))
         self.signalColorChoose.setItemIcon(2, QIcon("Assets/RightPanel/ColorsIcon/orange.png"))
@@ -53,7 +47,7 @@ class RightPanel(QWidget):
         colorPropertyRow1.addWidget(self.signalColorLabel)
 
         colorPropertyRow2 = QHBoxLayout()
-        # propertiesRow2.addWidget(self.colorSquare)
+        
         colorPropertyRow2.addWidget(self.signalColorChoose)
 
         self.thicknessLabel = QLabel("Line thickness")
@@ -85,77 +79,79 @@ class RightPanel(QWidget):
         propertiesPanel.addLayout(thicknessPropertyRow1)
         propertiesPanel.addLayout(thicknessPropertyRow2)
 
-        # Statistics
-        self.statsTitle = QLabel("Statistics")
-        self.statsTitle.setStyleSheet(titleStyle)
+        # Statistics setup
+        self.statsPanel = QVBoxLayout()
+        self.statsPanel.setAlignment(Qt.AlignTop)
 
-        self.cardsButtonIcon = QIcon("Assets/RightPanel/ViewButtons/cards.png")
-        self.cardsBlackButtonIcon = QIcon("Assets/RightPanel/ViewButtons/cardsBlack.png")
-        self.listButtonIcon = QIcon("Assets/RightPanel/ViewButtons/list.png")
-        self.listBlackButtonIcon = QIcon("Assets/RightPanel/ViewButtons/listBlack.png")
+        self.setupStatistics()
+
+        
+        mainLayout = QVBoxLayout()
+        mainLayout.addLayout(signalTitlePanel)
+        mainLayout.addLayout(propertiesPanel)
+        mainLayout.addLayout(self.statsPanel)
+        mainLayout.addStretch()
+
+        self.setLayout(mainLayout)
+        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
+
+    
+        
+
+    def setupStatistics(self):
+      
+        statsTitle = QLabel("Statistics")
+        statsTitle.setStyleSheet(titleStyle)
 
         self.statsListViewButton = QPushButton()
         self.statsCardsViewButton = QPushButton()
-
-        self.isListViewActive = True
-
-        self.statsListViewButton.clicked.connect(self.toggle_view_mode)
-        self.statsCardsViewButton.clicked.connect(self.toggle_view_mode)
         self.statsListViewButton.setStyleSheet(viewButtonOnStyle)
         self.statsCardsViewButton.setStyleSheet(viewButtonOffStyle)
+
+        self.listButtonIcon = QIcon("Assets/RightPanel/ViewButtons/list.png")
+        self.cardsButtonIcon = QIcon("Assets/RightPanel/ViewButtons/cards.png")
+        self.listBlackButtonIcon = QIcon("Assets/RightPanel/ViewButtons/listBlack.png")
+        self.cardsBlackButtonIcon = QIcon("Assets/RightPanel/ViewButtons/cardsBlack.png")
 
         self.statsListViewButton.setIcon(self.listButtonIcon)
         self.statsCardsViewButton.setIcon(self.cardsButtonIcon)
 
-        statsLabel = ["Mean", "Std", "Duration", "Max", "Min"]
-        stats = ["12", "223", "22:45", "15", "-2"]
+        self.statsListViewButton.clicked.connect(self.toggle_view_mode)
+        self.statsCardsViewButton.clicked.connect(self.toggle_view_mode)
 
-        self.statsTable = QTableWidget()
-        self.statsTable.setStyleSheet(tableStyle)
-        self.statsTable.setColumnCount(2)
-        self.statsTable.setRowCount(len(statsLabel))
-        self.statsTable.horizontalHeader().setVisible(False)
-        self.statsTable.verticalHeader().setVisible(False)
-        self.statsTable.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        self.statsTable.setEnabled(False)
-        self.statsTable.setMaximumHeight(35 * len(statsLabel))
-
-        header = self.statsTable.horizontalHeader()
-        header.setStretchLastSection(True)
-
-        for row in range(len(statsLabel)):
-            self.statsTable.setItem(row, 0, QTableWidgetItem(statsLabel[row]))
-            statsValue = QTableWidgetItem(stats[row])
-            statsValue.setTextAlignment(Qt.AlignCenter)
-            self.statsTable.setItem(row, 1, statsValue)
-
+       
         statsTitleRow = QHBoxLayout()
-        statsTitleRow.addWidget(self.statsTitle)
+        statsTitleRow.addWidget(statsTitle)
         statsTitleRow.addStretch()
         statsTitleRow.addWidget(self.statsListViewButton)
         statsTitleRow.addWidget(self.statsCardsViewButton)
 
-        statsTableLayout = QHBoxLayout()
-        statsTableLayout.addWidget(self.statsTable)
+        self.statsPanel.addLayout(statsTitleRow)
 
-        # self.model = QStandardItemModel()
-        # self.statsView = QTreeView()
-        # self.statsView.setModel(self.model)
+        # Create the table view
+        self.statsTable = QTableWidget()
+        self.statsTable.setStyleSheet(tableStyle)
+        self.statsTable.setColumnCount(2)
+        self.statsTable.setRowCount(5)
+        self.statsTable.horizontalHeader().setVisible(False)
+        self.statsTable.verticalHeader().setVisible(False)
+        self.statsTable.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
-        # statsLabel = ["Mean", "Std", "Duration", "Max", "Min"]
+        statsLabels = ["Mean", "Std", "Duration", "Max", "Min"]
+        statsValues = ["12", "223", "22:45", "15", "-2"]
 
-        # for stat in range(len(statsLabel)):
-        #   self.model.appendRow([QStandardItem(statsLabel[stat]), QStandardItem("55")])
+        for row, (label, value) in enumerate(zip(statsLabels, statsValues)):
+            self.statsTable.setItem(row, 0, QTableWidgetItem(label))
+            statsValueItem = QTableWidgetItem(value)
+            statsValueItem.setTextAlignment(Qt.AlignCenter)
+            self.statsTable.setItem(row, 1, statsValueItem)
+        self.statsTable.horizontalHeader().setStretchLastSection(True)
+        self.statsTable.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
 
-        # statsTitleRow = QHBoxLayout()
-        # statsTitleRow.addWidget(self.statsTitle)
-
-        # statsTableLayout = QHBoxLayout()
-        # statsTableLayout.addWidget(self.statsView)
+        self.statsTable.setMinimumWidth(300)
 
 
-        # should take array
-
+        # Create the card view
         self.card1 = StatsCard("mean", "12")
         self.card2 = StatsCard("min", "2")
         self.card3 = StatsCard("max", "24")
@@ -163,55 +159,68 @@ class RightPanel(QWidget):
         self.card5 = StatsCard("min", "2")
         self.card6 = StatsCard("max", "24")
 
-        cardRow = QHBoxLayout()
-        cardRow.addWidget(self.card1)
-        cardRow.addWidget(self.card2)
-        cardRow.addWidget(self.card3)
+        self.cardViewLayout = QVBoxLayout()
+        cardRow1 = QHBoxLayout()
         cardRow2 = QHBoxLayout()
+
+        cardRow1.addWidget(self.card1)
+        cardRow1.addWidget(self.card2)
+        cardRow1.addWidget(self.card3)
         cardRow2.addWidget(self.card4)
         cardRow2.addWidget(self.card5)
         cardRow2.addWidget(self.card6)
 
-        statsPanel = QVBoxLayout()
-        statsPanel.addLayout(statsTitleRow)
-        statsPanel.addLayout(statsTableLayout)
-        statsPanel.addStretch()
+        self.cardViewLayout.addLayout(cardRow1)
+        self.cardViewLayout.addLayout(cardRow2)
 
-
-        #main layout
-        mainLayout = QVBoxLayout()
-        mainLayout.addLayout(signalTitlePanel)
-        mainLayout.addLayout(propertiesPanel)
-        mainLayout.addLayout(statsPanel)
-        mainLayout.addStretch()
-        self.setLayout(mainLayout)
-
-        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
+        
+        self.statsPanel.addWidget(self.statsTable)
+        self.cardViewLayoutWidget = QWidget()
+        self.cardViewLayoutWidget.setLayout(self.cardViewLayout)
+        self.cardViewLayoutWidget.hide()
+        self.statsPanel.addWidget(self.cardViewLayoutWidget)
 
     def updateThicknessValue(self, value):
         self.thicknessValueBox.setText(str(value))
 
     def toggle_view_mode(self):
-        if self.isListViewActive:
-            # Toggle to card view
+        if self.statsTable.isVisible():
+            # Switch to card view
+            self.statsTable.hide()
+            self.cardViewLayoutWidget.show()
             self.statsListViewButton.setStyleSheet(viewButtonOffStyle)
-            self.statsListViewButton.setIcon(self.listBlackButtonIcon)
             self.statsCardsViewButton.setStyleSheet(viewButtonOnStyle)
+            self.statsListViewButton.setIcon(self.listBlackButtonIcon)
             self.statsCardsViewButton.setIcon(self.cardsButtonIcon)
-
-            self.statsPanel.removeItem(self.statsTableLayout)
-            self.statsPanel.addLayout(self.cardRow1)
-            self.statsPanel.addLayout(self.cardRow2)
-            self.isListViewActive = False
         else:
-            # Toggle to list view
+            # Switch to list view
+            self.cardViewLayoutWidget.hide()
+            self.statsTable.show()
             self.statsListViewButton.setStyleSheet(viewButtonOnStyle)
-            self.statsListViewButton.setIcon(self.listButtonIcon)
             self.statsCardsViewButton.setStyleSheet(viewButtonOffStyle)
+            self.statsListViewButton.setIcon(self.listButtonIcon)
             self.statsCardsViewButton.setIcon(self.cardsBlackButtonIcon)
 
 
-            self.statsPanel.removeItem(self.cardRow1)
-            self.statsPanel.removeItem(self.cardRow2)
-            self.statsPanel.addLayout(self.statsTableLayout)
-            self.isListViewActive = True
+
+import sys
+from PyQt5.QtWidgets import QApplication, QMainWindow
+
+
+class MainWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        
+        self.right_panel = RightPanel()
+        self.setCentralWidget(self.right_panel)
+
+        
+        self.setWindowTitle("Right Pane;")
+        self.setGeometry(100, 100, 400, 600)  
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    main_window = MainWindow()
+    main_window.show()
+    sys.exit(app.exec_())
