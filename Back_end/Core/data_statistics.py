@@ -1,12 +1,12 @@
-import statistics
+import numpy as np
 
 def stat(signal):
-    mean = statistics.mean(signal[1])          # Calculate mean
+    mean = np.mean(signal[1])          # Calculate mean
     maximum = max(signal[1])                   # Calculate max
     minimum = min(signal[1])                   # Calculate min
-    std_dev = statistics.stdev(signal[1])      # Calculate standard deviation
+    std_dev = np.std(signal[1])      # Calculate standard deviation
 
-    return [mean, maximum, minimum, std_dev]
+    return [float(mean), maximum, minimum, float(std_dev)]
 
 
 signal = [[1, 3, 5, 6, 7], 
