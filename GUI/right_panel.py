@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import QPushButton, QLabel, QHBoxLayout, QVBoxLayout, QComb
     QLineEdit, QTableWidget, QTableWidgetItem, QAbstractItemView
 from PyQt5.QtGui import QIcon, QPixmap, QColor
 from right_panel_style import signalChooseStyle, labelStyle, titleStyle, colorSignalChooseStyle, sliderStyle, valueBoxStyle, tableStyle
-
+from stats_Card import StatsCard
 
 class RightPanel(QWidget):
     def __init__(self):
@@ -93,22 +93,26 @@ class RightPanel(QWidget):
         #Statistics
         self.statsTitle = QLabel("Statistics")
         self.statsTitle.setStyleSheet(titleStyle)
-        #self.statsTitle.setStyleSheet("""border-top: 1px solid #242424;""")
+
+        self.statsListViewButton = QPushButton()
+        self.statsCardsViewButton = QPushButton()
+
+        statsLabel =["Mean", "Std", "Duration", "Max", "Min"]
+        stats =["12", "223", "22:45", "15", "-2"]
 
         self.statsTable = QTableWidget()
         self.statsTable.setStyleSheet(tableStyle)
         self.statsTable.setColumnCount(2)
-        self.statsTable.setRowCount(5)
+        self.statsTable.setRowCount(len(statsLabel))
         self.statsTable.horizontalHeader().setVisible(False)
         self.statsTable.verticalHeader().setVisible(False)
         self.statsTable.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.statsTable.setEnabled(False)
+        self.statsTable.setMaximumHeight(35*len(statsLabel))
 
         header = self.statsTable.horizontalHeader()
         header.setStretchLastSection(True)
 
-        statsLabel =["Mean", "Std", "Duration", "Max", "Min"]
-        stats =["12", "223", "22:45", "15", "-2"]
 
         for row in range(len(statsLabel)):
 
@@ -119,6 +123,9 @@ class RightPanel(QWidget):
 
         statsTitleRow = QHBoxLayout()
         statsTitleRow.addWidget(self.statsTitle)
+        statsTitleRow.addStretch()
+        statsTitleRow.addWidget(self.statsListViewButton)
+        statsTitleRow.addWidget(self.statsCardsViewButton)
 
         statsTableLayout = QHBoxLayout()
         statsTableLayout.addWidget(self.statsTable)
@@ -141,15 +148,35 @@ class RightPanel(QWidget):
         statsPanel = QVBoxLayout()
         statsPanel.addLayout(statsTitleRow)
         statsPanel.addLayout(statsTableLayout)
+        statsPanel.addStretch()
+
+        #should take array
+
+        self.card1 = StatsCard("mean","12")
+        self.card2 = StatsCard("min","2")
+        self.card3 = StatsCard("max","24")
+        self.card4 = StatsCard("mean","12")
+        self.card5 = StatsCard("min","2")
+        self.card6 = StatsCard("max","24")
+
+        cardRow =QHBoxLayout()
+        cardRow.addWidget(self.card1)
+        cardRow.addWidget(self.card2)
+        cardRow.addWidget(self.card3)
+        cardRow2 =QHBoxLayout()
+        cardRow2.addWidget(self.card4)
+        cardRow2.addWidget(self.card5)
+        cardRow2.addWidget(self.card6)
 
         mainLayout = QVBoxLayout()
         mainLayout.addLayout(signalTitlePanel)
         mainLayout.addLayout(propertiesPanel)
-        mainLayout.addLayout(statsPanel )
+        mainLayout.addLayout(statsPanel)
+        mainLayout.addLayout(cardRow)
+        mainLayout.addLayout(cardRow2)
         mainLayout.addStretch()
         self.setLayout(mainLayout)
 
-        # Set the size policy to expand horizontally
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
 
     def update_thickness_value(self, value):

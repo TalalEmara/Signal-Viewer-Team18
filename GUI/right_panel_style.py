@@ -102,6 +102,25 @@ QTableWidget {
 }
 
 QTableWidget::item {
-    border-bottom: 1px solid #2D2D2D;
+    border-bottom: 3px solid #2D2D2D;
 }
+"""
+
+cardLabelStyle = """
+QLabel{
+        color: #76D4D4;
+        font-family: Sofia sans;
+        font-weight: semiBold;
+        font-size:12px;
+        
+    }
+"""
+cardValueStyle = """
+QLabel{
+        color: #EFEFEF;
+        font-family: Sofia sans;
+        font-weight: semiBold;
+        font-size:35px;
+        text-align: center;
+    }
 """
