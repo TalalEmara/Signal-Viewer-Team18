@@ -102,7 +102,7 @@ class Signals(object):
         self.signal1TitleEdit = QPushButton(self.signal1Viewer)
         self.signal1TitleEdit.setIcon(QtGui.QIcon("photos/edit.png"))
         self.signal1TitleEdit.setStyleSheet("background-color: #2D2D2D; border: none;")
-        self.signal1TitleEdit.setFixedSize(25, 25)
+        self.signal1TitleEdit.setFixedSize(20, 20)
         self.titleToolbarLayout1.addWidget(self.signal1TitleEdit)
 
        
@@ -217,7 +217,7 @@ class Signals(object):
         self.signal2TitleEdit = QPushButton(self.signal2Viewer)
         self.signal2TitleEdit.setIcon(QtGui.QIcon("photos/edit.png"))
         self.signal2TitleEdit.setStyleSheet("background-color: #2D2D2D; border: none;")
-        self.signal2TitleEdit.setFixedSize(25, 25)
+        self.signal2TitleEdit.setFixedSize(20, 20)
         self.titleToolbarLayout2.addWidget(self.signal2TitleEdit)
 
         spacer2 = QSpacerItem(680, 0, QSizePolicy.Fixed, QSizePolicy.Minimum)
@@ -308,18 +308,18 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def init_plot(self):
         t = np.linspace(0, 10, 100)
-        signal1 = np.sin(2 * np.pi * t) 
+        signal1 = np.sin(2 * np.pi * t)  
         signal2 = np.cos(2 * np.pi * t)  
         self.update_canvas(self.signals.canvas1, t, signal1)
         self.update_canvas(self.signals.canvas2, t, signal2)
 
-      
+        
         self.anim1 = FuncAnimation(self.signals.canvas1.figure, self.animate1, frames=np.arange(0, 100), interval=100)
         self.anim2 = FuncAnimation(self.signals.canvas2.figure, self.animate2, frames=np.arange(0, 100), interval=100)
 
     def animate1(self, i):
         t = np.linspace(0, 10, 100)
-        signal1 = np.sin(2 * np.pi * (t + i / 10)) 
+        signal1 = np.sin(2 * np.pi * (t + i / 10))  
         self.signals.canvas1.update_plot(t, signal1)
 
     def animate2(self, i):
