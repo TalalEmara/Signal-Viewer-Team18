@@ -7,8 +7,8 @@ from PyQt5.QtGui import QIcon
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas, NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
 from matplotlib.animation import FuncAnimation
-from Back_end import Data_load
 
+from Back_end import Data_load
 
 
 class MplCanvas(FigureCanvas):
@@ -22,12 +22,11 @@ class CustomToolbar(NavigationToolbar):
     def __init__(self, canvas, parent):
         super().__init__(canvas, parent)
         self.zoom_out_button = QToolButton(self)
-        self.zoom_out_button.setIcon(QIcon('photos/zoomOut.png'))  # Path to your zoom out icon
+        self.zoom_out_button.setIcon(QIcon('photos/zoomOut.png'))
         self.zoom_out_button.clicked.connect(self.zoom_out)
         self.addWidget(self.zoom_out_button)
 
     def zoom_out(self):
-
         rlim = self.canvas.ax.get_ylim()
         # Zoom out by a factor of 1.5
         self.canvas.ax.set_ylim([rlim[0] - (rlim[1] - rlim[0]) * 0.5, rlim[1] + (rlim[1] - rlim[0]) * 0.5])
@@ -39,18 +38,15 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         # Load the data from CSV
-        self.csv_file_path = 'signals_data/EMG_Normal.csv'
+        self.csv_file_path = '../signals_data/EMG_Abnormal.csv'
         self.data_loader = Data_load.DataLoader(self.csv_file_path)
         self.data_loader.load_data()
-        self.data = self.data_loader.get_data().values  # Convert to NumPy array
-
+        self.data = self.data_loader.get_data()
 
         self.canvas = MplCanvas(self, width=5, height=4, dpi=100)
         self.init_plot()
 
-
         self.toolbar = CustomToolbar(self.canvas, self)
-
 
         self.stop_button = QPushButton("Stop")
         self.stop_button.clicked.connect(self.stop_signal)
@@ -66,43 +62,37 @@ class MainWindow(QMainWindow):
 
         self.running = True
         self.current_index = 0
-        self.batch_size = 10  # Number of points to update
-        self.ani = FuncAnimation(self.canvas.figure, self.update_plot, interval=100, blit=False)
+
+        # Create a point in the plot
+        self.polar_point, = self.canvas.ax.plot([], [], 'o', color='b')  # 'o' creates a single point
+
+        # Start the animation
+        self.ani = FuncAnimation(self.canvas.figure, self.update_plot, interval=10, blit=False)
 
     def init_plot(self):
-        self.polar_line, = self.canvas.ax.plot([], [], marker='o')
         self.canvas.ax.set_title('Polar Plot of Signal Data')
         if self.data is not None:
-            r_min = np.min(self.data[:, 1])
-            r_max = np.max(self.data[:, 1])
-            self.canvas.ax.set_ylim(r_min, r_max*1.1)
+            self.canvas.ax.set_ylim(self.data.iloc[:, 1].min(), self.data.iloc[:, 1].max()*1.1)
+
     def update_plot(self, frame):
         if self.running and self.data is not None:
-            # avoiding index errors.
-            end_index = min(self.current_index + self.batch_size, len(self.data))
+            if self.current_index < len(self.data):
+                theta = 2 * np.pi * self.data.iloc[self.current_index, 0]
+                r = self.data.iloc[self.current_index, 1]
 
-            batch_data = self.data[self.current_index:end_index]
-            theta = 2 * np.pi * batch_data[:, 0]  # First column for theta
-            r = batch_data[:, 1]  # Second column for radius
+                # Update the position point
+                self.polar_point.set_data(theta, r)
 
-            if self.current_index == 0:
-                self.polar_line.set_data(theta, r)  # Initial plot
-            else:
-                self.polar_line.set_data(
-                    np.concatenate((self.polar_line.get_xdata(), theta)),
-                    np.concatenate((self.polar_line.get_ydata(), r))
-                )
-
-            self.current_index += self.batch_size
+                self.current_index += 1
 
 
-
-            self.canvas.draw()
+                self.canvas.draw()
 
     def stop_signal(self):
         self.running = False
 
 
+# Run the application
 app = QApplication(sys.argv)
 window = MainWindow()
 window.show()

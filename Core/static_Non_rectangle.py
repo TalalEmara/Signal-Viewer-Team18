@@ -24,7 +24,7 @@ def plot_polar(data):
 def main():
     """Main function to run the data loading and plotting."""
     # Replace 'your_file.csv' with the path to your CSV file
-    csv_file_path = 'signals_data/EMG_Normal.csv'
+    csv_file_path = '../signals_data/EMG_Normal.csv'
 
     # Create a DataLoader instance and load data
     data_loader = Data_load.DataLoader(csv_file_path)

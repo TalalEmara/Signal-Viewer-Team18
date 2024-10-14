@@ -71,7 +71,7 @@ def plot_cylindrical_coordinates(data):
 # Usage Example
 if __name__ == "__main__":
     # Path to your CSV file
-    file_path = 'signals_data/ECG_Abnormal.csv'
+    file_path = '../signals_data/ECG_Abnormal.csv'
 
     # Load data
     data_loader = Data_load.DataLoader(file_path)
