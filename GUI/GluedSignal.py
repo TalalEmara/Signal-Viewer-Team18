@@ -5,7 +5,7 @@ from PyQt5.QtGui import QIcon
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas, NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
 import numpy as np
-from fpdf import FPDF  # Add fpdf library for PDF creation
+from fpdf import FPDF 
 
 
 class MplCanvas(FigureCanvas):
@@ -50,15 +50,15 @@ class MplCanvas(FigureCanvas):
         self.draw()
 
     def save_snapshot_image(self, filepath):
-        """Save the current figure as an image."""
+        
         self.figure.savefig(filepath)
 
 
 class Signals(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
-        self.snapshots = []  # List to store snapshots
-        self.signal_data = None  # Store current signal data
+        self.snapshots = []  
+        self.signal_data = None 
 
     def signalViewerUi(self, Signals):
         Signals.setObjectName("Signals")
@@ -107,7 +107,7 @@ class Signals(QtWidgets.QMainWindow):
         self.GluedSignalbuttonsLayout = QHBoxLayout()
         self.GluedSignalbuttonsLayout.addSpacing(10)  
 
-                # Time Label
+     
         self.timeLabel = QtWidgets.QLabel("00:00", self.GluedSignal)
         self.timeLabel.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         self.timeLabel.setStyleSheet("color: #EFEFEF")
@@ -115,7 +115,7 @@ class Signals(QtWidgets.QMainWindow):
 
         self.GluedSignalbuttonsLayout.addSpacing(123)
 
-        # Buttons
+       
         self.pauseButton = QtWidgets.QPushButton(self.GluedSignal)
         self.pauseButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         self.pauseButton.setStyleSheet("border: 2px solid #76D4D4; border-radius: 10px; background-color: #2D2D2D;")
