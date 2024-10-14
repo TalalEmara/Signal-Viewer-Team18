@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
@@ -67,10 +68,11 @@ class DataPlotter:
             print("Error: No data to plot.")
 
 
+
 def main():
     """Main function to run the data loading and plotting."""
     # Replace 'your_file.csv' with the path to your CSV file
-    csv_file_path = 'signals_data/EMG_Abnormal.csv'
+    csv_file_path = 'signals_data/ECG_Abnormal.csv'
 
     # Create a DataLoader instance and load data
     data_loader = DataLoader(csv_file_path)
