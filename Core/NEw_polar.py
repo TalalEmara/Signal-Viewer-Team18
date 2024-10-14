@@ -8,7 +8,7 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 from matplotlib.animation import FuncAnimation
 
-from Back_end import Data_load
+from Core import Data_load
 
 
 class MplCanvas(FigureCanvas):
