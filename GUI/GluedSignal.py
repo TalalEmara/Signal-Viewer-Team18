@@ -57,11 +57,14 @@ class Signals(object):
     def signalViewerUi(self, Signals):
         Signals.setObjectName("Signals")
         Signals.resize(1000, 700)
+
+        
+        Signals.setWindowTitle("Glued Signal") 
+
         self.centralwidget = QtWidgets.QWidget(Signals)
         self.centralwidget.setObjectName("centralwidget")
         Signals.setCentralWidget(self.centralwidget)
 
-        
         mainLayout = QVBoxLayout(self.centralwidget)
         mainLayout.setContentsMargins(0, 0, 0, 0)
         mainLayout.setSpacing(0)
@@ -92,7 +95,6 @@ class Signals(object):
 
         self.titleToolbarLayout.addSpacing(680)  
 
-        
         self.snapShotButton = QPushButton("SnapShot", self.GluedSignal)
         self.snapShotButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         self.snapShotButton.setStyleSheet("border: 2px solid #76D4D4; border-radius: 5px; background-color: #2D2D2D; color: #76D4D4; width:100px; font-size:17px;")
@@ -106,7 +108,6 @@ class Signals(object):
         self.GluedSignalPlotLayout.addLayout(self.titleToolbarLayout, stretch=1)  
         self.GluedSignalPlotLayout.addWidget(self.canvas1, stretch=13)  
 
-        
         self.GluedSignalbuttonsLayout = QHBoxLayout()
         self.GluedSignalbuttonsLayout.addSpacing(10)  
 
@@ -117,7 +118,6 @@ class Signals(object):
 
         self.GluedSignalbuttonsLayout.addSpacing(123)
 
-    
         self.pauseButton = QtWidgets.QPushButton(self.GluedSignal)
         self.pauseButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         self.pauseButton.setStyleSheet("border: 2px solid #76D4D4; border-radius: 10px; background-color: #2D2D2D;")
@@ -167,7 +167,6 @@ class Signals(object):
         self.GluedSignalbuttonsLayout.addStretch()
         self.GluedSignalPlotLayout.addLayout(self.GluedSignalbuttonsLayout, stretch=6)
 
-       
         GluedSignalLayout = QVBoxLayout(self.GluedSignal)
         GluedSignalLayout.setContentsMargins(0, 0, 0, 0) 
         GluedSignalLayout.addWidget(self.GluedSignalPlot)
@@ -177,6 +176,7 @@ if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
     SignalsApp = QtWidgets.QMainWindow()
     ui = Signals()
+    
     ui.signalViewerUi(SignalsApp)
     SignalsApp.show()
     sys.exit(app.exec_())
