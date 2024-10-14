@@ -1,0 +1,48 @@
+import sys
+from PyQt5.QtWidgets import QApplication, QVBoxLayout, QWidget
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.figure import Figure
+import numpy as np
+
+class SignalViewer(QWidget):
+    def __init__(self):
+        super().__init__()
+
+        # Create a figure and axis
+        self.fig = Figure(figsize=(5, 3))  # Adjust figure size as needed
+        self.canvas = FigureCanvas(self.fig)
+        self.ax = self.fig.add_subplot(111)  # 111 means 1 row, 1 column, 1 plot
+
+        # Set layout
+        layout = QVBoxLayout()
+        layout.addWidget(self.canvas)
+        self.setLayout(layout)
+
+        # Plot multiple signals
+        self.plot_signals()
+
+    def plot_signals(self):
+        # Create two or more signals to plot
+        x = np.linspace(0, 10, 100)  # X-axis values (common for all signals)
+        signal1 = np.sin(x)          # First signal (sine wave)
+        signal2 = np.cos(x)          # Second signal (cosine wave)
+
+        # Plot signals on the same graph
+        self.ax.plot(x, signal1, label='Signal 1 (Sin)')
+        self.ax.plot(x, signal2, label='Signal 2 (Cos)')
+
+        # Add legend, labels, and title
+        self.ax.set_title("Multiple Signals")
+        self.ax.set_xlabel("Time")
+        self.ax.set_ylabel("Amplitude")
+        self.ax.legend()
+
+        # Draw the canvas
+        self.canvas.draw()
+
+# Run the PyQt5 application
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    window = SignalViewer()
+    window.show()
+    sys.exit(app.exec_())
