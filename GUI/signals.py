@@ -8,7 +8,9 @@ from matplotlib.figure import Figure
 import numpy as np
 from matplotlib.animation import FuncAnimation
 from PyQt5.QtCore import Qt
-from channels import Channels
+from channels import Channels, data_load
+from importToChannelsWindow import ImportToChannelsWindow, channel  # Adjust path accordingly
+
 
 class MplCanvas(FigureCanvas):
     def __init__(self, parent=None, width=5, height=4, dpi=100, signal_color="#D55877"):
@@ -264,28 +266,29 @@ class SignalMainWindow(QtWidgets.QMainWindow):
         super(SignalMainWindow, self).__init__()
         self.signals = Signals()
         self.setCentralWidget(self.signals)
-        self.channels = Channels()
         self.init_plot()
 
     def init_plot(self):
         # Load the data from the file using ImportToChannelsWindow
-        if self.channels.openImportWindowForChannel1():
-            signal, channel = self.channels.openImportWindowForChannel1()
-            time = signal.iloc[:, 0]
-            amplitude = signal.iloc[:, 1]
-        elif self.channels.openImportWindowForChannel2():
-            signal, channel = self.channels.openImportWindowForChannel2()
-            time = signal.iloc[:, 0]
-            amplitude = signal.iloc[:, 1]
+        # importedWindow = ImportToChannelsWindow()
+        # path, selectedChannel = importedWindow.importFromFile()
+        # channels = Channels()
+        signal = data_load
+        channels = channel
+        if signal is None:
+            print("Error: data_load is None. Please check file loading.")
+            return  # Exit if data_load is not set
 
-        print(time, amplitude)
+        time = signal.iloc[:, 0]
+        amplitude = signal.iloc[:, 1]
 
+        print(signal,channels)
         # Depending on the number of channels, update the corresponding canvas
-        if channel == 1:
+        if channels == 1:
             self.update_canvas(self.signals.canvas1, time, amplitude)
             self.anim1 = FuncAnimation(self.signals.canvas1.figure, self.animate_cine_mode, frames=len(time),
                                        interval=100, fargs=(self.signals.canvas1, time, amplitude))
-        elif channel == 2:
+        elif channels == 2:
             self.update_canvas(self.signals.canvas2, time, amplitude)
             self.anim2 = FuncAnimation(self.signals.canvas2.figure, self.animate_cine_mode, frames=len(time),
                                        interval=100, fargs=(self.signals.canvas2, time, amplitude))
