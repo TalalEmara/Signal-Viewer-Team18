@@ -12,7 +12,8 @@ from right_panel import RightPanel
 from Styles import menuBarStyle, toolBarStyle
 from channels import Channels
 from signals import Signals
-# from signals import SignalMainWindow
+from signals import SignalMainWindow
+from PyQt5.QtCore import pyqtSignal
 
 
 class MainWindow(QWidget):
@@ -31,7 +32,9 @@ class MainWindow(QWidget):
         self.properties = RightPanel()
         self.ImportSignal = Channels()
         self.properties.setMinimumWidth(int(.2*1440))
-        self.signalViewer = Signals()
+        self.signalViewer = SignalMainWindow()
+
+        self.ImportSignal.signal_data_ready.connect(self.signalViewer.init_plot)
 
         self.signalListTest = QWidget()
         self.signalListTest.setStyleSheet("background-color: #FFD700;")  # Gold

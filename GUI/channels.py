@@ -1,22 +1,23 @@
 from PyQt5 import QtCore, QtWidgets, QtGui
 import os
-from importToChannelsWindow import ImportToChannelsWindow, filePath  # Adjust path accordingly
 
+import pandas as pd
+from importToChannelsWindow import ImportToChannelsWindow  # Adjust path accordingly
+from PyQt5.QtCore import pyqtSignal
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from Core.Data_load import DataLoader
-data_load= None
 
 class Channels(QtWidgets.QWidget):
+    signal_data_ready = pyqtSignal(pd.DataFrame, int) 
+
     def __init__(self):
         super().__init__()
-        self.importWindow = None
         self.setGeometry(100, 100, 700, 1000)  
         self.setWindowTitle("Channels Interface")
 
         # Global checkboxes to track selection for both channels
-        self.data_loader=None
         self.ChannelsLayout()
         self.SetText()
 
@@ -124,7 +125,6 @@ class Channels(QtWidgets.QWidget):
         self.channel2List.setGeometry(QtCore.QRect(0, 60, 350, 315))
         self.channel2List.setObjectName("channel2List")
         self.channel2List.setStyleSheet("border: none; color: #EFEFEF;")
-
         self.channel2Layout.addWidget(self.channel2Frame)
 
     def SetText(self):
@@ -147,10 +147,6 @@ class Channels(QtWidgets.QWidget):
         self.importWindow = ImportToChannelsWindow(default_channel=2)
         self.importWindow.fileSelected.connect(self.handleFileSelection)
         self.importWindow.show()
-        # self.filePath, self.selectedChannel = self.importWindow.importFromFile()
-        # self.data_loader = DataLoader(self.filePath)
-        # # print(self.data_loader.get_data())
-        # return self.data_loader.get_data(), self.selectedChannel
 
     def createFileItemWidget(self, file_name, file_location):
         
@@ -203,10 +199,13 @@ class Channels(QtWidgets.QWidget):
 
      
         fileWidget = self.createFileItemWidget(file_name, file_location)
+        print(filePath)
         self.data_loader = DataLoader(filePath)
-        # print(self.data_loader.get_data())
-        # global data_load  # Declare as global to modify the module-level variable
-        # data_load = self.data_loader.get_data()
+
+        signal_data = self.data_loader.get_data()
+        self.signal_data_ready.emit(signal_data, selectedChannel)
+
+    
         if selectedChannel == 1:
             
             listItem1 = QtWidgets.QListWidgetItem()
@@ -235,14 +234,7 @@ class Channels(QtWidgets.QWidget):
                 self.channel1List.addItem(listItem1)
                 self.channel1List.setItemWidget(listItem1, fileWidget)
 
-        # # return self.data_loader.get_data(), selectedChannel
-        global data_load
-        data_load = self.data_loader.get_data()
-        # print("hello", data_load)
     
-    # def get_signal(self):
-    #     return self.handleFileSelection(filePath, channel)
-
 if __name__ == "__main__":
     app = QtWidgets.QApplication([])
     widget = Channels()

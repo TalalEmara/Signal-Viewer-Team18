@@ -1,12 +1,9 @@
 from PyQt5 import QtCore, QtWidgets
-# from ..Core import Data_load
 
 class ImportToChannelsWindow(QtWidgets.QMainWindow):
     fileSelected = QtCore.pyqtSignal(str, int)  
     signalAdded = QtCore.pyqtSignal(str, int)   
-    # Path = ''
-    # channel = 1
-    
+
     def __init__(self, default_channel=1, parent=None):
         super().__init__(parent)
         self.default_channel = default_channel
@@ -93,7 +90,6 @@ class ImportToChannelsWindow(QtWidgets.QMainWindow):
             self.checkBoxChannel2.setChecked(True)
             self.checkBoxChannel2_2.setChecked(True)
     
-    # @staticmethod
     def importFromFile(self):
         options = QtWidgets.QFileDialog.Options()
         filePath, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Import File", "", "All Files (*)", options=options)
@@ -102,9 +98,8 @@ class ImportToChannelsWindow(QtWidgets.QMainWindow):
 
         if filePath:
             self.fileSelected.emit(filePath, selectedChannel)
-            global channel, path
-            path = filePath
-            channel = selectedChannel
+            
+
 
     def handleLiveSignalImport(self):
         liveSignal = self.ImportLiveSignal.toPlainText() 
@@ -113,18 +108,6 @@ class ImportToChannelsWindow(QtWidgets.QMainWindow):
 
         if liveSignal:
             self.signalAdded.emit(liveSignal, selectedChannel)
-
-filePath = ''
-channel = 1
-def setPath(path, selectedChannel):
-    global filePath  # Declare filePath as global to modify it
-    global channel
-    filePath = path
-    channel = selectedChannel
-
-def getPath():
-    return filePath, channel
-
 
 if __name__ == "__main__":
     import sys

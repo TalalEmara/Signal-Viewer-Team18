@@ -1,4 +1,5 @@
 import sys
+import pandas as pd
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QSizePolicy, QWidget, QSpacerItem, QFrame
 from PyQt5.QtGui import QIcon
@@ -8,9 +9,11 @@ from matplotlib.figure import Figure
 import numpy as np
 from matplotlib.animation import FuncAnimation
 from PyQt5.QtCore import Qt
-from channels import Channels, data_load
-from importToChannelsWindow import ImportToChannelsWindow, channel  # Adjust path accordingly
-
+from channels import Channels
+from importToChannelsWindow import ImportToChannelsWindow  # Adjust path accordingly
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from Core.Data_load import DataLoader
 
 class MplCanvas(FigureCanvas):
     def __init__(self, parent=None, width=5, height=4, dpi=100, signal_color="#D55877"):
@@ -266,29 +269,23 @@ class SignalMainWindow(QtWidgets.QMainWindow):
         super(SignalMainWindow, self).__init__()
         self.signals = Signals()
         self.setCentralWidget(self.signals)
-        self.init_plot()
+        self.default_path = 'D:/Projects/DSP/Signal-Viewer-Team18/signals_data/ECG_Abnormal.csv'
+        self.default_signal = DataLoader(self.default_path).get_data()
+        self.init_plot(self.default_signal ,3)
 
-    def init_plot(self):
-        # Load the data from the file using ImportToChannelsWindow
-        # importedWindow = ImportToChannelsWindow()
-        # path, selectedChannel = importedWindow.importFromFile()
-        # channels = Channels()
-        signal = data_load
-        channels = channel
-        if signal is None:
-            print("Error: data_load is None. Please check file loading.")
-            return  # Exit if data_load is not set
+    @QtCore.pyqtSlot(pd.DataFrame, int)    
+    def init_plot(self, signal_data, selectedChannel):
+        
+        time = signal_data.iloc[:, 0]
+        amplitude = signal_data.iloc[:, 1]
 
-        time = signal.iloc[:, 0]
-        amplitude = signal.iloc[:, 1]
-
-        print(signal,channels)
+        print(signal_data, selectedChannel)
         # Depending on the number of channels, update the corresponding canvas
-        if channels == 1:
+        if selectedChannel == 1:
             self.update_canvas(self.signals.canvas1, time, amplitude)
             self.anim1 = FuncAnimation(self.signals.canvas1.figure, self.animate_cine_mode, frames=len(time),
                                        interval=100, fargs=(self.signals.canvas1, time, amplitude))
-        elif channels == 2:
+        elif selectedChannel == 2:
             self.update_canvas(self.signals.canvas2, time, amplitude)
             self.anim2 = FuncAnimation(self.signals.canvas2.figure, self.animate_cine_mode, frames=len(time),
                                        interval=100, fargs=(self.signals.canvas2, time, amplitude))
