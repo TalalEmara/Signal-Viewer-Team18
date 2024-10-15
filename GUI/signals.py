@@ -269,7 +269,7 @@ class SignalMainWindow(QtWidgets.QMainWindow):
         super(SignalMainWindow, self).__init__()
         self.signals = Signals()
         self.setCentralWidget(self.signals)
-        self.default_path = 'D:/Projects/DSP/Signal-Viewer-Team18/signals_data/ECG_Abnormal.csv'
+        self.default_path = 'Signal-Viewer-Team18/signals_data/ECG_Abnormal.csv'
         self.default_signal = DataLoader(self.default_path).get_data()
         self.init_plot(self.default_signal ,3)
 
