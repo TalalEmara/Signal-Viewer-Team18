@@ -14,7 +14,7 @@ class ImportToChannelsWindow(QtWidgets.QMainWindow):
         self.setObjectName("importToChannelsWindow")
         self.setWindowTitle("Import Signal")
         self.resize(312, 250)
-        self.setStyleSheet("background-color:#2D2D2D;")
+        self.setStyleSheet("background-color:#EFEFEF;")
 
         self.centralwidget = QtWidgets.QWidget(self)
         self.setCentralWidget(self.centralwidget)
