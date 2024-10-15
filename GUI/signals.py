@@ -8,6 +8,7 @@ from matplotlib.figure import Figure
 import numpy as np
 from matplotlib.animation import FuncAnimation
 from PyQt5.QtCore import Qt
+from channels import Channels
 
 class MplCanvas(FigureCanvas):
     def __init__(self, parent=None, width=5, height=4, dpi=100, signal_color="#D55877"):
@@ -258,39 +259,72 @@ class Signals(QtWidgets.QWidget):  # Inheriting from QWidget instead of object
         mainLayout.addWidget(self.signal2Viewer)
 
 
-class MainWindow(QtWidgets.QMainWindow):
+class SignalMainWindow(QtWidgets.QMainWindow):
     def __init__(self):
-        super(MainWindow, self).__init__()
+        super(SignalMainWindow, self).__init__()
         self.signals = Signals()
         self.setCentralWidget(self.signals)
+        self.channels = Channels()
         self.init_plot()
 
     def init_plot(self):
-        t = np.linspace(0, 10, 100)
-        signal1 = np.sin(2 * np.pi * t)  # Example signal 1 data
-        signal2 = np.cos(2 * np.pi * t)  # Example signal 2 data
-        self.update_canvas(self.signals.canvas1, t, signal1)
-        self.update_canvas(self.signals.canvas2, t, signal2)
+        # Load the data from the file using ImportToChannelsWindow
+        if self.channels.openImportWindowForChannel1():
+            signal, channel = self.channels.openImportWindowForChannel1()
+            time = signal.iloc[:, 0]
+            amplitude = signal.iloc[:, 1]
+        elif self.channels.openImportWindowForChannel2():
+            signal, channel = self.channels.openImportWindowForChannel2()
+            time = signal.iloc[:, 0]
+            amplitude = signal.iloc[:, 1]
 
-        self.anim1 = FuncAnimation(self.signals.canvas1.figure, self.animate1, frames=np.arange(0, 100), interval=100)
-        self.anim2 = FuncAnimation(self.signals.canvas2.figure, self.animate2, frames=np.arange(0, 100), interval=100)
+        print(time, amplitude)
 
-    def animate1(self, i):
-        t = np.linspace(0, 10, 100)
-        signal1 = np.sin(2 * np.pi * (t + i / 10))
-        self.signals.canvas1.update_plot(t, signal1)
+        # Depending on the number of channels, update the corresponding canvas
+        if channel == 1:
+            self.update_canvas(self.signals.canvas1, time, amplitude)
+            self.anim1 = FuncAnimation(self.signals.canvas1.figure, self.animate_cine_mode, frames=len(time),
+                                       interval=100, fargs=(self.signals.canvas1, time, amplitude))
+        elif channel == 2:
+            self.update_canvas(self.signals.canvas2, time, amplitude)
+            self.anim2 = FuncAnimation(self.signals.canvas2.figure, self.animate_cine_mode, frames=len(time),
+                                       interval=100, fargs=(self.signals.canvas2, time, amplitude))
+        else:
+            # If unspecified, update both canvases with the same signal
+            self.update_canvas(self.signals.canvas1, time, amplitude)
+            self.anim1 = FuncAnimation(self.signals.canvas1.figure, self.animate_cine_mode, frames=len(time),
+                                       interval=100, fargs=(self.signals.canvas1, time, amplitude))
+            self.update_canvas(self.signals.canvas2, time, amplitude)
+            self.anim2 = FuncAnimation(self.signals.canvas2.figure, self.animate_cine_mode, frames=len(time),
+                                       interval=100, fargs=(self.signals.canvas2, time, amplitude))
 
-    def animate2(self, i):
-        t = np.linspace(0, 10, 100)
-        signal2 = np.cos(2 * np.pi * (t + i / 10))
-        self.signals.canvas2.update_plot(t, signal2)
+    def animate_cine_mode(self, i, canvas, time, amplitude):
+        """Animate the signal in cine mode by looping over the data."""
+        # Define a window size for the data (number of points to display at once)
+        window_size = 100
+
+        # Compute the start and end indices for the window
+        start_idx = i % len(time)
+        end_idx = (start_idx + window_size) % len(time)
+
+        if start_idx < end_idx:
+            t_window = time[start_idx:end_idx]
+            amp_window = amplitude[start_idx:end_idx]
+        else:
+            # If the window wraps around the end of the signal
+            t_window = np.concatenate((time[start_idx:], time[:end_idx]))
+            amp_window = np.concatenate((amplitude[start_idx:], amplitude[:end_idx]))
+
+        # Update the plot with the new window of data
+        canvas.update_plot(t_window, amp_window)
 
     def update_canvas(self, canvas, t, signal):
+        """Update the plot with the entire signal (initial plot)."""
         canvas.update_plot(t, signal)
 
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
-    window = MainWindow()
+    window = SignalMainWindow()
     window.show()
     sys.exit(app.exec_())

@@ -2,6 +2,11 @@ from PyQt5 import QtCore, QtWidgets, QtGui
 import os
 from importToChannelsWindow import ImportToChannelsWindow  # Adjust path accordingly
 
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from Core.Data_load import DataLoader
+
 class Channels(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
@@ -10,7 +15,6 @@ class Channels(QtWidgets.QWidget):
         self.setWindowTitle("Channels Interface")
 
         # Global checkboxes to track selection for both channels
-      
 
         self.ChannelsLayout()
         self.SetText()
@@ -137,11 +141,19 @@ class Channels(QtWidgets.QWidget):
         self.importWindow = ImportToChannelsWindow(default_channel=1)
         self.importWindow.fileSelected.connect(self.handleFileSelection)
         self.importWindow.show()
+        self.filePath, self.selectedChannel = self.importWindow.importFromFile()
+        self.data_loader = DataLoader(self.filePath)
+        # print(self.data_loader.get_data())
+        return self.data_loader.get_data(), self.selectedChannel
 
     def openImportWindowForChannel2(self):
         self.importWindow = ImportToChannelsWindow(default_channel=2)
         self.importWindow.fileSelected.connect(self.handleFileSelection)
         self.importWindow.show()
+        self.filePath, self.selectedChannel = self.importWindow.importFromFile()
+        self.data_loader = DataLoader(self.filePath)
+        # print(self.data_loader.get_data())
+        return self.data_loader.get_data(), self.selectedChannel
 
     def createFileItemWidget(self, file_name, file_location):
         
@@ -194,7 +206,7 @@ class Channels(QtWidgets.QWidget):
 
      
         fileWidget = self.createFileItemWidget(file_name, file_location)
-       
+        
         if selectedChannel == 1:
             
             listItem1 = QtWidgets.QListWidgetItem()
@@ -222,6 +234,7 @@ class Channels(QtWidgets.QWidget):
                 listItem1.setSizeHint(fileWidget.sizeHint())
                 self.channel1List.addItem(listItem1)
                 self.channel1List.setItemWidget(listItem1, fileWidget)
+
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication([])
