@@ -67,7 +67,8 @@ QPushButton {
 """
 linkedButtonOnStyle = """
 QPushButton {
-    color: #76D4D4;
+    color: #2d2d2d;
+    background-color: #76D4D4;
     font-family: Sofia sans;
     font-weight: semiBold;
     font-size: 20px;

@@ -163,9 +163,11 @@ class ToolBar(QWidget):
     def handleLinkedClick(self):
         if self.isLinked:
             self.isLinked = False
+            self.linkedButton.setText("Link")
             self.linkedButton.setStyleSheet(linkedButtonOffStyle)
         else:
             self.isLinked = True
+            self.linkedButton.setText("Linked")
             self.linkedButton.setStyleSheet(linkedButtonOnStyle)
 
 
