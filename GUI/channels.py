@@ -147,6 +147,7 @@ class Channels(QtWidgets.QWidget):
         
         widget = QtWidgets.QWidget()
         layout = QtWidgets.QHBoxLayout(widget)
+        widget.setFixedHeight(20)
         
         layout.setSpacing(0)
         layout.setContentsMargins(0, 0, 0, 0)
@@ -175,7 +176,7 @@ class Channels(QtWidgets.QWidget):
         return widget
 
     def toggleVisibility(self, label, button):
-        # Toggle visibility of the label and change button icon
+       
         if label.isVisible():
             label.hide()
             icon = QtGui.QIcon()
@@ -204,14 +205,14 @@ class Channels(QtWidgets.QWidget):
             
             if self.importWindow.checkBoxChannel2.isChecked():
                 listItem2 = QtWidgets.QListWidgetItem()
-                
+                listItem2.setSizeHint(fileWidget.sizeHint())
                 self.channel2List.addItem(listItem2)
                 self.channel2List.setItemWidget(listItem2, fileWidget)
 
         elif selectedChannel == 2:
             
             listItem2 = QtWidgets.QListWidgetItem()
-           
+            listItem2.setSizeHint(fileWidget.sizeHint())
             self.channel2List.addItem(listItem2)
             self.channel2List.setItemWidget(listItem2, fileWidget)
 
