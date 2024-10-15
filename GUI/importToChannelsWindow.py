@@ -1,12 +1,5 @@
 from PyQt5 import QtCore, QtWidgets
 # from ..Core import Data_load
-import sys
-import os
-
-from Core.Data_load import DataLoader
-
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from Core import Data_load
 
 class ImportToChannelsWindow(QtWidgets.QMainWindow):
     fileSelected = QtCore.pyqtSignal(str, int)  
@@ -106,10 +99,7 @@ class ImportToChannelsWindow(QtWidgets.QMainWindow):
 
         if filePath:
             self.fileSelected.emit(filePath, selectedChannel)
-            self.data_loader = Data_load.DataLoader(filePath)
-            self.data_loader.load_data()
-            # print(Data_loader.get_data())
-            return self.data_loader.get_data(), selectedChannel
+            return filePath, selectedChannel
 
     def handleLiveSignalImport(self):
         liveSignal = self.ImportLiveSignal.toPlainText() 

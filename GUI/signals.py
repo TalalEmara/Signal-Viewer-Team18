@@ -8,7 +8,7 @@ from matplotlib.figure import Figure
 import numpy as np
 from matplotlib.animation import FuncAnimation
 from PyQt5.QtCore import Qt
-from importToChannelsWindow import ImportToChannelsWindow
+from channels import Channels
 
 class MplCanvas(FigureCanvas):
     def __init__(self, parent=None, width=5, height=4, dpi=100, signal_color="#D55877"):
@@ -259,19 +259,25 @@ class Signals(QtWidgets.QWidget):  # Inheriting from QWidget instead of object
         mainLayout.addWidget(self.signal2Viewer)
 
 
-class MainWindow(QtWidgets.QMainWindow):
+class SignalMainWindow(QtWidgets.QMainWindow):
     def __init__(self):
-        super(MainWindow, self).__init__()
+        super(SignalMainWindow, self).__init__()
         self.signals = Signals()
         self.setCentralWidget(self.signals)
-        self.ImportToChannelsWindow = ImportToChannelsWindow()
+        self.channels = Channels()
         self.init_plot()
 
     def init_plot(self):
         # Load the data from the file using ImportToChannelsWindow
-        signal, channel = self.ImportToChannelsWindow.importFromFile()
-        time = signal.iloc[:, 0]
-        amplitude = signal.iloc[:, 1]
+        if self.channels.openImportWindowForChannel1():
+            signal, channel = self.channels.openImportWindowForChannel1()
+            time = signal.iloc[:, 0]
+            amplitude = signal.iloc[:, 1]
+        elif self.channels.openImportWindowForChannel2():
+            signal, channel = self.channels.openImportWindowForChannel2()
+            time = signal.iloc[:, 0]
+            amplitude = signal.iloc[:, 1]
+
         print(time, amplitude)
 
         # Depending on the number of channels, update the corresponding canvas
@@ -319,6 +325,6 @@ class MainWindow(QtWidgets.QMainWindow):
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
-    window = MainWindow()
+    window = SignalMainWindow()
     window.show()
     sys.exit(app.exec_())

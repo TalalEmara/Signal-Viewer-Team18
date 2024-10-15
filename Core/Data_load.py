@@ -9,6 +9,7 @@ class DataLoader:
         """Initialize with the path to the CSV file."""
         self.file_path = file_path
         self.data = None
+        self.load_data()
 
     def load_data(self):
         """Load data from the CSV file into a DataFrame."""
