@@ -1,20 +1,20 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QPushButton, QLabel, QHBoxLayout, QVBoxLayout, QComboBox, QWidget, QSizePolicy, QSlider, \
-    QLineEdit, QTableWidget, QTableWidgetItem, QAbstractItemView,QHeaderView
+    QLineEdit, QTableWidget, QTableWidgetItem, QAbstractItemView, QHeaderView, QColorDialog
 from PyQt5.QtGui import QIcon, QPixmap, QColor
 from right_panel_style import signalChooseStyle, labelStyle, titleStyle, colorSignalChooseStyle, sliderStyle, \
     valueBoxStyle, tableStyle, viewButtonOnStyle, viewButtonOffStyle
 from stats_Card import StatsCard
 
+
 class RightPanel(QWidget):
     def __init__(self):
         super().__init__()
 
-        self.signalNameInput = "ECG Signal"  
+        self.signalNameInput = "ECG Signal"
 
         self.setAttribute(Qt.WA_StyledBackground, True)
         self.setStyleSheet('background-color: #2E2E2E')
-
 
         self.signalChoose = QComboBox()
         self.signalChoose.setStyleSheet(signalChooseStyle)
@@ -31,14 +31,25 @@ class RightPanel(QWidget):
         self.signalColorLabel = QLabel("Signal Color")
         self.signalColorLabel.setStyleSheet(labelStyle)
 
-        
-        self.signalColorChoose = QComboBox()
-        self.signalColorChoose.setStyleSheet(colorSignalChooseStyle)
-        self.signalColorChoose.addItems(["Red", "Cyan", "Orange", "Add Color"])
-        
-        self.signalColorChoose.setItemIcon(0, QIcon("Assets/RightPanel/ColorsIcon/red.png"))
-        self.signalColorChoose.setItemIcon(1, QIcon("Assets/RightPanel/ColorsIcon/cyan.png"))
-        self.signalColorChoose.setItemIcon(2, QIcon("Assets/RightPanel/ColorsIcon/orange.png"))
+        self.colorChoosen = "#D55877"
+        self.signalColorChooseSquare = QPushButton()
+        self.signalColorChooseSquare.clicked.connect(
+            lambda:  self.signalColorChooseList.setCurrentIndex(2)
+        )
+        self.signalColorChooseSquare.setStyleSheet(f"background-color: #D55877")
+        self.signalColorChooseSquare.setFixedHeight(20)
+        self.signalColorChooseSquare.setFixedWidth(20)
+
+
+        self.signalColorChooseList = QComboBox()
+        self.signalColorChooseList.setStyleSheet(colorSignalChooseStyle)
+
+
+
+        self.signalColorChooseList.addItem("Red", "#D55877")
+        self.signalColorChooseList.addItem("Blue", "#76D4D4")
+        self.signalColorChooseList.addItem("Add New Color")
+        self.signalColorChooseList.currentIndexChanged.connect(self.changeSignalColor)
 
         propertiesTitleRow = QHBoxLayout()
         propertiesTitleRow.addWidget(self.propertiesTitle)
@@ -47,8 +58,9 @@ class RightPanel(QWidget):
         colorPropertyRow1.addWidget(self.signalColorLabel)
 
         colorPropertyRow2 = QHBoxLayout()
-        
-        colorPropertyRow2.addWidget(self.signalColorChoose)
+
+        colorPropertyRow2.addWidget(self.signalColorChooseSquare)
+        colorPropertyRow2.addWidget(self.signalColorChooseList)
 
         self.thicknessLabel = QLabel("Line thickness")
         self.thicknessLabel.setStyleSheet(labelStyle)
@@ -85,7 +97,6 @@ class RightPanel(QWidget):
 
         self.setupStatistics()
 
-        
         mainLayout = QVBoxLayout()
         mainLayout.addLayout(signalTitlePanel)
         mainLayout.addLayout(propertiesPanel)
@@ -95,11 +106,8 @@ class RightPanel(QWidget):
         self.setLayout(mainLayout)
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
 
-    
-        
-
     def setupStatistics(self):
-      
+
         statsTitle = QLabel("Statistics")
         statsTitle.setStyleSheet(titleStyle)
 
@@ -119,7 +127,6 @@ class RightPanel(QWidget):
         self.statsListViewButton.clicked.connect(self.toggle_view_mode)
         self.statsCardsViewButton.clicked.connect(self.toggle_view_mode)
 
-       
         statsTitleRow = QHBoxLayout()
         statsTitleRow.addWidget(statsTitle)
         statsTitleRow.addStretch()
@@ -150,7 +157,6 @@ class RightPanel(QWidget):
 
         self.statsTable.setMinimumWidth(300)
 
-
         # Create the card view
         self.card1 = StatsCard("mean", "12")
         self.card2 = StatsCard("min", "2")
@@ -173,7 +179,6 @@ class RightPanel(QWidget):
         self.cardViewLayout.addLayout(cardRow1)
         self.cardViewLayout.addLayout(cardRow2)
 
-        
         self.statsPanel.addWidget(self.statsTable)
         self.cardViewLayoutWidget = QWidget()
         self.cardViewLayoutWidget.setLayout(self.cardViewLayout)
@@ -201,6 +206,16 @@ class RightPanel(QWidget):
             self.statsListViewButton.setIcon(self.listButtonIcon)
             self.statsCardsViewButton.setIcon(self.cardsBlackButtonIcon)
 
+    def changeSignalColor(self, index):
+        if index == 2:
+            self.colorChoosen = QColorDialog.getColor().name()
+        else:
+            value = self.signalColorChooseList.itemData(index)
+
+            self.colorChoosen = value
+
+        self.signalColorChooseSquare.setStyleSheet(f"background-color: {self.colorChoosen}")
+
 
 
 import sys
@@ -211,13 +226,12 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        
         self.right_panel = RightPanel()
         self.setCentralWidget(self.right_panel)
 
-        
         self.setWindowTitle("Right Pane;")
-        self.setGeometry(100, 100, 400, 600)  
+        self.setGeometry(100, 100, 400, 600)
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
