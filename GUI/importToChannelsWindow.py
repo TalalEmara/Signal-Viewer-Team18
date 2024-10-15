@@ -103,6 +103,7 @@ class ImportToChannelsWindow(QtWidgets.QMainWindow):
 
     def handleLiveSignalImport(self):
         liveSignal = self.ImportLiveSignal.toPlainText() 
+        print(liveSignal)
 
         selectedChannel = 1 if self.checkBoxChannel1_2.isChecked() else 2
 
