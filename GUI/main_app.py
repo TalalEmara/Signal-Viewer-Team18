@@ -65,7 +65,6 @@ class MainWindow(QWidget):
 
 
         mainLayout = QVBoxLayout()
-        mainLayout.addLayout(self.menuBarLayout,2)
         mainLayout.addLayout(self.workspace,98)
         self.workspace.addLayout(self.activeArea,80)
         self.workspace.addLayout(self.propertiesPanel,20)

@@ -15,7 +15,6 @@ QLabel {
     margin-top:10px;
 }
 """
-
 signalChooseStyle = """
 QComboBox{
     background-color: rgba(0, 0, 0, 0);
