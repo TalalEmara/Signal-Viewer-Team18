@@ -23,7 +23,7 @@ class DataLoader:
             self.data = self.data.apply(pd.to_numeric, errors='coerce')
 
             print("Data loaded successfully.")
-            print(self.data.head())  # Print first few rows of the loaded data for verification
+            # print(self.data.head())  # Print first few rows of the loaded data for verification
         except FileNotFoundError:
             print(f"Error: The file {self.file_path} was not found.")
         except Exception as e:
@@ -31,7 +31,8 @@ class DataLoader:
 
     def get_data(self):
         """Return the loaded data."""
-        return self.data
+        return self.data  # Convert to NumPy array
+
 
 
 class DataPlotter:

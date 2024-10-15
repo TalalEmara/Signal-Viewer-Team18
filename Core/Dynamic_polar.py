@@ -72,6 +72,7 @@ class MainWindow(QMainWindow):
     def init_plot(self):
         self.polar_line, = self.canvas.ax.plot([], [], marker='o')
         self.canvas.ax.set_title('Polar Plot of Signal Data')
+
         if self.data is not None:
             r_min = np.min(self.data[:, 1])
             r_max = np.max(self.data[:, 1])
