@@ -6,7 +6,7 @@ from datetime import datetime
 from matplotlib.ticker import MaxNLocator
 
 # URL to the real-time solar wind data from NOAA
-url = 'https://services.swpc.noaa.gov/json/planetary_k_index_1m.json'
+url_live = 'https://services.swpc.noaa.gov/json/planetary_k_index_1m.json'
 # url = 'https://services.swpc.noaa.gov/products/solar-wind/plasma-7-day.json'
 
 
