@@ -387,9 +387,6 @@ class SignalMainWindow(QtWidgets.QMainWindow):
 
         # Load default signal data
         self.default_path = 'Signal-Viewer-Team18/signals_data/ECG_Abnormal.csv'
-        self.signals = Signals()
-        self.setCentralWidget(self.signals)
-        self.default_path = 'D:\Faculty\SBE 24-25\DSP\Final\Signal-Viewer-Team18\signals_data\ECG_Abnormal.csv'
         self.default_signal = DataLoader(self.default_path).get_data()
 
         # Initialize the plot with the default signal and update both canvases
@@ -467,12 +464,6 @@ class SignalMainWindow(QtWidgets.QMainWindow):
                 interval=33,
                 blit=False
             )
-
-    # def update_canvas(self, canvas, time, amplitude):
-    #     """Update the plot on the given canvas with the provided time and amplitude data."""
-    #     canvas.ax.clear()  # Clear the current plot
-    #     canvas.ax.plot(time, amplitude)  # Plot the new signal data
-    #     canvas.draw()  # Redraw the canvas with the updated plot
 
     def animate_cine_mode(self, i, canvas, time, amplitude, channel):
         """Animate the signal in cine mode with control options."""
