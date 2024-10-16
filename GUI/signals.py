@@ -142,56 +142,52 @@ class Signals(QtWidgets.QWidget):  # Inheriting from QWidget instead of object
         self.Signal1buttonsLayout .addStretch(1)
         self.Signal1buttonsLayout  = QHBoxLayout()
         self.Signal1buttonsLayout .addSpacing(30)
-        
-        
+      
         self.timeLabel1 = QtWidgets.QLabel("00:00", self.signal1Viewer)
         self.timeLabel1.setStyleSheet(labelStyle)
         self.Signal1buttonsLayout.addWidget(self.timeLabel1)
         self.Signal1buttonsLayout .addSpacing(70)
+
         self.pauseButton = QtWidgets.QPushButton(self.signal1Viewer)
         self.pauseButton.setIcon(QtGui.QIcon("Assets/ControlsButtons/pause.png"))
         self.pauseButton.setStyleSheet(signalControlButtonStyle)
+        self.pauseButton.clicked.connect(self.pauseActionChannel1)
         self.Signal1buttonsLayout.addWidget(self.pauseButton)
 
-        self.Signal1buttonsLayout .addSpacing(5)
-        
         self.playButton = QtWidgets.QPushButton(self.signal1Viewer)
         self.playButton.setIcon(QtGui.QIcon("Assets/ControlsButtons/play.png"))
         self.playButton.setStyleSheet(signalControlButtonStyle)
+        self.playButton.clicked.connect(self.playActionChannel1)
         self.Signal1buttonsLayout.addWidget(self.playButton)
-
-        self.stopButton = QtWidgets.QPushButton(self.signal1Viewer)
-        self.stopButton.setIcon(QtGui.QIcon("Assets/ControlsButtons/stop.png"))
-        self.stopButton.setStyleSheet(signalControlButtonStyle)
-        self.Signal1buttonsLayout.addWidget(self.stopButton)
 
         self.toStartButton = QtWidgets.QPushButton(self.signal1Viewer)
         self.toStartButton.setIcon(QtGui.QIcon("Assets/ControlsButtons/start.png"))
         self.toStartButton.setStyleSheet(signalControlButtonStyle)
+        self.toStartButton.clicked.connect(self.toStartAction1)
         self.Signal1buttonsLayout.addWidget(self.toStartButton)
 
         self.toEndButton = QtWidgets.QPushButton(self.signal1Viewer)
         self.toEndButton.setIcon(QtGui.QIcon("Assets/ControlsButtons/end.png"))
         self.toEndButton.setStyleSheet(signalControlButtonStyle)
+        self.toEndButton.clicked.connect(self.toEndAction1)
         self.Signal1buttonsLayout.addWidget(self.toEndButton)
 
         self.rewindButton = QtWidgets.QPushButton(self.signal1Viewer)
         self.rewindButton.setIcon(QtGui.QIcon("Assets/ControlsButtons/rewindOff.png"))
         self.rewindButton.setStyleSheet(rewindOffButtonStyle)
+        self.rewindButton.setCheckable(True)
+        self.rewindButton.toggled.connect(self.toggleRewind)
         self.Signal1buttonsLayout.addWidget(self.rewindButton)
 
-        self.Signal1buttonsLayout.addStretch(6)  # Stretch added here to push buttons to the right
+        self.Signal1buttonsLayout.addStretch(6)  
         self.signal1PlotLayout.addLayout(self.Signal1buttonsLayout)
         
-        # Add signal1Viewer to the main layout
         mainLayout.addWidget(self.signal1Viewer)
         spacer_between_signals = QSpacerItem(0, 5, QSizePolicy.Minimum, QSizePolicy.Fixed)
         mainLayout.addSpacerItem(spacer_between_signals)
         
-        # Signal 2 Viewer (same structure as Signal 1)
         self.signal2Viewer = QtWidgets.QFrame(self)
         self.signal2Viewer.setStyleSheet("background-color: #2D2D2D; border:none;")
-        
         self.signal2Viewer.setFrameShape(QtWidgets.QFrame.StyledPanel)
 
         self.signal2PlotLayout = QVBoxLayout(self.signal2Viewer)
@@ -210,58 +206,118 @@ class Signals(QtWidgets.QWidget):  # Inheriting from QWidget instead of object
         self.signal2TitleEdit.setFixedSize(20, 20)
         self.titleToolbarLayout2.addWidget(self.signal2TitleEdit)
 
-        spacer2 = QSpacerItem(1000, 0, QSizePolicy.Fixed, QSizePolicy.Minimum)
-        self.titleToolbarLayout2.addSpacerItem(spacer2)
-
-        self.signal2PlotLayout.addLayout(self.titleToolbarLayout2)
-        self.signal2PlotLayout.addWidget(self.canvas2)
+        spacer = QSpacerItem(1000, 0, QSizePolicy.Fixed, QSizePolicy.Minimum)
+        self.titleToolbarLayout2.addSpacerItem(spacer)
+        
+        self.signal2PlotLayout.addLayout(self.titleToolbarLayout2, stretch=1)  
+        self.signal2PlotLayout.addWidget(self.canvas2, stretch=13)  
 
         self.Signal2buttonsLayout = QHBoxLayout()
-        
-
+        self.Signal2buttonsLayout .addStretch(1)
         self.Signal2buttonsLayout .addSpacing(30)
 
         self.timeLabel2 = QtWidgets.QLabel("00:00", self.signal2Viewer)
         self.timeLabel2.setStyleSheet(labelStyle)
         self.Signal2buttonsLayout.addWidget(self.timeLabel2)
+        self.Signal2buttonsLayout.addSpacing(70)
 
-        self.Signal2buttonsLayout .addSpacing(70)
-        
         self.pauseButton2 = QtWidgets.QPushButton(self.signal2Viewer)
         self.pauseButton2.setIcon(QtGui.QIcon("Assets/ControlsButtons/pause.png"))
         self.pauseButton2.setStyleSheet(signalControlButtonStyle)
+        self.pauseButton2.clicked.connect(self.pauseActionChannel2)
         self.Signal2buttonsLayout.addWidget(self.pauseButton2)
 
         self.playButton2 = QtWidgets.QPushButton(self.signal2Viewer)
         self.playButton2.setIcon(QtGui.QIcon("Assets/ControlsButtons/play.png"))
         self.playButton2.setStyleSheet(signalControlButtonStyle)
+        self.playButton2.clicked.connect(self.playActionChannel2)
         self.Signal2buttonsLayout.addWidget(self.playButton2)
-
-        self.stopButton2 = QtWidgets.QPushButton(self.signal2Viewer)
-        self.stopButton2.setIcon(QtGui.QIcon("Assets/ControlsButtons/stop.png"))
-        self.stopButton2.setStyleSheet(signalControlButtonStyle)
-        self.Signal2buttonsLayout.addWidget(self.stopButton2)
 
         self.toStartButton2 = QtWidgets.QPushButton(self.signal2Viewer)
         self.toStartButton2.setIcon(QtGui.QIcon("Assets/ControlsButtons/start.png"))
         self.toStartButton2.setStyleSheet(signalControlButtonStyle)
+        self.toStartButton2.clicked.connect(self.toStartAction2)
         self.Signal2buttonsLayout.addWidget(self.toStartButton2)
 
         self.toEndButton2 = QtWidgets.QPushButton(self.signal2Viewer)
         self.toEndButton2.setIcon(QtGui.QIcon("Assets/ControlsButtons/end.png"))
         self.toEndButton2.setStyleSheet(signalControlButtonStyle)
+        self.toEndButton2.clicked.connect(self.toEndAction2)
         self.Signal2buttonsLayout.addWidget(self.toEndButton2)
 
         self.rewindButton2 = QtWidgets.QPushButton(self.signal2Viewer)
         self.rewindButton2.setIcon(QtGui.QIcon("Assets/ControlsButtons/rewindOff.png"))
         self.rewindButton2.setStyleSheet(rewindOffButtonStyle)
+        self.rewindButton2.setCheckable(True)
+        self.rewindButton2.toggled.connect(self.toggleRewind2)
         self.Signal2buttonsLayout.addWidget(self.rewindButton2)
 
-        self.Signal2buttonsLayout.addStretch(6)
+        self.Signal2buttonsLayout.addStretch(6)  
         self.signal2PlotLayout.addLayout(self.Signal2buttonsLayout)
         
-        # Add signal2Viewer to the main layout
         mainLayout.addWidget(self.signal2Viewer)
+
+        
+    def pauseActionChannel1(self):
+        self.parent().anim1.event_source.stop()
+        self.parent().is_paused1 = True
+
+    def playActionChannel1(self):
+        if self.parent().is_paused1:
+            self.parent().anim1.event_source.start()
+            self.parent().is_paused1 = False
+
+    def toStartAction1(self):
+        current_ylim = self.canvas1.ax.get_ylim()
+        self.canvas1.ax.set_xlim([0, 0])  
+        self.canvas1.ax.set_ylim(current_ylim)  
+        self.canvas1.draw()  
+
+    def toEndAction1(self):
+        current_ylim = self.canvas1.ax.get_ylim()
+        self.canvas1.ax.set_xlim([10, 10])  
+        self.canvas1.ax.set_ylim(current_ylim) 
+        self.canvas1.draw()  
+
+    def toggleRewind(self, checked):
+        self.parent().rewind_enabled1 = checked
+        if checked:
+            self.parent().reset_signal_animation(1) 
+            self.rewindButton.setStyleSheet(rewindOnButtonStyle) 
+        else:
+            self.rewindButton.setStyleSheet(rewindOffButtonStyle) 
+
+
+
+    def pauseActionChannel2(self):
+        self.parent().anim2.event_source.stop()
+        self.parent().is_paused2 = True
+
+    def playActionChannel2(self):
+        if self.parent().is_paused2:
+            self.parent().anim2.event_source.start()
+            self.parent().is_paused2 = False
+
+    def toStartAction2(self):
+        current_ylim = self.canvas2.ax.get_ylim()
+        self.canvas2.ax.set_xlim([0, 0])  
+        self.canvas2.ax.set_ylim(current_ylim)  
+        self.canvas2.draw()  
+
+    def toEndAction2(self):
+        current_ylim = self.canvas2.ax.get_ylim()
+        self.canvas2.ax.set_xlim([10, 10])  
+        self.canvas2.ax.set_ylim(current_ylim) 
+        self.canvas2.draw()  
+
+    def toggleRewind2(self, checked):
+        """Enable or disable the rewind functionality based on button toggle."""
+        self.parent().rewind_enabled2 = checked
+        if checked:
+            self.parent().reset_signal_animation(2) 
+            self.rewindButton2.setStyleSheet(rewindOnButtonStyle) 
+        else:
+            self.rewindButton2.setStyleSheet(rewindOffButtonStyle) 
 
 
 class SignalMainWindow(QtWidgets.QMainWindow):
@@ -269,7 +325,7 @@ class SignalMainWindow(QtWidgets.QMainWindow):
         super(SignalMainWindow, self).__init__()
         self.signals = Signals()
         self.setCentralWidget(self.signals)
-        self.default_path = 'Signal-Viewer-Team18/signals_data/ECG_Abnormal.csv'
+        self.default_path = 'signals_data/ECG_Abnormal.csv'
         self.default_signal = DataLoader(self.default_path).get_data()
         self.init_plot(self.default_signal ,3)
 
@@ -280,7 +336,7 @@ class SignalMainWindow(QtWidgets.QMainWindow):
         amplitude = signal_data.iloc[:, 1]
 
         print(signal_data, selectedChannel)
-        # Depending on the number of channels, update the corresponding canvas
+        
         if selectedChannel == 1:
             self.update_canvas(self.signals.canvas1, time, amplitude)
             self.anim1 = FuncAnimation(self.signals.canvas1.figure, self.animate_cine_mode, frames=len(time),
@@ -321,6 +377,44 @@ class SignalMainWindow(QtWidgets.QMainWindow):
     def update_canvas(self, canvas, t, signal):
         """Update the plot with the entire signal (initial plot)."""
         canvas.update_plot(t, signal)
+
+    def update_signal1(self, frame):
+        if not self.is_paused1:
+            if self.rewind_enabled1:
+                self.current_frame1 = (frame + 1) % self.total_frames
+            else:
+                self.current_frame1 = frame
+                if self.current_frame1 >= self.total_frames - 1:  
+                    self.is_paused1 = True
+
+        
+        self.signals_widget.canvas1.update_plot(self.t[:self.current_frame1], self.signal1[:self.current_frame1])
+
+    def update_signal2(self, frame):
+        if not self.is_paused2:
+            if self.rewind_enabled2:
+                self.current_frame2 = (frame + 1) % self.total_frames
+            else:
+                self.current_frame2 = frame
+                if self.current_frame2 >= self.total_frames - 1:  
+                    self.is_paused2 = True
+
+   
+        self.signals_widget.canvas2.update_plot(self.t[:self.current_frame2], self.signal2[:self.current_frame2])
+
+    def reset_signal_animation(self, channel):
+        """Resets the animation to start over for the specified channel."""
+        if channel == 1:
+            self.current_frame1 = 0  
+            self.is_paused1 = False  
+            self.anim1.event_source.stop()  
+            self.anim1.event_source.start()  
+        elif channel == 2:
+            self.current_frame2 = 0  
+            self.is_paused2 = False  
+            self.anim2.event_source.stop()  
+            self.anim2.event_source.start()  
+
 
 
 if __name__ == "__main__":
