@@ -1,0 +1,70 @@
+class MainWindow(QtWidgets.QMainWindow):
+    def _init_(self):
+        super(MainWindow, self)._init_()
+        self.duration = 10  
+        self.frames_per_second = 30  
+        self.total_frames = self.duration * self.frames_per_second  
+        self.t = np.linspace(0, 10, self.total_frames)
+        self.current_frame1 = 0  
+        self.is_paused1 = False  
+        self.rewind_enabled1 = False
+        self.signal1 = np.sin(2 * np.pi * self.t) 
+
+        self.current_frame2 = 0  
+        self.is_paused2 = False  
+        self.rewind_enabled2 = False
+        self.signal2 = np.sin(2 * np.pi * self.t) 
+         
+        self.centralwidget = QtWidgets.QWidget(self)
+        self.setCentralWidget(self.centralwidget)
+        self.signals_widget = Signals()
+        self.setCentralWidget(self.signals_widget)
+
+        self.anim1 = FuncAnimation(self.signals_widget.canvas1.figure, self.update_signal1, frames=self.total_frames, interval=33, blit=False)
+        self.anim2 = FuncAnimation(self.signals_widget.canvas1.figure, self.update_signal2, frames=self.total_frames, interval=33, blit=False)
+
+    def update_signal1(self, frame):
+        if not self.is_paused1:
+            if self.rewind_enabled1:
+                
+                self.current_frame1 = (frame + 1) % self.total_frames  # Always play forward from the start
+            else:
+                # Normal forward playback
+                self.current_frame1 = frame
+                if self.current_frame1 >= self.total_frames - 1:  # If we reach the end, stop playback
+                    self.is_paused1 = True  # Pause the animation when it reaches the end
+        self.signals_widget.canvas1.update_plot(self.t[:self.current_frame1], self.signal1[:self.current_frame1])
+    
+    def update_signal2(self, frame):
+        if not self.is_paused2:
+            if self.rewind_enabled2:
+                
+                self.current_frame2 = (frame + 1) % self.total_frames  # Always play forward from the start
+            else:
+                # Normal forward playback
+                self.current_frame2 = frame
+                if self.current_frame2 >= self.total_frames - 1:  # If we reach the end, stop playback
+                    self.is_paused2 = True  # Pause the animation when it reaches the end
+
+        self.signals_widget.canvas2.update_plot(self.t[:self.current_frame2], self.signal2[:self.current_frame2])
+
+    def reset_signal_animation(self, channel):
+        """Resets the animation to start over for the specified channel."""
+        if channel == 1:
+            self.current_frame1 = 0  
+            self.is_paused1 = False  
+            self.anim1.event_source.stop()  
+            self.anim1.event_source.start()  
+        elif channel == 2:
+            self.current_frame2 = 0  
+            self.is_paused2 = False  
+            self.anim2.event_source.stop()  
+            self.anim2.event_source.start()  
+
+
+
+if _name_ == '_main_':
+    app = QtWidgets.QApplication(sys.argv)
+    window = MainWindow()
+    window.show()
+    sys.exit(app.exec_())
