@@ -52,7 +52,7 @@ class MplCanvas(FigureCanvas):
             elif action.text() == 'Pan':
                 action.setIcon(QIcon('photos/pan.png'))
             elif action.text() == 'Zoom':
-                action.setIcon(QIcon('photos/zoomIn.png'))
+                action.setIcon(QIcon('Signal-Viewer-Team18/GUI/photos/zoomIn.png'))
             elif action.text() == 'Save':
                 action.setIcon(QIcon('photos/save.png'))
         
@@ -61,7 +61,7 @@ class MplCanvas(FigureCanvas):
 
         # Zoom Out Button
         self.zoomOutButton = QPushButton("", parent)
-        self.zoomOutButton.setIcon(QtGui.QIcon("photos/zoomOut.png"))
+        self.zoomOutButton.setIcon(QtGui.QIcon("Signal-Viewer-Team18/GUI/photos/zoomOut.png"))
         self.zoomOutButton.setStyleSheet("background-color: #242424; color: #FFFFFF; border: none;")
         self.zoomOutButton.setFixedSize(25, 25)
         self.zoomOutButton.clicked.connect(self.zoom_out)
@@ -118,7 +118,7 @@ class Signals(QtWidgets.QWidget):  # Inheriting from QWidget instead of object
         self.titleToolbarLayout1.addWidget(self.signal1Title)
         
         self.signal1TitleEdit = QPushButton(self.signal1Viewer)
-        self.signal1TitleEdit.setIcon(QtGui.QIcon("photos/edit.png"))
+        self.signal1TitleEdit.setIcon(QtGui.QIcon("Signal-Viewer-Team18/GUI/photos/edit.png"))
         self.signal1TitleEdit.setStyleSheet("background-color: #2D2D2D; border: none;")
         self.signal1TitleEdit.setFixedSize(20, 20)
         self.titleToolbarLayout1.addWidget(self.signal1TitleEdit)
@@ -149,31 +149,31 @@ class Signals(QtWidgets.QWidget):  # Inheriting from QWidget instead of object
         self.Signal1buttonsLayout .addSpacing(70)
 
         self.pauseButton = QtWidgets.QPushButton(self.signal1Viewer)
-        self.pauseButton.setIcon(QtGui.QIcon("Assets/ControlsButtons/pause.png"))
+        self.pauseButton.setIcon(QtGui.QIcon("Signal-Viewer-Team18/GUI/Assets/ControlsButtons/pause.png"))
         self.pauseButton.setStyleSheet(signalControlButtonStyle)
         self.pauseButton.clicked.connect(self.pauseActionChannel1)
         self.Signal1buttonsLayout.addWidget(self.pauseButton)
 
         self.playButton = QtWidgets.QPushButton(self.signal1Viewer)
-        self.playButton.setIcon(QtGui.QIcon("Assets/ControlsButtons/play.png"))
+        self.playButton.setIcon(QtGui.QIcon("Signal-Viewer-Team18/GUI/Assets/ControlsButtons/play.png"))
         self.playButton.setStyleSheet(signalControlButtonStyle)
         self.playButton.clicked.connect(self.playActionChannel1)
         self.Signal1buttonsLayout.addWidget(self.playButton)
 
         self.toStartButton = QtWidgets.QPushButton(self.signal1Viewer)
-        self.toStartButton.setIcon(QtGui.QIcon("Assets/ControlsButtons/start.png"))
+        self.toStartButton.setIcon(QtGui.QIcon("Signal-Viewer-Team18/GUI/Assets/ControlsButtons/start.png"))
         self.toStartButton.setStyleSheet(signalControlButtonStyle)
         self.toStartButton.clicked.connect(self.toStartAction1)
         self.Signal1buttonsLayout.addWidget(self.toStartButton)
 
         self.toEndButton = QtWidgets.QPushButton(self.signal1Viewer)
-        self.toEndButton.setIcon(QtGui.QIcon("Assets/ControlsButtons/end.png"))
+        self.toEndButton.setIcon(QtGui.QIcon("Signal-Viewer-Team18/GUI/Assets/ControlsButtons/end.png"))
         self.toEndButton.setStyleSheet(signalControlButtonStyle)
         self.toEndButton.clicked.connect(self.toEndAction1)
         self.Signal1buttonsLayout.addWidget(self.toEndButton)
 
         self.rewindButton = QtWidgets.QPushButton(self.signal1Viewer)
-        self.rewindButton.setIcon(QtGui.QIcon("Assets/ControlsButtons/rewindOff.png"))
+        self.rewindButton.setIcon(QtGui.QIcon("Signal-Viewer-Team18/GUI/Assets/ControlsButtons/rewindOff.png"))
         self.rewindButton.setStyleSheet(rewindOffButtonStyle)
         self.rewindButton.setCheckable(True)
         self.rewindButton.toggled.connect(self.toggleRewind)
@@ -201,7 +201,7 @@ class Signals(QtWidgets.QWidget):  # Inheriting from QWidget instead of object
         self.titleToolbarLayout2.addWidget(self.signal2Title)
 
         self.signal2TitleEdit = QPushButton(self.signal2Viewer)
-        self.signal2TitleEdit.setIcon(QtGui.QIcon("photos/edit.png"))
+        self.signal2TitleEdit.setIcon(QtGui.QIcon("Signal-Viewer-Team18/GUI/photos/edit.png"))
         self.signal2TitleEdit.setStyleSheet("background-color: #2D2D2D; border: none;")
         self.signal2TitleEdit.setFixedSize(20, 20)
         self.titleToolbarLayout2.addWidget(self.signal2TitleEdit)
@@ -222,31 +222,31 @@ class Signals(QtWidgets.QWidget):  # Inheriting from QWidget instead of object
         self.Signal2buttonsLayout.addSpacing(70)
 
         self.pauseButton2 = QtWidgets.QPushButton(self.signal2Viewer)
-        self.pauseButton2.setIcon(QtGui.QIcon("Assets/ControlsButtons/pause.png"))
+        self.pauseButton2.setIcon(QtGui.QIcon("Signal-Viewer-Team18/GUI/Assets/ControlsButtons/pause.png"))
         self.pauseButton2.setStyleSheet(signalControlButtonStyle)
         self.pauseButton2.clicked.connect(self.pauseActionChannel2)
         self.Signal2buttonsLayout.addWidget(self.pauseButton2)
 
         self.playButton2 = QtWidgets.QPushButton(self.signal2Viewer)
-        self.playButton2.setIcon(QtGui.QIcon("Assets/ControlsButtons/play.png"))
+        self.playButton2.setIcon(QtGui.QIcon("Signal-Viewer-Team18/GUI/Assets/ControlsButtons/play.png"))
         self.playButton2.setStyleSheet(signalControlButtonStyle)
         self.playButton2.clicked.connect(self.playActionChannel2)
         self.Signal2buttonsLayout.addWidget(self.playButton2)
 
         self.toStartButton2 = QtWidgets.QPushButton(self.signal2Viewer)
-        self.toStartButton2.setIcon(QtGui.QIcon("Assets/ControlsButtons/start.png"))
+        self.toStartButton2.setIcon(QtGui.QIcon("Signal-Viewer-Team18/GUI/Assets/ControlsButtons/start.png"))
         self.toStartButton2.setStyleSheet(signalControlButtonStyle)
         self.toStartButton2.clicked.connect(self.toStartAction2)
         self.Signal2buttonsLayout.addWidget(self.toStartButton2)
 
         self.toEndButton2 = QtWidgets.QPushButton(self.signal2Viewer)
-        self.toEndButton2.setIcon(QtGui.QIcon("Assets/ControlsButtons/end.png"))
+        self.toEndButton2.setIcon(QtGui.QIcon("Signal-Viewer-Team18/GUI/Assets/ControlsButtons/end.png"))
         self.toEndButton2.setStyleSheet(signalControlButtonStyle)
         self.toEndButton2.clicked.connect(self.toEndAction2)
         self.Signal2buttonsLayout.addWidget(self.toEndButton2)
 
         self.rewindButton2 = QtWidgets.QPushButton(self.signal2Viewer)
-        self.rewindButton2.setIcon(QtGui.QIcon("Assets/ControlsButtons/rewindOff.png"))
+        self.rewindButton2.setIcon(QtGui.QIcon("Signal-Viewer-Team18/GUI/Signal-Viewer-Team18/GUI/Assets/ControlsButtons/rewindOff.png"))
         self.rewindButton2.setStyleSheet(rewindOffButtonStyle)
         self.rewindButton2.setCheckable(True)
         self.rewindButton2.toggled.connect(self.toggleRewind2)
@@ -320,101 +320,246 @@ class Signals(QtWidgets.QWidget):  # Inheriting from QWidget instead of object
             self.rewindButton2.setStyleSheet(rewindOffButtonStyle) 
 
 
+# class SignalMainWindow(QtWidgets.QMainWindow):
+#     def __init__(self):
+#         super(SignalMainWindow, self).__init__()
+#         self.duration = 10  
+#         self.frames_per_second = 30  
+#         self.total_frames = self.duration * self.frames_per_second  
+#         self.current_frame1 = 0  
+#         self.is_paused1 = False  
+#         self.rewind_enabled1 = False
+
+#         self.current_frame2 = 0  
+#         self.is_paused2 = False  
+#         self.rewind_enabled2 = False
+         
+#         self.centralwidget = QtWidgets.QWidget(self)
+#         self.setCentralWidget(self.centralwidget)
+#         self.signals_widget = Signals()
+#         self.setCentralWidget(self.signals_widget)
+
+#         self.anim1 = FuncAnimation(self.signals_widget.canvas1.figure, self.update_signal1, frames=self.total_frames, interval=33, blit=False)
+#         self.anim2 = FuncAnimation(self.signals_widget.canvas1.figure, self.update_signal2, frames=self.total_frames, interval=33, blit=False)
+        
+#         self.default_path = 'Signal-Viewer-Team18\signals_data\ECG_Abnormal.csv'
+#         self.default_signal = DataLoader(self.default_path).get_data()
+#         self.init_plot(self.default_signal ,3)
+
+
+    # @QtCore.pyqtSlot(pd.DataFrame, int)    
+    # def init_plot(self, signal_data, selectedChannel):
+        
+    #     time = signal_data.iloc[:, 0]
+    #     amplitude = signal_data.iloc[:, 1]
+
+    #     print(signal_data, selectedChannel)
+        
+    #     if selectedChannel == 1:
+    #         self.update_canvas(self.signals.canvas1, time, amplitude)
+    #         self.anim1 = FuncAnimation(self.signals.canvas1.figure, self.animate_cine_mode, frames=len(time),
+    #                                    interval=100, fargs=(self.signals.canvas1, time, amplitude))
+    #     elif selectedChannel == 2:
+    #         self.update_canvas(self.signals.canvas2, time, amplitude)
+    #         self.anim2 = FuncAnimation(self.signals.canvas2.figure, self.animate_cine_mode, frames=len(time),
+    #                                    interval=100, fargs=(self.signals.canvas2, time, amplitude))
+    #     else:
+    #         # If unspecified, update both canvases with the same signal
+    #         self.update_canvas(self.signals.canvas1, time, amplitude)
+    #         self.anim1 = FuncAnimation(self.signals.canvas1.figure, self.animate_cine_mode, frames=len(time),
+    #                                    interval=100, fargs=(self.signals.canvas1, time, amplitude))
+    #         self.update_canvas(self.signals.canvas2, time, amplitude)
+    #         self.anim2 = FuncAnimation(self.signals.canvas2.figure, self.animate_cine_mode, frames=len(time),
+    #                                    interval=100, fargs=(self.signals.canvas2, time, amplitude))
 class SignalMainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(SignalMainWindow, self).__init__()
-        self.signals = Signals()
-        self.setCentralWidget(self.signals)
-        self.default_path = 'signals_data/ECG_Abnormal.csv'
+
+        # Animation settings
+        self.duration = 10  
+        self.frames_per_second = 30  
+        self.total_frames = self.duration * self.frames_per_second  
+
+        # Initialize variables for channel 1
+        self.current_frame1 = 0  
+        self.is_paused1 = False  
+        self.rewind_enabled1 = False
+        self.total_frames1 = self.total_frames
+
+        # Initialize variables for channel 2
+        self.current_frame2 = 0  
+        self.is_paused2 = False  
+        self.rewind_enabled2 = False
+        self.total_frames2 = self.total_frames
+
+        # Set up central widget and signal display
+        self.centralwidget = QtWidgets.QWidget(self)
+        self.setCentralWidget(self.centralwidget)
+        self.signals_widget = Signals()
+        self.setCentralWidget(self.signals_widget)
+
+        # Create FuncAnimation objects for both channels
+        self.anim1 = FuncAnimation(self.signals_widget.canvas1.figure, self.update_signal1, frames=self.total_frames1, interval=33, blit=False)
+        self.anim2 = FuncAnimation(self.signals_widget.canvas2.figure, self.update_signal2, frames=self.total_frames2, interval=33, blit=False)
+
+        # Load default signal data
+        self.default_path = 'Signal-Viewer-Team18/signals_data/ECG_Abnormal.csv'
         self.default_signal = DataLoader(self.default_path).get_data()
-        self.init_plot(self.default_signal ,3)
+
+        # Initialize the plot with the default signal and update both canvases
+        self.init_plot(self.default_signal, 3)
 
     @QtCore.pyqtSlot(pd.DataFrame, int)    
     def init_plot(self, signal_data, selectedChannel):
-        
+        """Initialize the plot and set up the signal data for animation."""
+
+        # Extract time and amplitude data from the DataFrame
         time = signal_data.iloc[:, 0]
         amplitude = signal_data.iloc[:, 1]
 
+        # Print for debugging
         print(signal_data, selectedChannel)
         
+        # Assign signal and time data based on the selected channel
         if selectedChannel == 1:
-            self.update_canvas(self.signals.canvas1, time, amplitude)
-            self.anim1 = FuncAnimation(self.signals.canvas1.figure, self.animate_cine_mode, frames=len(time),
-                                       interval=100, fargs=(self.signals.canvas1, time, amplitude))
+            # Update channel 1 data
+            self.t = time
+            self.signal1 = amplitude
+            self.total_frames1 = len(time)
+            self.current_frame1 = 0  # Reset current frame for channel 1
+            self.is_paused1 = False  # Reset pause flag
+            self.rewind_enabled1 = False  # Reset rewind flag
+
+            # Update canvas for channel 1
+            self.update_canvas(self.signals_widget.canvas1, time, amplitude)
+
+            # Update FuncAnimation for channel 1 with the new signal
+            self.anim1 = FuncAnimation(self.signals_widget.canvas1.figure, self.update_signal1, frames=self.total_frames1, interval=33, blit=False)
+        
         elif selectedChannel == 2:
-            self.update_canvas(self.signals.canvas2, time, amplitude)
-            self.anim2 = FuncAnimation(self.signals.canvas2.figure, self.animate_cine_mode, frames=len(time),
-                                       interval=100, fargs=(self.signals.canvas2, time, amplitude))
+            # Update channel 2 data
+            self.t = time
+            self.signal2 = amplitude
+            self.total_frames2 = len(time)
+            self.current_frame2 = 0  # Reset current frame for channel 2
+            self.is_paused2 = False  # Reset pause flag
+            self.rewind_enabled2 = False  # Reset rewind flag
+
+            # Update canvas for channel 2
+            self.update_canvas(self.signals_widget.canvas2, time, amplitude)
+
+            # Update FuncAnimation for channel 2 with the new signal
+            self.anim2 = FuncAnimation(self.signals_widget.canvas2.figure, self.update_signal2, frames=self.total_frames2, interval=33, blit=False)
+        
         else:
             # If unspecified, update both canvases with the same signal
-            self.update_canvas(self.signals.canvas1, time, amplitude)
-            self.anim1 = FuncAnimation(self.signals.canvas1.figure, self.animate_cine_mode, frames=len(time),
-                                       interval=100, fargs=(self.signals.canvas1, time, amplitude))
-            self.update_canvas(self.signals.canvas2, time, amplitude)
-            self.anim2 = FuncAnimation(self.signals.canvas2.figure, self.animate_cine_mode, frames=len(time),
-                                       interval=100, fargs=(self.signals.canvas2, time, amplitude))
+            self.t = time
+            self.signal1 = amplitude
+            self.signal2 = amplitude
+            self.total_frames1 = len(time)
+            self.total_frames2 = len(time)
+            self.current_frame1 = 0  # Reset current frame for channel 1
+            self.current_frame2 = 0  # Reset current frame for channel 2
+            self.is_paused1 = False  # Reset pause flag
+            self.is_paused2 = False  # Reset pause flag
+            self.rewind_enabled1 = False  # Reset rewind flag
+            self.rewind_enabled2 = False  # Reset rewind flag
 
-    def animate_cine_mode(self, i, canvas, time, amplitude):
-        """Animate the signal in cine mode by looping over the data."""
-        # Define a window size for the data (number of points to display at once)
+            # Update FuncAnimation for both channels with the new signal
+            self.anim1 = FuncAnimation(
+                self.signals_widget.canvas1.figure,
+                lambda i: self.animate_cine_mode(i, self.signals_widget.canvas1, time, amplitude, 1),
+                frames=self.total_frames1,
+                interval=33,
+                blit=False
+            )
+
+            self.anim2 = FuncAnimation(
+                self.signals_widget.canvas2.figure,
+                lambda i: self.animate_cine_mode(i, self.signals_widget.canvas2, time, amplitude, 2),
+                frames=self.total_frames2,
+                interval=33,
+                blit=False
+            )
+
+    # def update_canvas(self, canvas, time, amplitude):
+    #     """Update the plot on the given canvas with the provided time and amplitude data."""
+    #     canvas.ax.clear()  # Clear the current plot
+    #     canvas.ax.plot(time, amplitude)  # Plot the new signal data
+    #     canvas.draw()  # Redraw the canvas with the updated plot
+
+    def animate_cine_mode(self, i, canvas, time, amplitude, channel):
+        """Animate the signal in cine mode with control options."""
         window_size = 100
+        current_frame = self.current_frame1 if channel == 1 else self.current_frame2
+        is_paused = self.is_paused1 if channel == 1 else self.is_paused2
+        rewind_enabled = self.rewind_enabled1 if channel == 1 else self.rewind_enabled2
+        total_frames = self.total_frames1 if channel == 1 else self.total_frames2
 
-        # Compute the start and end indices for the window
-        start_idx = i % len(time)
+        if not is_paused:
+            if rewind_enabled:
+                current_frame = (current_frame + 1) % total_frames
+            else:
+                current_frame = i
+                if current_frame >= total_frames - 1:
+                    if channel == 1:
+                        self.is_paused1 = True
+                    else:
+                        self.is_paused2 = True
+
+        start_idx = current_frame % len(time)
         end_idx = (start_idx + window_size) % len(time)
 
         if start_idx < end_idx:
             t_window = time[start_idx:end_idx]
             amp_window = amplitude[start_idx:end_idx]
         else:
-            # If the window wraps around the end of the signal
             t_window = np.concatenate((time[start_idx:], time[:end_idx]))
             amp_window = np.concatenate((amplitude[start_idx:], amplitude[:end_idx]))
 
-        # Update the plot with the new window of data
         canvas.update_plot(t_window, amp_window)
 
-    def update_canvas(self, canvas, t, signal):
-        """Update the plot with the entire signal (initial plot)."""
-        canvas.update_plot(t, signal)
+        if channel == 1:
+            self.current_frame1 = current_frame
+        else:
+            self.current_frame2 = current_frame
 
     def update_signal1(self, frame):
+        """Update signal for channel 1."""
         if not self.is_paused1:
             if self.rewind_enabled1:
-                self.current_frame1 = (frame + 1) % self.total_frames
+                self.current_frame1 = (frame + 1) % self.total_frames1
             else:
                 self.current_frame1 = frame
-                if self.current_frame1 >= self.total_frames - 1:  
+                if self.current_frame1 >= self.total_frames1 - 1:
                     self.is_paused1 = True
 
-        
         self.signals_widget.canvas1.update_plot(self.t[:self.current_frame1], self.signal1[:self.current_frame1])
 
     def update_signal2(self, frame):
+        """Update signal for channel 2."""
         if not self.is_paused2:
             if self.rewind_enabled2:
-                self.current_frame2 = (frame + 1) % self.total_frames
+                self.current_frame2 = (frame + 1) % self.total_frames2
             else:
                 self.current_frame2 = frame
-                if self.current_frame2 >= self.total_frames - 1:  
+                if self.current_frame2 >= self.total_frames2 - 1:
                     self.is_paused2 = True
 
-   
         self.signals_widget.canvas2.update_plot(self.t[:self.current_frame2], self.signal2[:self.current_frame2])
 
     def reset_signal_animation(self, channel):
         """Resets the animation to start over for the specified channel."""
         if channel == 1:
-            self.current_frame1 = 0  
-            self.is_paused1 = False  
-            self.anim1.event_source.stop()  
-            self.anim1.event_source.start()  
+            self.current_frame1 = 0
+            self.is_paused1 = False
+            self.anim1.event_source.stop()
+            self.anim1.event_source.start()
         elif channel == 2:
-            self.current_frame2 = 0  
-            self.is_paused2 = False  
-            self.anim2.event_source.stop()  
-            self.anim2.event_source.start()  
-
+            self.current_frame2 = 0
+            self.is_paused2 = False
+            self.anim2.event_source.stop()
+            self.anim2.event_source.start()
 
 
 if __name__ == "__main__":
