@@ -11,7 +11,7 @@ from tool_bar import ToolBar  # Import the panel class
 from right_panel import RightPanel
 from Styles import menuBarStyle, toolBarStyle
 from channels import Channels
-from signals import Signals
+
 from signals import SignalMainWindow
 from PyQt5.QtCore import pyqtSignal
 
@@ -19,7 +19,7 @@ from PyQt5.QtCore import pyqtSignal
 class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
-
+        
         # Set window properties
         self.setWindowTitle("Demo UI")
         self.resize(2000, 980)
@@ -33,24 +33,12 @@ class MainWindow(QWidget):
         self.ImportSignal = Channels()
         self.properties.setMinimumWidth(int(.2*1440))
         self.signalViewer = SignalMainWindow()
+        self.toolBar.signals=self.signalViewer
 
         self.ImportSignal.signal_data_ready.connect(self.signalViewer.init_plot)
 
         self.signalListTest = QWidget()
-        self.signalListTest.setStyleSheet("background-color: #FFD700;")  # Gold
-
-
-        self.channels = QWidget()
-        self.channels.setStyleSheet("background-color: #00FFFF;")  # Cyan
-
-        self.propTest = QWidget()
-        self.propTest.setStyleSheet("background-color: #90EE90;")  # Light Green
-
-        self.menBar = QWidget()
-        self.menBar.setStyleSheet("background-color: #FF0000;")  # Red
-
-        self.tlBar = QWidget()
-        self.tlBar.setStyleSheet("background-color: #808080;")  # Gray
+        
 
         self.menuBarLayout = QHBoxLayout()
         self.menuBarLayout.addWidget(self.menuBar)
