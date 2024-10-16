@@ -1,7 +1,8 @@
 import sys
 import pandas as pd
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QSizePolicy, QWidget, QSpacerItem, QFrame
+from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QSizePolicy, QWidget, QSpacerItem, QFrame, \
+    QLineEdit
 from PyQt5.QtGui import QIcon
 from Styles import boxStyle, signalControlButtonStyle, labelStyle, rewindOffButtonStyle, rewindOnButtonStyle
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas, NavigationToolbar2QT as NavigationToolbar
@@ -117,11 +118,12 @@ class Signals(QtWidgets.QWidget):  # Inheriting from QWidget instead of object
         self.signal1Title.setStyleSheet("color: #87EDF1; font-size:15px;")
         self.titleToolbarLayout1.addWidget(self.signal1Title)
         
-        self.signal1TitleEdit = QPushButton(self.signal1Viewer)
-        self.signal1TitleEdit.setIcon(QtGui.QIcon("photos/edit.png"))
-        self.signal1TitleEdit.setStyleSheet("background-color: #2D2D2D; border: none;")
-        self.signal1TitleEdit.setFixedSize(20, 20)
-        self.titleToolbarLayout1.addWidget(self.signal1TitleEdit)
+        self.signal1TitleEditButton = QPushButton(self.signal1Viewer)
+        self.signal1TitleEditButton.setIcon(QtGui.QIcon("photos/edit.png"))
+        self.signal1TitleEditButton.setStyleSheet("background-color: #2D2D2D; border: none;")
+        self.signal1TitleEditButton.setFixedSize(20, 20)
+        self.signal1TitleEditButton.clicked.connect(lambda: self.editTitle(self.signal1Title, self.titleToolbarLayout1))
+        self.titleToolbarLayout1.addWidget(self.signal1TitleEditButton)
 
         
         self.signal1PlotLayout.addLayout(self.titleToolbarLayout1, stretch=1)  
@@ -200,11 +202,12 @@ class Signals(QtWidgets.QWidget):  # Inheriting from QWidget instead of object
         self.signal2Title.setStyleSheet("color: #87EDF1; font-size:15px;")
         self.titleToolbarLayout2.addWidget(self.signal2Title)
 
-        self.signal2TitleEdit = QPushButton(self.signal2Viewer)
-        self.signal2TitleEdit.setIcon(QtGui.QIcon("photos/edit.png"))
-        self.signal2TitleEdit.setStyleSheet("background-color: #2D2D2D; border: none;")
-        self.signal2TitleEdit.setFixedSize(20, 20)
-        self.titleToolbarLayout2.addWidget(self.signal2TitleEdit)
+        self.signal2TitleEditButton = QPushButton(self.signal2Viewer)
+        self.signal2TitleEditButton.setIcon(QtGui.QIcon("photos/edit.png"))
+        self.signal2TitleEditButton.setStyleSheet("background-color: #2D2D2D; border: none;")
+        self.signal2TitleEditButton.setFixedSize(20, 20)
+        self.signal2TitleEditButton.clicked.connect(lambda: self.editTitle(self.signal2Title, self.titleToolbarLayout2))
+        self.titleToolbarLayout2.addWidget(self.signal2TitleEditButton)
 
         spacer = QSpacerItem(1000, 0, QSizePolicy.Fixed, QSizePolicy.Minimum)
         self.titleToolbarLayout2.addSpacerItem(spacer)
@@ -318,6 +321,37 @@ class Signals(QtWidgets.QWidget):  # Inheriting from QWidget instead of object
             self.rewindButton2.setStyleSheet(rewindOnButtonStyle) 
         else:
             self.rewindButton2.setStyleSheet(rewindOffButtonStyle) 
+    def editTitle(self, label, layout):
+        edit_line = QLineEdit(label.text(), self.signal1Viewer)
+
+        edit_line.setMaxLength(12)
+
+        edit_line.setStyleSheet("color: #EFEFEF; font-size:15px; background-color:#2D2D2D;")
+
+        def save_changes():
+            new_text = edit_line.text()
+
+            label.setText(new_text)
+
+            layout.replaceWidget(edit_line, label)
+
+            edit_line.deleteLater()
+
+        edit_line.returnPressed.connect(save_changes)
+
+        edit_line.setFocus()
+
+        layout.replaceWidget(label, edit_line)
+
+        # Add a focus out event handler to restore the QLabel state
+
+        def on_focus_out(event):
+            if event.reason() == QtCore.Qt.FocusReason.LostFocus:
+                layout.replaceWidget(edit_line, label)
+
+                edit_line.deleteLater()
+
+        edit_line.focusOutEvent = on_focus_out
 
 
 class SignalMainWindow(QtWidgets.QMainWindow):
@@ -325,7 +359,7 @@ class SignalMainWindow(QtWidgets.QMainWindow):
         super(SignalMainWindow, self).__init__()
         self.signals = Signals()
         self.setCentralWidget(self.signals)
-        self.default_path = 'signals_data/ECG_Abnormal.csv'
+        self.default_path = 'D:\Faculty\SBE 24-25\DSP\Final\Signal-Viewer-Team18\signals_data\ECG_Abnormal.csv'
         self.default_signal = DataLoader(self.default_path).get_data()
         self.init_plot(self.default_signal ,3)
 
