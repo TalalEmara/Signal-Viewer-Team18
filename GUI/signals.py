@@ -386,7 +386,7 @@ class SignalMainWindow(QtWidgets.QMainWindow):
         self.anim2 = FuncAnimation(self.signals_widget.canvas2.figure, self.update_signal2, frames=self.total_frames2, interval=33, blit=False)
 
         # Load default signal data
-        self.default_path = 'Signal-Viewer-Team18/signals_data/ECG_Normal.csv'
+        self.default_path = '../signals_data/ECG_Normal.csv'
         self.default_signal = DataLoader(self.default_path).get_data()
 
         # Initialize the plot with the default signal and update both canvases
