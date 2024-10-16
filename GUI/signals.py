@@ -25,7 +25,8 @@ class MplCanvas(FigureCanvas):
         self.ax.set_facecolor('#242424')
 
         self.line, = self.ax.plot([], [], color=signal_color, lw=2)
-        
+        self.ax.set_ylim(-0.5, 0.1)
+
         self.ax.tick_params(axis='x', colors='#EFEFEF')
         self.ax.tick_params(axis='y', colors='#EFEFEF')
         self.ax.xaxis.label.set_color('#EFEFEF')
@@ -353,7 +354,6 @@ class Signals(QtWidgets.QWidget):  # Inheriting from QWidget instead of object
 
         edit_line.focusOutEvent = on_focus_out
 
-
 class SignalMainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(SignalMainWindow, self).__init__()
@@ -386,7 +386,7 @@ class SignalMainWindow(QtWidgets.QMainWindow):
         self.anim2 = FuncAnimation(self.signals_widget.canvas2.figure, self.update_signal2, frames=self.total_frames2, interval=33, blit=False)
 
         # Load default signal data
-        self.default_path = 'Signal-Viewer-Team18/signals_data/ECG_Abnormal.csv'
+        self.default_path = 'Signal-Viewer-Team18/signals_data/ECG_Normal.csv'
         self.default_signal = DataLoader(self.default_path).get_data()
 
         # Initialize the plot with the default signal and update both canvases
@@ -493,13 +493,17 @@ class SignalMainWindow(QtWidgets.QMainWindow):
         else:
             t_window = np.concatenate((time[start_idx:], time[:end_idx]))
             amp_window = np.concatenate((amplitude[start_idx:], amplitude[:end_idx]))
-
+            
         canvas.update_plot(t_window, amp_window)
 
         if channel == 1:
             self.current_frame1 = current_frame
         else:
             self.current_frame2 = current_frame
+
+    def update_canvas(self, canvas, t, signal):
+        """Update the plot with the entire signal (initial plot)."""
+        canvas.update_plot(t, signal)
 
     def update_signal1(self, frame):
         """Update signal for channel 1."""
@@ -524,7 +528,7 @@ class SignalMainWindow(QtWidgets.QMainWindow):
                     self.is_paused2 = True
 
         self.signals_widget.canvas2.update_plot(self.t[:self.current_frame2], self.signal2[:self.current_frame2])
-
+    
     def reset_signal_animation(self, channel):
         """Resets the animation to start over for the specified channel."""
         if channel == 1:
