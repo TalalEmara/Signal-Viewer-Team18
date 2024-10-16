@@ -2,7 +2,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QPushButton, QLabel, QHBoxLayout, QVBoxLayout, QCheckBox, QWidget, QSizePolicy
 from PyQt5.QtGui import QIcon
 from Styles import boxStyle, signalControlButtonStyle, labelStyle, rewindOffButtonStyle, rewindOnButtonStyle, linkedButtonOffStyle, linkedButtonOnStyle
-
+from Core.Dynamic_polar import MainWindow as NonRectangularWindow
 
 class ToolBar(QWidget):
     def __init__(self):
@@ -125,11 +125,16 @@ class ToolBar(QWidget):
         #self.linkedLabel = QLabel("Linked")
         #self.linkedLabel.setStyleSheet(labelStyle)
 
-
         self.linkedButton = QPushButton("Linked")
         self.linkedButton.setStyleSheet(linkedButtonOnStyle)
-        self.isLinked =True
+        self.isLinked = True
         self.linkedButton.clicked.connect(lambda: self.handleLinkedClick())
+        
+        self.nonRectangleButton = QPushButton("Non-Rectangular View")
+        self.nonRectangleButton.setStyleSheet(linkedButtonOnStyle)
+        self.nonRectangleButton.clicked.connect(lambda: self.handleNonRectangularClick())
+        self.nonRectangleButton.pressed.connect(lambda: self.nonRectangleButton.setStyleSheet("background-color: #efefef; font-family: Sofia sans; font-weight: semiBold;font-size: 20px;"))
+        self.nonRectangleButton.released.connect(lambda: self.nonRectangleButton.setStyleSheet(linkedButtonOnStyle))
 
         #self.channel2LinkOption = QPushButton("Channel 2")
 
@@ -143,11 +148,12 @@ class ToolBar(QWidget):
         #linkedGroupLayout.addWidget(self.channel2LinkOption)
 
         linkedGroupLayout.addWidget(self.linkedButton)
+        linkedGroupLayout.addWidget(self.nonRectangleButton)
 
         toolBarLayout = QHBoxLayout()
         toolBarLayout.addWidget(signalControl,30)
-        toolBarLayout.addWidget(toolBox,30)
-        toolBarLayout.addWidget(linkedGroup,10)
+        toolBarLayout.addWidget(toolBox,20)
+        toolBarLayout.addWidget(linkedGroup,20)
 
         self.setLayout(toolBarLayout)
 
@@ -183,3 +189,7 @@ class ToolBar(QWidget):
 
     def handleButtonRelease(self, button):
         button.setStyleSheet(signalControlButtonStyle)
+
+    def handleNonRectangularClick(self):
+        nonRectangularView = NonRectangularWindow()
+        nonRectangularView.show()

@@ -15,6 +15,16 @@ class MplCanvas(FigureCanvas):
     def __init__(self, parent=None, width=5, height=4, dpi=100):
         fig = Figure(figsize=(width, height), dpi=dpi)
         self.ax = fig.add_subplot(111, projection='polar')
+        fig.patch.set_facecolor('#242424')
+        self.ax.set_facecolor('#242424')
+        self.ax.set_title("Polar Plot", color='#EFEFEF')
+        self.ax.spines['polar'].set_color('#EFEFEF')
+        self.ax.grid(color='#EFEFEF', linestyle='dashed', linewidth=0.2)
+        self.ax.tick_params(axis='x', colors='#EFEFEF')
+        self.ax.tick_params(axis='y', colors='#EFEFEF')
+
+
+
         super(MplCanvas, self).__init__(fig)
 
 
@@ -38,6 +48,8 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
+        self.setStyleSheet("background-color:#242424; color: #efefef;")
+
         # Load the data from CSV
         self.csv_file_path = '../signals_data/EMG_Normal.csv'
         self.data_loader = Data_load.DataLoader(self.csv_file_path)
@@ -45,7 +57,7 @@ class MainWindow(QMainWindow):
         self.data = self.data_loader.get_data().values  # Convert to NumPy array
 
 
-        self.canvas = MplCanvas(self, width=5, height=4, dpi=100)
+        self.canvas = MplCanvas(self, width=5, height=6, dpi=100)
         self.init_plot()
 
 
@@ -70,7 +82,7 @@ class MainWindow(QMainWindow):
         self.ani = FuncAnimation(self.canvas.figure, self.update_plot, interval=100, blit=False)
 
     def init_plot(self):
-        self.polar_line, = self.canvas.ax.plot([], [], marker='o')
+        self.polar_line, = self.canvas.ax.plot([], [], marker='.')
         self.canvas.ax.set_title('Polar Plot of Signal Data')
 
         if self.data is not None:
@@ -103,9 +115,4 @@ class MainWindow(QMainWindow):
     def stop_signal(self):
         self.running = False
 
-
-app = QApplication(sys.argv)
-window = MainWindow()
-window.show()
-sys.exit(app.exec_())
 
