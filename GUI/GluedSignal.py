@@ -41,17 +41,17 @@ class MplCanvas(FigureCanvas):
 
         for action in self.navToolbar.actions():
             if action.text() == 'Home':
-                action.setIcon(QIcon('photos/home.png'))
+                action.setIcon(QIcon('E:\Programming programs\Web dev\Signal-Viewer-Team18\GUI\photos/home.png'))
             elif action.text() == 'Pan':
-                action.setIcon(QIcon('photos/pan.png'))
+                action.setIcon(QIcon('E:\Programming programs\Web dev\Signal-Viewer-Team18\GUI\photos/pan.png'))
             elif action.text() == 'Zoom':
-                action.setIcon(QIcon('photos/zoomIn.png'))
+                action.setIcon(QIcon('E:\Programming programs\Web dev\Signal-Viewer-Team18\GUI\photos\zoomIn.png'))
             elif action.text() == 'Save':
-                action.setIcon(QIcon('photos/save.png'))
+                action.setIcon(QIcon('E:\Programming programs\Web dev\Signal-Viewer-Team18\GUI\photos/save.png'))
 
         # Add the zoom-out button to the toolbar layout, right beside the toolbar
         self.zoomOutButton = QPushButton("", parent)
-        self.zoomOutButton.setIcon(QtGui.QIcon("photos/zoomOut.png"))
+        self.zoomOutButton.setIcon(QtGui.QIcon("E:\Programming programs\Web dev\Signal-Viewer-Team18\GUI\photos/zoomOut.png"))
         self.zoomOutButton.setStyleSheet("background-color: #242424; color: #FFFFFF; border: none;")
         self.zoomOutButton.setFixedSize(25, 25)
         self.zoomOutButton.clicked.connect(self.zoom_out)
@@ -182,37 +182,37 @@ class GluedSignals(QtWidgets.QMainWindow):
         self.pauseButton = QtWidgets.QPushButton(self.GluedSignal)
         self.pauseButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         self.pauseButton.setStyleSheet(signalControlButtonStyle)
-        self.pauseButton.setIcon(QtGui.QIcon("Assets/ControlsButtons/pause.png"))
+        self.pauseButton.setIcon(QtGui.QIcon("E:\Programming programs\Web dev\Signal-Viewer-Team18\GUI\Assets/ControlsButtons/pause.png"))
         self.GluedSignalbuttonsLayout.addWidget(self.pauseButton)
 
         self.playButton = QtWidgets.QPushButton(self.GluedSignal)
         self.playButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         self.playButton.setStyleSheet(signalControlButtonStyle)
-        self.playButton.setIcon(QtGui.QIcon("Assets/ControlsButtons/play.png"))
+        self.playButton.setIcon(QtGui.QIcon("E:\Programming programs\Web dev\Signal-Viewer-Team18\GUI\Assets/ControlsButtons/play.png"))
         self.GluedSignalbuttonsLayout.addWidget(self.playButton)
 
         self.stopButton = QtWidgets.QPushButton(self.GluedSignal)
         self.stopButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         self.stopButton.setStyleSheet(signalControlButtonStyle)
-        self.stopButton.setIcon(QtGui.QIcon("Assets/ControlsButtons/stop.png"))
+        self.stopButton.setIcon(QtGui.QIcon("E:\Programming programs\Web dev\Signal-Viewer-Team18\GUI\Assets/ControlsButtons/stop.png"))
         self.GluedSignalbuttonsLayout.addWidget(self.stopButton)
 
         self.toStartButton = QtWidgets.QPushButton(self.GluedSignal)
         self.toStartButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         self.toStartButton.setStyleSheet(signalControlButtonStyle)
-        self.toStartButton.setIcon(QtGui.QIcon("Assets/ControlsButtons/start.png"))
+        self.toStartButton.setIcon(QtGui.QIcon("E:\Programming programs\Web dev\Signal-Viewer-Team18\GUI\Assets/ControlsButtons/start.png"))
         self.GluedSignalbuttonsLayout.addWidget(self.toStartButton)
 
         self.toEndButton = QtWidgets.QPushButton(self.GluedSignal)
         self.toEndButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         self.toEndButton.setStyleSheet(signalControlButtonStyle)
-        self.toEndButton.setIcon(QtGui.QIcon("Assets/ControlsButtons/end.png"))
+        self.toEndButton.setIcon(QtGui.QIcon("E:\Programming programs\Web dev\Signal-Viewer-Team18\GUI\Assets\ControlsButtons\end.png"))
         self.GluedSignalbuttonsLayout.addWidget(self.toEndButton)
 
         self.rewindButton = QtWidgets.QPushButton(self.GluedSignal)
         self.rewindButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         self.rewindButton.setStyleSheet(rewindOffButtonStyle)
-        self.rewindButton.setIcon(QtGui.QIcon("Assets/ControlsButtons/rewindOff.png"))
+        self.rewindButton.setIcon(QtGui.QIcon("E:\Programming programs\Web dev\Signal-Viewer-Team18\GUI\Assets/ControlsButtons/rewindOff.png"))
         self.GluedSignalbuttonsLayout.addWidget(self.rewindButton)
 
         self.GluedSignalbuttonsLayout.addStretch()

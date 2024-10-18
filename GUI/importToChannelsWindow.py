@@ -1,5 +1,7 @@
 from PyQt5 import QtCore, QtWidgets
 
+
+
 class ImportToChannelsWindow(QtWidgets.QMainWindow):
     fileSelected = QtCore.pyqtSignal(str, int)  
     signalAdded = QtCore.pyqtSignal(str, int)   
@@ -53,42 +55,47 @@ class ImportToChannelsWindow(QtWidgets.QMainWindow):
 
         self.ImportTab.addTab(self.fileTab, "File")
 
+
         self.liveTab = QtWidgets.QWidget()
         self.liveTab.setObjectName("liveTab")
 
+        # Create a vertical layout for the liveTab
+        layout = QtWidgets.QVBoxLayout(self.liveTab)
+
         self.chooseToImportLabel_2 = QtWidgets.QLabel(self.liveTab)
-        self.chooseToImportLabel_2.setGeometry(QtCore.QRect(70, 20, 151, 16))
         self.chooseToImportLabel_2.setStyleSheet("color: #87EDF1; font-size:15px;")
         self.chooseToImportLabel_2.setText("Write link of live signal")
+        layout.addWidget(self.chooseToImportLabel_2)  # Add to layout
 
         self.ImportLiveSignal = QtWidgets.QTextEdit(self.liveTab)
-        self.ImportLiveSignal.setGeometry(QtCore.QRect(32, 50, 231, 21))  
-        self.ImportLiveSignal.setStyleSheet("background-color:white; border: none;")  
-        self.ImportLiveSignal.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)  
+        self.ImportLiveSignal.setStyleSheet("background-color:white; border: none;")
+        self.ImportLiveSignal.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.ImportLiveSignal.setFixedHeight(25)  # Set fixed height to resemble QLineEdit
+        layout.addWidget(self.ImportLiveSignal)  # Add to layout
 
-        self.importedInLabel_2 = QtWidgets.QLabel(self.liveTab)
-        self.importedInLabel_2.setGeometry(QtCore.QRect(80, 100, 121, 20))  
-        self.importedInLabel_2.setStyleSheet("color: #87EDF1; font-size:15px;")
-        self.importedInLabel_2.setText("To be imported in ")
+       
 
-        self.checkBoxChannel1_2 = QtWidgets.QCheckBox(self.liveTab)
-        self.checkBoxChannel1_2.setGeometry(QtCore.QRect(110, 130, 100, 20)) 
-        self.checkBoxChannel1_2.setStyleSheet("color: #87EDF1;")
-        self.checkBoxChannel1_2.setText("Channel 1")
+        
 
-        self.checkBoxChannel2_2 = QtWidgets.QCheckBox(self.liveTab)
-        self.checkBoxChannel2_2.setGeometry(QtCore.QRect(110, 160, 100, 20)) 
-        self.checkBoxChannel2_2.setStyleSheet("color: #87EDF1;")
-        self.checkBoxChannel2_2.setText("Channel 2")
 
+        # Add an "OK" button
+        self.okButton = QtWidgets.QPushButton(self.liveTab)
+        self.okButton.setStyleSheet("background-color: #87EDF1; color: #0D0D0D; border: none; border-radius: 5px;")
+        self.okButton.setText("OK")
+        layout.addWidget(self.okButton)  # Add to layout
+
+        # Connect the "OK" button to the handleLiveSignalImport function
+        self.okButton.clicked.connect(self.handleLiveSignalImport)
+
+        # Add the tab to the ImportTab
         self.ImportTab.addTab(self.liveTab, "Live")
 
         if self.default_channel == 1:
             self.checkBoxChannel1.setChecked(True)
-            self.checkBoxChannel1_2.setChecked(True)
+           
         elif self.default_channel == 2:
             self.checkBoxChannel2.setChecked(True)
-            self.checkBoxChannel2_2.setChecked(True)
+           
     
     def importFromFile(self):
         options = QtWidgets.QFileDialog.Options()
@@ -98,17 +105,16 @@ class ImportToChannelsWindow(QtWidgets.QMainWindow):
 
         if filePath:
             self.fileSelected.emit(filePath, selectedChannel)
-            
-
 
     def handleLiveSignalImport(self):
-        liveSignal = self.ImportLiveSignal.toPlainText() 
+        liveSignal = self.ImportLiveSignal.toPlainText()
         print(liveSignal)
 
-        selectedChannel = 1 if self.checkBoxChannel1_2.isChecked() else 2
+       
 
         if liveSignal:
-            self.signalAdded.emit(liveSignal, selectedChannel)
+            self.signalAdded.emit(liveSignal)
+            plot_live_data(liveSignal)
 
 if __name__ == "__main__":
     import sys
