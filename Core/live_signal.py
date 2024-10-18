@@ -20,7 +20,7 @@ from matplotlib.ticker import MaxNLocator
 
 #         ax.clear()  # Clear the plot for live updating
 #         ax.plot(times, speeds, label='kp index', color='blue')
-        
+
 #         ax.xaxis.set_major_locator(MaxNLocator(nbins=100))  # Maximum of 10 ticks on the x-axis
 
 #         ax.set_xlabel('Time')
@@ -39,6 +39,7 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
 from datetime import datetime
 import time
+
 
 # Function to fetch and process the live solar wind data
 def Live_signal(url):
@@ -66,6 +67,7 @@ def Live_signal(url):
         kp_values.append(entry['estimated_kp'])  # Appending the kp value
 
     return time_strings, kp_values, date
+
 
 # Function to live plot the solar wind data
 def plot_live_data(url_live):
@@ -104,6 +106,5 @@ def plot_live_data(url_live):
             plt.pause(120)  # Pause for a brief moment to allow the plot to update
     except KeyboardInterrupt:
         print("Plotting stopped by user.")
-
 
 # plot_live_data(url_live)

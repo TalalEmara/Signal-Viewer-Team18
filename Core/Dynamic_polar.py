@@ -51,7 +51,7 @@ class MainWindow(QMainWindow):
         self.setStyleSheet("background-color:#242424; color: #efefef;")
 
         # Load the data from CSV
-        self.csv_file_path = '../signals_data/EMG_Normal.csv'
+        self.csv_file_path = 'E:\Programming programs\Web dev\Signal-Viewer-Team18\signals_data\EMG_Normal.csv'
         self.data_loader = Data_load.DataLoader(self.csv_file_path)
         self.data_loader.load_data()
         self.data = self.data_loader.get_data().values  # Convert to NumPy array

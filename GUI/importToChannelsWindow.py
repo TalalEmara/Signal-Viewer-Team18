@@ -1,11 +1,14 @@
 from PyQt5 import QtCore, QtWidgets
 
+<<<<<<< HEAD
+=======
 from Core.live_signal import plot_live_data
+>>>>>>> f6db941ac083c6585a92c4137c2b689942d1c778
 
 
 class ImportToChannelsWindow(QtWidgets.QMainWindow):
-    fileSelected = QtCore.pyqtSignal(str, int)  
-    signalAdded = QtCore.pyqtSignal(str, int)   
+    fileSelected = QtCore.pyqtSignal(str, int)
+    signalAdded = QtCore.pyqtSignal(str, int)
 
     def __init__(self, default_channel=1, parent=None):
         super().__init__(parent)
@@ -35,22 +38,23 @@ class ImportToChannelsWindow(QtWidgets.QMainWindow):
 
         self.importFromFiles = QtWidgets.QPushButton(self.fileTab)
         self.importFromFiles.setGeometry(QtCore.QRect(80, 50, 131, 20))
-        self.importFromFiles.setStyleSheet("background-color: #87EDF1; color: #0D0D0D; border: none; border-radius: 5px;")
+        self.importFromFiles.setStyleSheet(
+            "background-color: #87EDF1; color: #0D0D0D; border: none; border-radius: 5px;")
         self.importFromFiles.setText("Files")
         self.importFromFiles.clicked.connect(self.importFromFile)
 
         self.importedInLabel = QtWidgets.QLabel(self.fileTab)
-        self.importedInLabel.setGeometry(QtCore.QRect(80, 100, 121, 20)) 
+        self.importedInLabel.setGeometry(QtCore.QRect(80, 100, 121, 20))
         self.importedInLabel.setStyleSheet("color: #87EDF1; font-size:15px;")
         self.importedInLabel.setText("To be imported in ")
 
         self.checkBoxChannel1 = QtWidgets.QCheckBox(self.fileTab)
-        self.checkBoxChannel1.setGeometry(QtCore.QRect(110, 130, 100, 20)) 
+        self.checkBoxChannel1.setGeometry(QtCore.QRect(110, 130, 100, 20))
         self.checkBoxChannel1.setStyleSheet("color: #87EDF1;")
         self.checkBoxChannel1.setText("Channel 1")
 
         self.checkBoxChannel2 = QtWidgets.QCheckBox(self.fileTab)
-        self.checkBoxChannel2.setGeometry(QtCore.QRect(110, 160, 100, 20))  
+        self.checkBoxChannel2.setGeometry(QtCore.QRect(110, 160, 100, 20))
         self.checkBoxChannel2.setStyleSheet("color: #87EDF1;")
         self.checkBoxChannel2.setText("Channel 2")
 
@@ -74,6 +78,12 @@ class ImportToChannelsWindow(QtWidgets.QMainWindow):
         self.ImportLiveSignal.setFixedHeight(25)  # Set fixed height to resemble QLineEdit
         layout.addWidget(self.ImportLiveSignal)  # Add to layout
 
+<<<<<<< HEAD
+       
+
+        
+
+=======
         self.importedInLabel_2 = QtWidgets.QLabel(self.liveTab)
         self.importedInLabel_2.setStyleSheet("color: #87EDF1; font-size:15px;")
         self.importedInLabel_2.setText("To be imported in ")
@@ -88,6 +98,7 @@ class ImportToChannelsWindow(QtWidgets.QMainWindow):
         self.checkBoxChannel2_2.setStyleSheet("color: #87EDF1;")
         self.checkBoxChannel2_2.setText("Channel 2")
         layout.addWidget(self.checkBoxChannel2_2)  # Add to layout
+>>>>>>> f6db941ac083c6585a92c4137c2b689942d1c778
 
         # Add an "OK" button
         self.okButton = QtWidgets.QPushButton(self.liveTab)
@@ -103,11 +114,16 @@ class ImportToChannelsWindow(QtWidgets.QMainWindow):
 
         if self.default_channel == 1:
             self.checkBoxChannel1.setChecked(True)
-            self.checkBoxChannel1_2.setChecked(True)
+           
         elif self.default_channel == 2:
             self.checkBoxChannel2.setChecked(True)
-            self.checkBoxChannel2_2.setChecked(True)
+<<<<<<< HEAD
+           
     
+=======
+            self.checkBoxChannel2_2.setChecked(True)
+
+>>>>>>> f6db941ac083c6585a92c4137c2b689942d1c778
     def importFromFile(self):
         options = QtWidgets.QFileDialog.Options()
         filePath, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Import File", "", "All Files (*)", options=options)
@@ -121,14 +137,21 @@ class ImportToChannelsWindow(QtWidgets.QMainWindow):
         liveSignal = self.ImportLiveSignal.toPlainText()
         print(liveSignal)
 
-        selectedChannel = 1 if self.checkBoxChannel1_2.isChecked() else 2
+       
 
         if liveSignal:
+<<<<<<< HEAD
+            self.signalAdded.emit(liveSignal)
+            plot_live_data(liveSignal)
+=======
             self.signalAdded.emit(liveSignal, selectedChannel)
             plot_live_data(liveSignal)
 
+>>>>>>> f6db941ac083c6585a92c4137c2b689942d1c778
+
 if __name__ == "__main__":
     import sys
+
     app = QtWidgets.QApplication(sys.argv)
     importToChannelsWindow = ImportToChannelsWindow()
     importToChannelsWindow.show()
