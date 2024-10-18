@@ -6,11 +6,13 @@ import os
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from Core.Dynamic_polar import MainWindow as NonRectangularWindow
+from signals import Signals
+from messageBar import MessageBar
 
 class ToolBar(QWidget):
     def __init__(self):
         super().__init__()
-
+        self.signals = Signals()
         # Signal controls and time
         self.timeLabel = QLabel("00:00")
         self.timeLabel.setAlignment(Qt.AlignCenter)
@@ -24,8 +26,10 @@ class ToolBar(QWidget):
         self.pauseButton = QPushButton()
         self.pauseButton.setStyleSheet(signalControlButtonStyle)
         self.pauseButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        self.pauseIcon = QIcon("Assets/ControlsButtons/pause.png")
+        self.pauseIcon = QIcon("E:\Programming programs\Web dev\Signal-Viewer-Team18\GUI\Assets\ControlsButtons\pause.png")
         self.pauseButton.setIcon(self.pauseIcon)
+        
+       
 
         self.pauseButton.pressed.connect(lambda: self.handleButtonPress(self.pauseButton))
         self.pauseButton.released.connect(lambda: self.handleButtonRelease(self.pauseButton))
@@ -33,28 +37,22 @@ class ToolBar(QWidget):
         self.playButton = QPushButton()
         self.playButton.setStyleSheet(signalControlButtonStyle)
         self.playButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        self.playIcon = QIcon("Assets/ControlsButtons/play.png")
+        self.playIcon = QIcon("E:\Programming programs\Web dev\Signal-Viewer-Team18\GUI\Assets/ControlsButtons/play.png")
         self.playButton.setIcon(self.playIcon)
+        
 
         self.playButton.pressed.connect(lambda: self.handleButtonPress(self.playButton))
         self.playButton.released.connect(lambda: self.handleButtonRelease(self.playButton))
 
-        self.stopButton = QPushButton()
-        self.stopButton.setStyleSheet(signalControlButtonStyle)
-        self.stopButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        self.stopIcon = QIcon("Assets/ControlsButtons/stop.png")
-        self.stopButton.setIcon(self.stopIcon)
-
-
-        self.stopButton.pressed.connect(lambda: self.handleButtonPress(self.stopButton))
-        self.stopButton.released.connect(lambda: self.handleButtonRelease(self.stopButton))
-
+       
 
         self.toStartButton = QPushButton()
         self.toStartButton.setStyleSheet(signalControlButtonStyle)
         self.toStartButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        self.toStartIcon = QIcon("Assets/ControlsButtons/start.png")
+        self.toStartIcon = QIcon("E:\Programming programs\Web dev\Signal-Viewer-Team18\GUI\Assets/ControlsButtons/start.png")
         self.toStartButton.setIcon(self.toStartIcon)
+        
+        
 
 
         self.toStartButton.pressed.connect(lambda: self.handleButtonPress(self.toStartButton))
@@ -64,8 +62,9 @@ class ToolBar(QWidget):
         self.toEndButton = QPushButton()
         self.toEndButton.setStyleSheet(signalControlButtonStyle)
         self.toEndButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        self.toEndIcon = QIcon("Assets/ControlsButtons/end.png")
+        self.toEndIcon = QIcon("E:\Programming programs\Web dev\Signal-Viewer-Team18\GUI\Assets/ControlsButtons/end.png")
         self.toEndButton.setIcon(self.toEndIcon)
+        
 
 
         self.toEndButton.pressed.connect(lambda: self.handleButtonPress(self.toEndButton))
@@ -74,7 +73,7 @@ class ToolBar(QWidget):
         self.rewindButton = QPushButton()
         self.rewindButton.setStyleSheet(rewindOffButtonStyle)
         self.rewindButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        self.rewindIcon = QIcon("Assets/ControlsButtons/rewindOff.png")
+        self.rewindIcon = QIcon("E:\Programming programs\Web dev\Signal-Viewer-Team18\GUI\Assets/ControlsButtons/rewindOff.png")
         self.rewindButton.setIcon(self.rewindIcon)
 
         self.isRewind = False
@@ -88,7 +87,6 @@ class ToolBar(QWidget):
         signalControlLayout.addWidget(self.timeLabel)
         signalControlLayout.addWidget(self.pauseButton)
         signalControlLayout.addWidget(self.playButton)
-        signalControlLayout.addWidget(self.stopButton)
         signalControlLayout.addWidget(self.toStartButton)
         signalControlLayout.addWidget(self.toEndButton)
         signalControlLayout.addWidget(self.rewindButton)
@@ -96,7 +94,7 @@ class ToolBar(QWidget):
         self.zoomButton = QPushButton()
         self.zoomButton.setStyleSheet(signalControlButtonStyle)
         self.zoomButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        self.zoomIcon = QIcon("Assets/ToolBox/zoom.png")
+        self.zoomIcon = QIcon("E:\Programming programs\Web dev\Signal-Viewer-Team18\GUI\Assets/ToolBox/zoom.png")
         self.zoomButton.setIcon(self.zoomIcon)
 
         self.zoomButton.pressed.connect(lambda: self.handleButtonPress(self.zoomButton))
@@ -106,7 +104,7 @@ class ToolBar(QWidget):
         self.glueButton = QPushButton()
         self.glueButton.setStyleSheet(signalControlButtonStyle)
         self.glueButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        self.glueIcon = QIcon("Assets/ToolBox/glue.png")
+        self.glueIcon = QIcon("E:\Programming programs\Web dev\Signal-Viewer-Team18\GUI\Assets/ToolBox/glue.png")
         self.glueButton.setIcon(self.glueIcon)
 
 
@@ -125,9 +123,7 @@ class ToolBar(QWidget):
         toolBoxLayout.addWidget(self.glueButton)
         toolBoxLayout.addStretch()
 
-        #self.linkedLabel = QLabel("Linked")
-        #self.linkedLabel.setStyleSheet(labelStyle)
-
+       
         self.linkedButton = QPushButton("Linked")
         self.linkedButton.setStyleSheet(linkedButtonOnStyle)
         self.isLinked = True
@@ -139,8 +135,7 @@ class ToolBar(QWidget):
         self.nonRectangleButton.pressed.connect(lambda: self.nonRectangleButton.setStyleSheet("background-color: #efefef; font-family: Sofia sans; font-weight: semiBold;font-size: 20px;"))
         self.nonRectangleButton.released.connect(lambda: self.nonRectangleButton.setStyleSheet(linkedButtonOnStyle))
 
-        #self.channel2LinkOption = QPushButton("Channel 2")
-
+       
         linkedGroup = QWidget()
         linkedGroup.setStyleSheet(boxStyle)
         linkedGroupLayout = QHBoxLayout()
@@ -161,23 +156,33 @@ class ToolBar(QWidget):
         self.setLayout(toolBarLayout)
 
 
-    def handleRewindClick(self):
-        if self.isRewind:
-            self.isRewind = False
-            self.rewindButton.setStyleSheet(rewindOffButtonStyle)
-        else:
-            self.isRewind = True
-            self.rewindButton.setStyleSheet(rewindOnButtonStyle)
+        self.pauseButton.clicked.connect(self.pauseAction if self.isLinked else self.handleButtonPress)
+        self.pauseButton.clicked.connect(self.pauseAction) 
+        self.playButton.clicked.connect(self.playAction)    
+        self.toStartButton.clicked.connect(self.toStartAction)
+        self.toEndButton.clicked.connect(self.toEndAction)
+        self.rewindButton.clicked.connect(self.handleRewindClick)
 
-    def handleLinkedClick(self):
+    def pauseAction(self):
         if self.isLinked:
-            self.isLinked = False
-            self.linkedButton.setText("Link")
-            self.linkedButton.setStyleSheet(linkedButtonOffStyle)
-        else:
-            self.isLinked = True
-            self.linkedButton.setText("Linked")
-            self.linkedButton.setStyleSheet(linkedButtonOnStyle)
+            self.signals.pause_both()
+    
+
+    def playAction(self):
+        if self.isLinked:
+            self.signals.play_both()  
+
+    def toStartAction(self):
+        if self.isLinked:
+            self.signals.to_start()  
+
+    def toEndAction(self):
+        if self.isLinked:
+            self.signals.to_end() 
+
+    def handleRewindClick(self):
+        if self.isLinked:
+            self.signals.rewind_both()  
 
 
     def handleButtonPress(self, button):
@@ -196,3 +201,14 @@ class ToolBar(QWidget):
     def handleNonRectangularClick(self):
         nonRectangularView = NonRectangularWindow()
         nonRectangularView.show()
+
+    
+    def handleLinkedClick(self):
+        if self.isLinked:
+            self.isLinked = False
+            self.linkedButton.setText("Link")
+            self.linkedButton.setStyleSheet(linkedButtonOffStyle)
+        else:
+            self.isLinked = True
+            self.linkedButton.setText("Linked")
+            self.linkedButton.setStyleSheet(linkedButtonOnStyle)
