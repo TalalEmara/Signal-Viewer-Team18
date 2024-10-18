@@ -1,9 +1,5 @@
 from PyQt5 import QtCore, QtWidgets
 
-<<<<<<< HEAD
-=======
-from Core.live_signal import plot_live_data
->>>>>>> f6db941ac083c6585a92c4137c2b689942d1c778
 
 
 class ImportToChannelsWindow(QtWidgets.QMainWindow):
@@ -78,27 +74,10 @@ class ImportToChannelsWindow(QtWidgets.QMainWindow):
         self.ImportLiveSignal.setFixedHeight(25)  # Set fixed height to resemble QLineEdit
         layout.addWidget(self.ImportLiveSignal)  # Add to layout
 
-<<<<<<< HEAD
        
 
         
 
-=======
-        self.importedInLabel_2 = QtWidgets.QLabel(self.liveTab)
-        self.importedInLabel_2.setStyleSheet("color: #87EDF1; font-size:15px;")
-        self.importedInLabel_2.setText("To be imported in ")
-        layout.addWidget(self.importedInLabel_2)  # Add to layout
-
-        self.checkBoxChannel1_2 = QtWidgets.QCheckBox(self.liveTab)
-        self.checkBoxChannel1_2.setStyleSheet("color: #87EDF1;")
-        self.checkBoxChannel1_2.setText("Channel 1")
-        layout.addWidget(self.checkBoxChannel1_2)  # Add to layout
-
-        self.checkBoxChannel2_2 = QtWidgets.QCheckBox(self.liveTab)
-        self.checkBoxChannel2_2.setStyleSheet("color: #87EDF1;")
-        self.checkBoxChannel2_2.setText("Channel 2")
-        layout.addWidget(self.checkBoxChannel2_2)  # Add to layout
->>>>>>> f6db941ac083c6585a92c4137c2b689942d1c778
 
         # Add an "OK" button
         self.okButton = QtWidgets.QPushButton(self.liveTab)
@@ -117,13 +96,8 @@ class ImportToChannelsWindow(QtWidgets.QMainWindow):
            
         elif self.default_channel == 2:
             self.checkBoxChannel2.setChecked(True)
-<<<<<<< HEAD
            
     
-=======
-            self.checkBoxChannel2_2.setChecked(True)
-
->>>>>>> f6db941ac083c6585a92c4137c2b689942d1c778
     def importFromFile(self):
         options = QtWidgets.QFileDialog.Options()
         filePath, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Import File", "", "All Files (*)", options=options)
@@ -140,14 +114,8 @@ class ImportToChannelsWindow(QtWidgets.QMainWindow):
        
 
         if liveSignal:
-<<<<<<< HEAD
             self.signalAdded.emit(liveSignal)
             plot_live_data(liveSignal)
-=======
-            self.signalAdded.emit(liveSignal, selectedChannel)
-            plot_live_data(liveSignal)
-
->>>>>>> f6db941ac083c6585a92c4137c2b689942d1c778
 
 if __name__ == "__main__":
     import sys
