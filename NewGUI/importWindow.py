@@ -80,8 +80,10 @@ class ImportWindow(QMainWindow):
 
     def importFile(self):
         print("importedSignal")
+        self.close()
     def plotLiveSignal(self):
         print("LiveSignal")
+        self.close()
 
 
 
