@@ -1,6 +1,6 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout
-from right_panel_style import cardLabelStyle, cardValueStyle
+from properties_style import cardLabelStyle, cardValueStyle
 from PyQt5.QtCore import Qt  # Import Qt for alignment flags
 
 class StatsCard(QWidget):
