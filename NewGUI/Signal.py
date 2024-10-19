@@ -9,7 +9,7 @@ class Signal:
         self.isOnChannel1 = True
         self.isOnChannel2 = False
 
-        self.colorinChannel1 = "#EFEFEF"
+        self.colorinChannel1 = "red"
         self.colorinChannel2 = "#EFEFEF"
         self.isShown =True
 
