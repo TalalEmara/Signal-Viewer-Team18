@@ -5,22 +5,22 @@ from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QSize
 from PyQt5.QtGui import QIcon
 from Styles import boxStyle, signalControlButtonStyle, labelStyle, rewindOffButtonStyle, rewindOnButtonStyle
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas, NavigationToolbar2QT as NavigationToolbar
-from matplotlib.figure import Figure
-import numpy as np
-from matplotlib.animation import FuncAnimation
-from PyQt5.QtCore import Qt
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from Core.Data_load import DataLoader
 from matplotlibFig import MplCanvas
+from plotting import Plotting
+import numpy as np
 
-class Viewer1(QtWidgets.QWidget):
-    def __init__(self):
+class Viewer(QtWidgets.QWidget):
+    def __init__(self,data_list):
         super().__init__()
-        self.initUI()
-        self.is_paused = False
+        
+        self.data_list = data_list
+        self.ViewerUi()
+        
 
-    def initUI(self):
+    def ViewerUi(self):
         self.setStyleSheet("background-color: #2D2D2D;")
         self.setObjectName("Viewer 1")
         self.resize(792, 434)
@@ -36,6 +36,7 @@ class Viewer1(QtWidgets.QWidget):
 
      
         self.canvas = MplCanvas(self, width=5, height=4, dpi=100)
+        self.plotting_instance = Plotting(self.canvas, self.data_list)
         self.canvas.draw()
 
         self.titleToolbarLayout = QHBoxLayout()
@@ -65,32 +66,32 @@ class Viewer1(QtWidgets.QWidget):
         self.pauseButton = QtWidgets.QPushButton(self.signalViewer)
         self.pauseButton.setIcon(QtGui.QIcon("NewGUI/Assets/ControlsButtons/pause.png"))
         self.pauseButton.setStyleSheet(signalControlButtonStyle)
-        self.pauseButton.clicked.connect(self.pauseAction)
+        self.pauseButton.clicked.connect(self.plotting_instance.pause)
         self.SignalbuttonsLayout.addWidget(self.pauseButton)
 
         self.playButton = QtWidgets.QPushButton(self.signalViewer)
         self.playButton.setIcon(QtGui.QIcon("NewGUI/Assets/ControlsButtons/play.png"))
         self.playButton.setStyleSheet(signalControlButtonStyle)
-        self.playButton.clicked.connect(self.playAction)
+        self.playButton.clicked.connect(self.plotting_instance.play)
         self.SignalbuttonsLayout.addWidget(self.playButton)
 
         self.toStartButton = QtWidgets.QPushButton(self.signalViewer)
         self.toStartButton.setIcon(QtGui.QIcon("NewGUI/Assets/ControlsButtons/start.png"))
         self.toStartButton.setStyleSheet(signalControlButtonStyle)
-        self.toStartButton.clicked.connect(self.toStartAction)
+        self.toStartButton.clicked.connect(self.plotting_instance.to_start)
         self.SignalbuttonsLayout.addWidget(self.toStartButton)
 
         self.toEndButton = QtWidgets.QPushButton(self.signalViewer)
         self.toEndButton.setIcon(QtGui.QIcon("NewGUI/Assets/ControlsButtons/end.png"))
         self.toEndButton.setStyleSheet(signalControlButtonStyle)
-        self.toEndButton.clicked.connect(self.toEndAction)
+        self.toEndButton.clicked.connect(self.plotting_instance.to_end)
         self.SignalbuttonsLayout.addWidget(self.toEndButton)
 
         self.rewindButton = QtWidgets.QPushButton(self.signalViewer)
         self.rewindButton.setIcon(QtGui.QIcon("NewGUI/Assets/ControlsButtons/rewindOff.png"))
         self.rewindButton.setStyleSheet(rewindOffButtonStyle)
         self.rewindButton.setCheckable(True)
-        self.rewindButton.toggled.connect(self.toggleRewind)
+        self.rewindButton.toggled.connect(self.plotting_instance.toggle_rewind)
         self.SignalbuttonsLayout.addWidget(self.rewindButton)
 
         self.SignalbuttonsLayout.addStretch(6)
@@ -106,46 +107,37 @@ class Viewer1(QtWidgets.QWidget):
         self.setLayout(mainLayout)
 
 
-    def pauseAction(self):
-        self.parent().anim.event_source.stop()
-        self.parent().is_paused = True
+    def set_properties(self, properties):
+        self.plotting_instance.plot_selected.connect(properties.update_properties)
+    
+    def on_plot_selected(self, index, color, thickness, speed):
 
-    def playAction(self):
-        if self.parent().is_paused:
-            self.parent().anim.event_source.start()
-            self.parent().is_paused = False
+        if self.RightPanelInstance:
+            self.RightPanelInstance.update_properties(index, color, thickness, speed)
 
-    def toStartAction(self):
-        current_ylim = self.canvas.ax.get_ylim()
-        self.canvas.ax.set_xlim([0, 0])  
-        self.canvas.ax.set_ylim(current_ylim)  
-        self.canvas.draw()  
-
-    def toEndAction(self):
-        current_ylim = self.canvas.ax.get_ylim()
-        self.canvas.ax.set_xlim([10, 10])  
-        self.canvas.ax.set_ylim(current_ylim) 
-        self.canvas.draw()  
-
-    def toggleRewind(self, checked):
-        self.parent().rewind_enabled = checked
-        if checked:
-            self.parent().reset_signal_animation(1) 
-            self.rewindButton.setStyleSheet(rewindOnButtonStyle) 
-        else:
-            self.rewindButton.setStyleSheet(rewindOffButtonStyle) 
-
-
+        
     def editTitle(self, label, layout):
         edit_line = QLineEdit(label.text(), self.signalViewer)
         edit_line.setMaxLength(12)
         edit_line.setStyleSheet("color: #EFEFEF; font-size:15px; background-color:#2D2D2D;")
-
+        
 def main():
     app = QtWidgets.QApplication(sys.argv)
-    viewer = Viewer1()
-    viewer.show()  
-    sys.exit(app.exec_())  
+
+   
+    x_data = np.linspace(0, 10, 1000)
+    plot_data_list = [
+        {'x_data': x_data, 'y_data': np.sin(x_data), 'color': '#FF5733', 'thickness': 2, 'speed': 50},
+        {'x_data': x_data, 'y_data': np.cos(x_data), 'color': '#33FF57', 'thickness': 3, 'speed': 100},
+        {'x_data': x_data, 'y_data': np.sin(2 * x_data), 'color': '#3357FF', 'thickness': 4, 'speed': 150}
+    ]
+
+
+    viewer = Viewer(plot_data_list)
+    viewer.setWindowTitle("Signal Viewer")
+    viewer.show()
+
+    sys.exit(app.exec_())
 
 if __name__ == "__main__":
     main()
