@@ -14,6 +14,7 @@ from channels import Channels
 
 from signals import SignalMainWindow
 from PyQt5.QtCore import pyqtSignal
+from NewGUI.selectorPanel import SelectorPanel
 
 
 class MainWindow(QWidget):
@@ -30,12 +31,11 @@ class MainWindow(QWidget):
         self.menuBar.setStyleSheet(menuBarStyle)
         self.toolBar = ToolBar()
         self.properties = RightPanel()
-        self.ImportSignal = Channels()
+        self.ImportSignal = SelectorPanel()
         self.properties.setMinimumWidth(int(.2*1440))
         self.signalViewer = SignalMainWindow()
         self.toolBar.signals=self.signalViewer
 
-        self.ImportSignal.signal_data_ready.connect(self.signalViewer.init_plot)
 
         self.signalListTest = QWidget()
         

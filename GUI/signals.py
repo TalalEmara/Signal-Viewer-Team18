@@ -1,8 +1,7 @@
 import sys
 import pandas as pd
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QSizePolicy, QWidget, QSpacerItem, QFrame, \
-    QLineEdit
+from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QSizePolicy, QWidget, QSpacerItem, QFrame, QLineEdit
 from PyQt5.QtGui import QIcon
 from Styles import boxStyle, signalControlButtonStyle, labelStyle, rewindOffButtonStyle, rewindOnButtonStyle
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas, NavigationToolbar2QT as NavigationToolbar
@@ -366,7 +365,7 @@ class SignalMainWindow(QtWidgets.QMainWindow):
         super(SignalMainWindow, self).__init__()
         self.signals = Signals()
         self.setCentralWidget(self.signals)
-        self.default_path = 'E:\Programming programs\Web dev\Signal-Viewer-Team18\signals_data\ECG_Abnormal.csv'
+        self.default_path = 'D:\Faculty\SBE 24-25\DSP\Signal-Viewer-Team18\signals_data\ECG_Normal.csv'
         self.default_signal = DataLoader(self.default_path).get_data()
         self.init_plot(self.default_signal ,3)
 
