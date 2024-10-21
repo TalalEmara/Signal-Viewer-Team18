@@ -113,9 +113,13 @@ class ImportWindow(QMainWindow):
         # Get the text from the QLineEdit
         liveSignal = str(self.liveInput.text())
         if liveSignal:
-            times, speeds, _ = Live_signal_processing(liveSignal)
-            Plotting.plot_live_signal(self,times, speeds)
-        self.close()
+            times, speeds = Live_signal_processing(liveSignal)  # Get data from processing function
+            plot_data_list = [{'x_data': times, 'y_data': speeds}]  # Prepare data for plotting
+
+            self.viewer = Viewer(plot_data_list)  # Create Viewer instance
+            self.viewer.setWindowTitle("Live Signal Viewer")  # Set the window title
+            self.viewer.show()  # Show the viewer window
+            self.close()
 
     # function to import csv file    
     def open_file_dialog(self):
