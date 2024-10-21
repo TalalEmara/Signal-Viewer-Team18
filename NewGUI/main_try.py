@@ -1,9 +1,8 @@
 import sys
-import PyQt5.QtWidgets
-from PyQt5.QtWidgets import QApplication, QMainWindow, QHBoxLayout, QWidget  
+from PyQt5.QtWidgets import QApplication, QMainWindow, QHBoxLayout, QWidget
 import numpy as np
 from SignalViewer import Viewer
-from right_panel import RightPanel
+from properties import Properties
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -20,22 +19,22 @@ class MainWindow(QMainWindow):
             {'x_data': x_data, 'y_data': np.sin(2 * x_data), 'color': '#3357FF', 'thickness': 4, 'speed': 150}
         ]
 
-       
-        self.SignalViewer = Viewer(plot_data_list)
+        # Create the viewer and properties panels
+        self.viewer = Viewer(plot_data_list)  # Fix naming inconsistency
+        self.properties = Properties()
 
-        
-        self.right_panel = RightPanel()
-        self.SignalViewer.set_right_panel(self.right_panel)
+        # Link the properties with the viewer
+        self.viewer.set_properties(self.properties)
 
-        
-        self.viewer.plotting_instance.plot_selected.connect(self.right_panel.update_properties)
-        self.right_panel.signal_properties_changed.connect(self.viewer.plotting_instance.update_plot_properties)
+        # Connect signals
+        self.viewer.plotting_instance.plot_selected.connect(self.properties.update_properties)
+        self.properties.signal_properties_changed.connect(self.viewer.plotting_instance.update_plot_properties)
 
-        
+        # Main layout combining Viewer and Properties (RightPanel)
         main_widget = QWidget()
         main_layout = QHBoxLayout(main_widget)
-        main_layout.addWidget(self.SignalViewer, stretch=3)  
-        main_layout.addWidget(self.right_panel, stretch=1)  
+        main_layout.addWidget(self.viewer, stretch=3)  # Signal Viewer on the left
+        main_layout.addWidget(self.properties, stretch=1)  # Properties panel on the right
 
         self.setCentralWidget(main_widget)
 
