@@ -12,6 +12,9 @@ from NewCore.Signal import Signal
 from NewCore.dataLoader import DataLoader
 from selectorPanel import SelectorPanel
 
+from NewCore.live_signals import plot_live_data, Live_signal_processing
+from plotting import Plotting
+from SignalViewer import Viewer
 class ImportWindow(QMainWindow):
     fileSelected = QtCore.pyqtSignal(str)
 
@@ -107,6 +110,11 @@ class ImportWindow(QMainWindow):
 
     def plotLiveSignal(self):
         print("LiveSignal")
+        # Get the text from the QLineEdit
+        liveSignal = str(self.liveInput.text())
+        if liveSignal:
+            times, speeds, _ = Live_signal_processing(liveSignal)
+            Plotting.plot_live_signal(self,times, speeds)
         self.close()
 
     # function to import csv file    
@@ -122,8 +130,6 @@ class ImportWindow(QMainWindow):
 
         else:
             print("No file selected.")
-
-
 
 if __name__ == "__main__":
     import sys

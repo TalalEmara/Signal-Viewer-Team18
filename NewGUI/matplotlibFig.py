@@ -130,3 +130,8 @@ class MplCanvas(FigureCanvas):
         self.ax.relim()
         self.ax.autoscale_view()
         self.draw()
+    def update_plot(self, x_data, y_data):
+        """Update the plot with new data."""
+        self.clear_canvas()  # Clear previous lines if needed
+        self.add_line(x_data, y_data)
+        self.draw()  # Redraw the canvas

@@ -17,6 +17,8 @@ class Viewer(QtWidgets.QWidget):
         super().__init__()
         
         self.data_list = data_list
+        self.x_data = data_list[0]['x_data']
+        self.y_data = data_list[0]['y_data']
         self.ViewerUi()
         
 
@@ -36,8 +38,10 @@ class Viewer(QtWidgets.QWidget):
 
      
         self.canvas = MplCanvas(self, width=5, height=4, dpi=100)
-        self.plotting_instance = Plotting(self.canvas, self.data_list)
-        self.canvas.draw()
+        self.plotting_instance = Plotting(self.canvas)
+        if self.x_data:
+            self.plotting_instance.init_plot(self.data_list)
+        # self.canvas.draw()
 
         self.titleToolbarLayout = QHBoxLayout()
         self.signalTitle = QLabel("Channel 1", self.signalViewer)
@@ -91,7 +95,7 @@ class Viewer(QtWidgets.QWidget):
         self.rewindButton.setIcon(QtGui.QIcon("NewGUI/Assets/ControlsButtons/rewindOff.png"))
         self.rewindButton.setStyleSheet(rewindOffButtonStyle)
         self.rewindButton.setCheckable(True)
-        self.rewindButton.toggled.connect(self.plotting_instance.toggle_rewind)
+        # self.rewindButton.toggled.connect(self.plotting_instance.toggle_rewind)
         self.SignalbuttonsLayout.addWidget(self.rewindButton)
 
         self.SignalbuttonsLayout.addStretch(6)
@@ -125,13 +129,14 @@ def main():
     app = QtWidgets.QApplication(sys.argv)
 
    
+    # plot_data_list = [
+    #     {'x_data': x_data, 'y_data': np.sin(x_data), 'color': '#FF5733', 'thickness': 2, 'speed': 50},
+    #     {'x_data': x_data, 'y_data': np.cos(x_data), 'color': '#33FF57', 'thickness': 3, 'speed': 100},
+    #     {'x_data': x_data, 'y_data': np.sin(2 * x_data), 'color': '#3357FF', 'thickness': 4, 'speed': 150}
+    # ]
     x_data = np.linspace(0, 10, 1000)
-    plot_data_list = [
-        {'x_data': x_data, 'y_data': np.sin(x_data), 'color': '#FF5733', 'thickness': 2, 'speed': 50},
-        {'x_data': x_data, 'y_data': np.cos(x_data), 'color': '#33FF57', 'thickness': 3, 'speed': 100},
-        {'x_data': x_data, 'y_data': np.sin(2 * x_data), 'color': '#3357FF', 'thickness': 4, 'speed': 150}
-    ]
-
+    y_data = np.sin(x_data)
+    plot_data_list = [{'x_data': x_data, 'y_data':y_data}]
 
     viewer = Viewer(plot_data_list)
     viewer.setWindowTitle("Signal Viewer")
