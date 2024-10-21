@@ -39,9 +39,12 @@ class Viewer(QtWidgets.QWidget):
      
         self.canvas = MplCanvas(self, width=5, height=4, dpi=100)
         self.plotting_instance = Plotting(self.canvas)
-        if self.x_data:
+        if self.data_list:
             self.plotting_instance.init_plot(self.data_list)
         # self.canvas.draw()
+
+
+
 
         self.titleToolbarLayout = QHBoxLayout()
         self.signalTitle = QLabel("Channel 1", self.signalViewer)
@@ -95,8 +98,10 @@ class Viewer(QtWidgets.QWidget):
         self.rewindButton.setIcon(QtGui.QIcon("NewGUI/Assets/ControlsButtons/rewindOff.png"))
         self.rewindButton.setStyleSheet(rewindOffButtonStyle)
         self.rewindButton.setCheckable(True)
-        # self.rewindButton.toggled.connect(self.plotting_instance.toggle_rewind)
+        self.rewindButton.toggled.connect(self.plotting_instance.toggle_rewind)
+        self.plotting_instance.rewind_state_changed.connect(self.update_rewind_button)
         self.SignalbuttonsLayout.addWidget(self.rewindButton)
+
 
         self.SignalbuttonsLayout.addStretch(6)
 
@@ -122,18 +127,51 @@ class Viewer(QtWidgets.QWidget):
         
     def editTitle(self, label, layout):
         edit_line = QLineEdit(label.text(), self.signalViewer)
+
         edit_line.setMaxLength(12)
+
         edit_line.setStyleSheet("color: #EFEFEF; font-size:15px; background-color:#2D2D2D;")
+
+        def save_changes():
+            new_text = edit_line.text()
+
+            label.setText(new_text)
+
+            layout.replaceWidget(edit_line, label)
+
+            edit_line.deleteLater()
+
+        edit_line.returnPressed.connect(save_changes)
+
+        edit_line.setFocus()
+
+        layout.replaceWidget(label, edit_line)
+
+
+        def on_focus_out(event):
+            if event.reason() == QtCore.Qt.FocusReason.LostFocus:
+                layout.replaceWidget(edit_line, label)
+
+                edit_line.deleteLater()
+
+        edit_line.focusOutEvent = on_focus_out
+    
+    def setup_connections(self):
+        # Connect the rewind state change signal to the method that updates the button appearance
+        self.plotting_instance.rewind_state_changed.connect(self.update_rewind_button)
+
+    def update_rewind_button(self, enabled):
+        # Update the appearance of the rewind button based on its state
+        if enabled:
+            self.rewindButton.setStyleSheet(rewindOnButtonStyle)
+            self.rewindButton.setIcon(QtGui.QIcon("NewGUI/Assets/ControlsButtons/rewindOn.png"))
+        else:
+            self.rewindButton.setStyleSheet(rewindOffButtonStyle)
+            self.rewindButton.setIcon(QtGui.QIcon("NewGUI/Assets/ControlsButtons/rewindOff.png"))
         
 def main():
     app = QtWidgets.QApplication(sys.argv)
 
-   
-    # plot_data_list = [
-    #     {'x_data': x_data, 'y_data': np.sin(x_data), 'color': '#FF5733', 'thickness': 2, 'speed': 50},
-    #     {'x_data': x_data, 'y_data': np.cos(x_data), 'color': '#33FF57', 'thickness': 3, 'speed': 100},
-    #     {'x_data': x_data, 'y_data': np.sin(2 * x_data), 'color': '#3357FF', 'thickness': 4, 'speed': 150}
-    # ]
     x_data = np.linspace(0, 10, 1000)
     y_data = np.sin(x_data)
     plot_data_list = [{'x_data': x_data, 'y_data':y_data}]

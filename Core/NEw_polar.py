@@ -8,7 +8,7 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 from matplotlib.animation import FuncAnimation
 
-from Core import Data_load
+import Data_load
 
 
 class MplCanvas(FigureCanvas):
@@ -38,7 +38,7 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         # Load the data from CSV
-        self.csv_file_path = '../signals_data/EMG_Abnormal.csv'
+        self.csv_file_path = 'E:\Programming programs\Web dev\Signal-Viewer-Team18\signals_data\ECG_Abnormal.csv'
         self.data_loader = Data_load.DataLoader(self.csv_file_path)
         self.data_loader.load_data()
         self.data = self.data_loader.get_data()

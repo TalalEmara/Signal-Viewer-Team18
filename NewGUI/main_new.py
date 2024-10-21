@@ -109,7 +109,7 @@ def main():
     #     {'x_data': x_data, 'y_data': np.sin(2 * x_data)}
     # ]
     # y_data = np.sin(x_data)
-    csv_file_path = '../signals_data/ECG_Abnormal.csv'
+    csv_file_path = 'signals_data/ECG_Abnormal.csv'
     data_loader = DataLoader(csv_file_path)
     data_loader.load_data()
 
@@ -117,9 +117,9 @@ def main():
     data = data_loader.get_data()
     x_data = data[:, 0]
     y_data = data[:, 1]
-    # plot_data_list = [{'x_data': x_data, 'y_data': y_data},{'x_data': np.linspace(0, 10, 1000), 'y_data': np.sinh(np.linspace(0, 10, 1000))}]
-    x_data,y_data,_ = Live_signal_processing(url_live)
-    plot_data_list = [{'x_data': x_data, 'y_data': y_data}]
+    plot_data_list = [{'x_data': x_data, 'y_data': y_data},{'x_data': np.linspace(0, 10, 1000), 'y_data': np.sinh(np.linspace(0, 10, 1000))}]
+    # x_data,y_data,_ = Live_signal_processing(url_live)
+    # plot_data_list = [{'x_data': x_data, 'y_data': y_data}]
     print(x_data)
     viewer = Viewer(plot_data_list)
     viewer.setWindowTitle("Signal Viewer")

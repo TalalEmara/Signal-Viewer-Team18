@@ -15,7 +15,7 @@ class MplCanvas(FigureCanvas):
         fig.patch.set_facecolor('#242424')
         self.ax.set_facecolor('#242424')
 
-        self.lines = []  # List to store multiple lines on the plot
+        self.lines = []  
 
         super(MplCanvas, self).__init__(fig)
 
@@ -124,14 +124,14 @@ class MplCanvas(FigureCanvas):
         super().mouseMoveEvent(event)
 
     def clear_canvas(self):
-        """Clear all lines from the canvas."""
+       
         self.ax.clear()
         self.lines = []
         self.ax.relim()
         self.ax.autoscale_view()
         self.draw()
     def update_plot(self, x_data, y_data):
-        """Update the plot with new data."""
+       
         self.clear_canvas()  # Clear previous lines if needed
         self.add_line(x_data, y_data)
         self.draw()  # Redraw the canvas
