@@ -3,7 +3,13 @@ from PyQt5.QtWidgets import QMainWindow, QApplication, QTabWidget, QWidget, QLab
     QHBoxLayout, QLineEdit
 from Styling.importWindowStyles import importButtonStyle, browseButtonStyle,tabStyle
 import Signal
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+from NewCore.live_signals import plot_live_data, Live_signal_processing
+from plotting import Plotting
+from SignalViewer import Viewer
 class ImportWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -81,11 +87,15 @@ class ImportWindow(QMainWindow):
     def importFile(self):
         print("importedSignal")
         self.close()
+
     def plotLiveSignal(self):
         print("LiveSignal")
+        # Get the text from the QLineEdit
+        liveSignal = str(self.liveInput.text())
+        if liveSignal:
+            times, speeds, _ = Live_signal_processing(liveSignal)
+            Plotting.plot_live_signal(self,times, speeds)
         self.close()
-
-
 
 
 if __name__ == "__main__":
