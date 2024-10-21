@@ -48,6 +48,7 @@ QPushButton{
 """
 labelStyle = """
 QLabel {
+    margin:20px;
     color: #76D4D4;
     font-family: Sofia sans;
     font-weight: semiBold;

@@ -1,18 +1,26 @@
+import os
+import sys
+sys.path.append(os.path.abspath('Signal-Viewer-Team18'))
+
 from PyQt5.QtCore import Qt
+from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QMainWindow, QApplication, QTabWidget, QWidget, QLabel, QPushButton, QCheckBox, QVBoxLayout, \
     QHBoxLayout, QLineEdit
+import pandas as pd
 from Styling.importWindowStyles import importButtonStyle, browseButtonStyle,tabStyle
-import Signal
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from NewCore.Signal import Signal
+from NewCore.dataLoader import DataLoader
+from selectorPanel import SelectorPanel
 
 from NewCore.live_signals import plot_live_data, Live_signal_processing
 from plotting import Plotting
 from SignalViewer import Viewer
 class ImportWindow(QMainWindow):
+    fileSelected = QtCore.pyqtSignal(str)
+
     def __init__(self):
         super().__init__()
+        self.file_path = None
         self.setWindowTitle("Import a Signal")
         self.resize(400,100)
         self.setStyleSheet("background-color:#2D2D2D; color:#EFEFEF; font-family: Sofia sans; font-weight: semiBold;")
@@ -33,6 +41,7 @@ class ImportWindow(QMainWindow):
         self.signalName.setFixedWidth(300)
 
         self.browseButton = QPushButton("Browse")
+        self.browseButton.clicked.connect(self.open_file_dialog)
         self.browseButton.setStyleSheet(browseButtonStyle)
 
         self.channel1CheckBox = QCheckBox("Channel 1")
@@ -85,8 +94,19 @@ class ImportWindow(QMainWindow):
         self.tabs.addTab(self.liveTab,"Live")
 
     def importFile(self):
-        print("importedSignal")
-        self.close()
+        if self.file_path:
+            file_name = os.path.basename(self.file_path)
+            signalData = DataLoader(self.file_path).get_data()
+            signal = Signal(file_name, self.file_path, signalData)
+            SelectorPanel.signal_map[signal.name] = signal
+            
+            # self.fileSelected.emit(self.file_path)
+            SelectorPanel.update_signal_dict(SelectorPanel)
+
+            print("importedSignal")
+            self.close()
+        else: 
+            print("No file selected")
 
     def plotLiveSignal(self):
         print("LiveSignal")
@@ -97,6 +117,19 @@ class ImportWindow(QMainWindow):
             Plotting.plot_live_signal(self,times, speeds)
         self.close()
 
+    # function to import csv file    
+    def open_file_dialog(self):
+        # Open a file dialog restricted to .csv files
+        file_path, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Open CSV File", "", "CSV Files (*.csv);;All Files (*)")
+
+        # Check if a file was selected
+        if file_path:
+            self.file_path = file_path
+            # print(signal.name)
+            # return Signal(file_name, file_path, signalData)
+
+        else:
+            print("No file selected.")
 
 if __name__ == "__main__":
     import sys

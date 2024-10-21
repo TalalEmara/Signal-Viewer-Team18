@@ -51,6 +51,7 @@ class MainWindow(QMainWindow):
         self.setStyleSheet("background-color:#242424; color: #efefef;")
 
         # Load the data from CSV
+        self.csv_file_path = 'D:\Faculty\SBE 24-25\DSP\Signal-Viewer-Team18\signals_data\ECG_Normal.csv'
         self.csv_file_path = 'E:\Programming programs\Web dev\Signal-Viewer-Team18\signals_data\ECG_Abnormal.csv'
         self.data_loader = Data_load.DataLoader(self.csv_file_path)
         self.data_loader.load_data()
@@ -114,5 +115,12 @@ class MainWindow(QMainWindow):
 
     def stop_signal(self):
         self.running = False
+def run_app():
+    app = QApplication(sys.argv)
+    window = MainWindow()  # Create an instance of MainWindow
+    window.show()          # Show the window
+    sys.exit(app.exec_())   # Execute the application event loop
+if __name__ == "__main__":
+    run_app()
 
 
