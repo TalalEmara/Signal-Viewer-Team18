@@ -2,7 +2,7 @@
 class Signal:
     def __init__(self):
         self.name = "Untitled"
-        self.location = "////"
+        self.location = "Url"
         self.lineWidth = 20
         self.dataSet = []
         self.isLive = False
