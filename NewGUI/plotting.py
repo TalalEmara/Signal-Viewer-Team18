@@ -31,21 +31,33 @@ class Plotting(QObject):
         )
 
     def animate_cine_mode(self, i):
-        self.current_frame = i  
+        self.current_frame = i
         self.canvas.ax.clear()
+
+        # Determine the minimum and maximum x values for the current window
+        window_size = 50  # Number of data points to show at once
+        x_min, x_max = None, None
 
         for idx, data in enumerate(self.data_list):
             time = data['x_data']
             amplitude = data['y_data']
             self.canvas.ax.plot(time[:i + 1], amplitude[:i + 1], label=f'Signal {idx + 1}')
 
-        # self.canvas.ax.set_xlim(min(self.data_list[0]['x_data']), max(self.data_list[0]['x_data']))
-        # self.canvas.ax.set_ylim(min(np.min([data['y_data'] for data in self.data_list])), max(np.max([data['y_data'] for data in self.data_list])))
+            # Update x_min and x_max based on the data range in this window
+            if i < window_size:
+                x_min, x_max = time[0], time[window_size] if x_max is None else max(x_max, time[window_size])
+            else:
+                x_min, x_max = time[i - window_size], time[i]
+
+        # Set consistent x-axis limits for all signals
+        self.canvas.ax.set_xlim(x_min, x_max)
+        self.canvas.ax.legend()
+
         self.canvas.draw()
 
         if i == self.total_frames - 1:
             if self.rewind_enabled:
-                self.reset_animation()  
+                self.reset_animation()
             else:
                 self.animation.event_source.stop()
 
