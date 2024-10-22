@@ -1,16 +1,13 @@
 import sys
 import numpy as np
-import pandas as pd
-from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QPushButton, QToolButton, QSizePolicy, \
-    QHBoxLayout
+from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QPushButton, QSizePolicy, QHBoxLayout
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas, NavigationToolbar2QT as NavigationToolbar
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 from matplotlib.animation import FuncAnimation
 from Core import Data_load
-from NewGUI.Styles import signalControlButtonStyle, boxStyle, rewindOffButtonStyle,rewindOnButtonStyle
-
+from NewGUI.Styles import signalControlButtonStyle, boxStyle, rewindOffButtonStyle
 
 
 class MplCanvas(FigureCanvas):
@@ -24,19 +21,12 @@ class MplCanvas(FigureCanvas):
         self.ax.grid(color='#EFEFEF', linestyle='dashed', linewidth=0.2)
         self.ax.tick_params(axis='x', colors='#EFEFEF')
         self.ax.tick_params(axis='y', colors='#EFEFEF')
-
-
-
         super(MplCanvas, self).__init__(fig)
 
 
-
-
-
-class MainWindow(QMainWindow):
+class NonRectangularWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-
         self.setStyleSheet("background-color:#242424; color: #efefef;")
         self.setWindowTitle("Polar view")
 
@@ -44,68 +34,45 @@ class MainWindow(QMainWindow):
         self.csv_file_path = '..\signals_data\EMG_Normal.csv'
         self.data_loader = Data_load.DataLoader(self.csv_file_path)
         self.data_loader.load_data()
-        self.data = self.data_loader.get_data()  # Convert to NumPy array
-
+        self.data = self.data_loader.get_data()
 
         self.canvas = MplCanvas(self, width=5, height=8, dpi=100)
         self.init_plot()
 
-
-
-
-
-        #self.stop_button = QPushButton("Stop")
-        #self.stop_button.clicked.connect(self.stop_signal)
-
+        # Create buttons
         self.pauseButton = QPushButton()
         self.pauseButton.setStyleSheet(signalControlButtonStyle)
         self.pauseButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        self.pauseIcon = QIcon(
-            "E:\Programming programs\Web dev\Signal-Viewer-Team18\GUI\Assets\ControlsButtons\pause.png")
+        self.pauseIcon = QIcon("../Assets/ControlsButtons/pause.png")
         self.pauseButton.setIcon(self.pauseIcon)
-
-        self.pauseButton.pressed.connect(lambda: self.handleButtonPress(self.pauseButton))
-        self.pauseButton.released.connect(lambda: self.handleButtonRelease(self.pauseButton))
+        self.pauseButton.clicked.connect(self.pause)
 
         self.playButton = QPushButton()
         self.playButton.setStyleSheet(signalControlButtonStyle)
         self.playButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        self.playIcon = QIcon(
-            "E:\Programming programs\Web dev\Signal-Viewer-Team18\GUI\Assets/ControlsButtons/play.png")
+        self.playIcon = QIcon("../Assets/ControlsButtons/play.png")
         self.playButton.setIcon(self.playIcon)
+        self.playButton.clicked.connect(self.play)
 
-        self.playButton.pressed.connect(lambda: self.handleButtonPress(self.playButton))
-        self.playButton.released.connect(lambda: self.handleButtonRelease(self.playButton))
+        # Zoom In Button
+        self.zoomInButton = QPushButton("Zoom In")
+        self.zoomInButton.setStyleSheet(signalControlButtonStyle)
+        self.zoomInButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        self.zoomInButton.clicked.connect(self.zoom_in)
 
-        self.toStartButton = QPushButton()
-        self.toStartButton.setStyleSheet(signalControlButtonStyle)
-        self.toStartButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        self.toStartIcon = QIcon(
-            "E:\Programming programs\Web dev\Signal-Viewer-Team18\GUI\Assets/ControlsButtons/start.png")
-        self.toStartButton.setIcon(self.toStartIcon)
+        # Zoom Out Button
+        self.zoomOutButton = QPushButton("Zoom Out")
+        self.zoomOutButton.setStyleSheet(signalControlButtonStyle)
+        self.zoomOutButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        self.zoomOutButton.clicked.connect(self.zoom_out)
 
-        self.toStartButton.pressed.connect(lambda: self.handleButtonPress(self.toStartButton))
-        self.toStartButton.released.connect(lambda: self.handleButtonRelease(self.toStartButton))
-
-        self.toEndButton = QPushButton()
-        self.toEndButton.setStyleSheet(signalControlButtonStyle)
-        self.toEndButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        self.toEndIcon = QIcon(
-            "E:\Programming programs\Web dev\Signal-Viewer-Team18\GUI\Assets/ControlsButtons/end.png")
-        self.toEndButton.setIcon(self.toEndIcon)
-
-        self.toEndButton.pressed.connect(lambda: self.handleButtonPress(self.toEndButton))
-        self.toEndButton.released.connect(lambda: self.handleButtonRelease(self.toEndButton))
 
         self.rewindButton = QPushButton()
         self.rewindButton.setStyleSheet(rewindOffButtonStyle)
         self.rewindButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        self.rewindIcon = QIcon(
-            "E:\Programming programs\Web dev\Signal-Viewer-Team18\GUI\Assets/ControlsButtons/rewindOff.png")
+        self.rewindIcon = QIcon("../Assets/ControlsButtons/rewindOff.png")
         self.rewindButton.setIcon(self.rewindIcon)
-
-        self.isRewind = False
-        self.rewindButton.clicked.connect(lambda: self.handleRewindClick())
+        self.rewindButton.clicked.connect(self.rewind)
 
         signalControl = QWidget()
         signalControl.setStyleSheet(boxStyle)
@@ -114,14 +81,12 @@ class MainWindow(QMainWindow):
 
         signalControlLayout.addWidget(self.pauseButton)
         signalControlLayout.addWidget(self.playButton)
-        signalControlLayout.addWidget(self.toStartButton)
-        signalControlLayout.addWidget(self.toEndButton)
+        signalControlLayout.addWidget(self.zoomInButton)
+        signalControlLayout.addWidget(self.zoomOutButton)
         signalControlLayout.addWidget(self.rewindButton)
 
         layout = QVBoxLayout()
-
         layout.addWidget(self.canvas)
-        #layout.addWidget(self.stop_button)
         layout.addWidget(signalControl)
 
         container = QWidget()
@@ -130,7 +95,7 @@ class MainWindow(QMainWindow):
 
         self.running = True
         self.current_index = 0
-        self.batch_size = 10  # Number of points to update
+        self.batch_size = 10
         self.ani = FuncAnimation(self.canvas.figure, self.update_plot, interval=100, blit=False)
 
     def init_plot(self):
@@ -144,20 +109,16 @@ class MainWindow(QMainWindow):
 
     def update_plot(self, frame):
         if self.running and self.data is not None:
-            # Avoiding index errors
             end_index = min(self.current_index + self.batch_size, len(self.data))
-
             batch_data = self.data[self.current_index:end_index]
 
-            # Transform time to theta
-            time = batch_data[:, 0]  # Assuming the first column is time
-            max_time = self.data[:, 0].max()  # Get the maximum time value for normalization
-            theta = 2 * np.pi * time / max_time  # Map time to the range [0, 2π]
-
-            r = batch_data[:, 1]  # Second column for radius (amplitude)
+            time = batch_data[:, 0]
+            max_time = self.data[:, 0].max()
+            theta = 2 * np.pi * time / max_time
+            r = batch_data[:, 1]
 
             if self.current_index == 0:
-                self.polar_line.set_data(theta, r)  # Initial plot
+                self.polar_line.set_data(theta, r)
             else:
                 self.polar_line.set_data(
                     np.concatenate((self.polar_line.get_xdata(), theta)),
@@ -165,45 +126,45 @@ class MainWindow(QMainWindow):
                 )
 
             self.current_index += self.batch_size
-
-
-
             self.canvas.draw()
 
-        def pause(self):
-            self.is_paused = True
-            if self.animation:
-                self.animation.event_source.stop()
-
-        def play(self):
-            self.is_paused = False
-            if self.animation:
-                self.animation.event_source.start()
-
-        def to_start(self):
-            current_ylim = self.canvas.ax.get_ylim()
-            self.canvas.ax.set_xlim([0, 0])
-            self.canvas.ax.set_ylim(current_ylim)
-            self.canvas.draw()
-
-        def to_end(self):
-            current_ylim = self.canvas.ax.get_ylim()
-            self.canvas.ax.set_xlim([10, 10])
-            self.canvas.ax.set_ylim(current_ylim)
-            self.canvas.draw()
-
-        def toggle_rewind(self, checked):
-            self.rewind_enabled = checked
-            self.rewind_state_changed.emit(checked)
-
-            if self.rewind_enabled and self.current_frame == self.total_frames - 1:
-                self.reset_animation()
-
-    def stop_signal(self):
+    def pause(self):
         self.running = False
 
+    def play(self):
+        self.running = True
 
-app = QApplication(sys.argv)
-window = MainWindow()
-window.show()
-sys.exit(app.exec_())
+    def zoom_in(self):
+        current_ylim = self.canvas.ax.get_ylim()
+        new_ylim = (current_ylim[0] / 2, current_ylim[1] / 2)  # Zoom in by half
+
+        # Adjust the radial limits of the polar plot
+        r_min, r_max = new_ylim
+        self.canvas.ax.set_ylim(r_min, r_max)
+        self.canvas.ax.set_yticks(np.linspace(r_min, r_max, num=5))  # Update y-ticks
+
+        self.canvas.draw()  # Update the canvas with the new zoom level
+
+    def zoom_out(self):
+        current_ylim = self.canvas.ax.get_ylim()
+        new_ylim = (current_ylim[0] * 2, current_ylim[1] * 2)  # Zoom out by doubling the range
+
+        # Adjust the radial limits of the polar plot
+        r_min, r_max = new_ylim
+        self.canvas.ax.set_ylim(r_min, r_max)
+        self.canvas.ax.set_yticks(np.linspace(r_min, r_max, num=5))  # Update y-ticks
+
+        self.canvas.draw()  # Update the canvas with the new zoom level
+
+    def rewind(self):
+        self.current_index = 0
+        self.polar_line.set_data([], [])  # Clear existing plot data
+        self.canvas.draw()  # Update the canvas to reflect changes
+        self.running = True  # Resume the animation after rewinding
+
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    window = NonRectangularWindow()
+    window.show()
+    sys.exit(app.exec_())

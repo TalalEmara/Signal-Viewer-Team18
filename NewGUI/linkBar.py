@@ -5,7 +5,7 @@ from Styles import boxStyle, signalControlButtonStyle, labelStyle, rewindOffButt
 import os
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from Core.Dynamic_polar import MainWindow as NonRectangularWindow
+from NewCore.Polar import NonRectangularWindow
 from SignalViewer import Viewer
 from messageBar import MessageBar
 
@@ -88,18 +88,18 @@ class ToolBar(QWidget):
         signalControl.setStyleSheet(boxStyle)
         signalControlLayout = QHBoxLayout()
         signalControl.setLayout(signalControlLayout)
-
-        signalControlLayout.addWidget(self.timeLabel)
+        #
+        # signalControlLayout.addWidget(self.timeLabel)
         signalControlLayout.addWidget(self.pauseButton)
         signalControlLayout.addWidget(self.playButton)
-        signalControlLayout.addWidget(self.toStartButton)
-        signalControlLayout.addWidget(self.toEndButton)
+        # signalControlLayout.addWidget(self.toStartButton)
+        # signalControlLayout.addWidget(self.toEndButton)
         signalControlLayout.addWidget(self.rewindButton)
 
         self.zoomButton = QPushButton()
         self.zoomButton.setStyleSheet(signalControlButtonStyle)
         self.zoomButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        self.zoomIcon = QIcon("E:\Programming programs\Web dev\Signal-Viewer-Team18\GUI\Assets/ToolBox/zoom.png")
+        self.zoomIcon = QIcon("\GUI\Assets/ToolBox/zoom.png")
         self.zoomButton.setIcon(self.zoomIcon)
 
         self.zoomButton.pressed.connect(lambda: self.handleButtonPress(self.zoomButton))
@@ -134,7 +134,7 @@ class ToolBar(QWidget):
         self.isLinked = True
         self.linkedButton.clicked.connect(lambda: self.handleLinkedClick())
         
-        self.nonRectangleButton = QPushButton("Non-Rectangular View")
+        self.nonRectangleButton = QPushButton("Polar View")
         self.nonRectangleButton.setStyleSheet(linkedButtonOnStyle)
         self.nonRectangleButton.clicked.connect(lambda: self.handleNonRectangularClick())
         self.nonRectangleButton.pressed.connect(lambda: self.nonRectangleButton.setStyleSheet("background-color: #efefef; font-family: Sofia sans; font-weight: semiBold;font-size: 20px;"))
@@ -222,8 +222,8 @@ class ToolBar(QWidget):
         button.setStyleSheet(signalControlButtonStyle)
 
     def handleNonRectangularClick(self):
-        nonRectangularView = NonRectangularWindow()
-        nonRectangularView.show()
+        self.nonRectangularView = NonRectangularWindow()
+        self.nonRectangularView.show()
 
     
     def handleLinkedClick(self):
