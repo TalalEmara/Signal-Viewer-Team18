@@ -185,17 +185,36 @@ class GlueWindow(QMainWindow):
 
         self.setMinimumSize(1000, 700)
         self.show()
+        # Initialize the plot
 
-    def update_plot(self, x, y):
-        self.mpl_canvas.ax.clear()  
-        self.mpl_canvas.line.set_xdata(x)
-        self.mpl_canvas.line.set_ydata(y)
-        self.mpl_canvas.ax.set_xlim(min(x), max(x)) 
-        self.mpl_canvas.ax.set_ylim(-1.2, 1.2)  
+    def init_plot(self, frame1_x, frame1_y, frame2_x, frame2_y):
+        # Clear the current plot
+        self.mpl_canvas.ax.clear()
+
+        # Plot the first frame
+        self.mpl_canvas.ax.plot(frame1_x, frame1_y, label='Frame 1', color='blue')
+
+        # Plot the second frame
+        self.mpl_canvas.ax.plot(frame2_x, frame2_y, label='Frame 2', color='red')
+
+        # Set labels and title
         self.mpl_canvas.ax.set_xlabel("X-axis")
         self.mpl_canvas.ax.set_ylabel("Y-axis")
-        self.mpl_canvas.draw() 
-    
+        self.mpl_canvas.ax.legend()
+        self.mpl_canvas.ax.set_title("Glued Frames")
+
+        # Refresh the canvas
+        self.mpl_canvas.draw()
+    def update_plot(self, x, y):
+        """Update the plot with new data."""
+        self.mpl_canvas.ax.clear()
+        self.mpl_canvas.line.set_xdata(x)
+        self.mpl_canvas.line.set_ydata(y)
+        self.mpl_canvas.ax.set_xlim(min(x), max(x))
+        self.mpl_canvas.ax.set_ylim(-1.2, 1.2)
+        self.mpl_canvas.ax.set_xlabel("X-axis")
+        self.mpl_canvas.ax.set_ylabel("Y-axis")
+        self.mpl_canvas.draw()
     def take_snapshot(self):
         t = np.linspace(0, 2 * np.pi, 400)
         signal = np.sin(t)

@@ -129,4 +129,19 @@ class Plotting(QObject):
         if hasattr(self, 'signals_widget') and hasattr(self.signals_widget, 'canvas'):
             self.signals_widget.canvas.update_plot(self.data_list[0]['x_data'][:self.current_frame], 
                                                     self.data_list[0]['y_data'][:self.current_frame])
-  
+
+
+    def get_current_data(self):
+        """Return the currently visible x and y data based on the x-axis limits."""
+        if self.canvas.ax:
+            x_min, x_max = self.canvas.ax.get_xlim()  # Get current x-axis limits
+            current_x_data = self.data_list[0]['x_data']
+            current_y_data = self.data_list[0]['y_data']
+
+            # Get indices of x data that fall within the current x limits
+            indices = np.where((current_x_data >= x_min) & (current_x_data <= x_max))[0]
+
+            # Return the corresponding x and y data
+            return current_x_data[indices], current_y_data[indices]
+
+        return None, None  # No data available yet
