@@ -196,6 +196,7 @@ class ToolBar(QWidget):
             self.viewer2.to_end_signal.emit()
 
         else:
+
             self.messageBar.showMessage("Not linked", "alert")  
 
 
@@ -217,6 +218,7 @@ class ToolBar(QWidget):
                             Opacity: .7;
                         }
                         """)
+        
 
     def handleButtonRelease(self, button):
         button.setStyleSheet(signalControlButtonStyle)

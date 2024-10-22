@@ -41,7 +41,7 @@ class Plotting(QObject):
             time = data['x_data']
             amplitude = data['y_data']
             self.canvas.ax.plot(time[:i + 1], amplitude[:i + 1], label=f'Signal {idx + 1}')
-
+          
             # Update x_min and x_max based on the data range in this window
             if i < window_size:
                 x_min, x_max = time[0], time[window_size] if x_max is None else max(x_max, time[window_size])
