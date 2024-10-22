@@ -89,11 +89,11 @@ class ToolBar(QWidget):
         signalControlLayout = QHBoxLayout()
         signalControl.setLayout(signalControlLayout)
 
-        signalControlLayout.addWidget(self.timeLabel)
+        # signalControlLayout.addWidget(self.timeLabel)
         signalControlLayout.addWidget(self.pauseButton)
         signalControlLayout.addWidget(self.playButton)
-        signalControlLayout.addWidget(self.toStartButton)
-        signalControlLayout.addWidget(self.toEndButton)
+        # signalControlLayout.addWidget(self.toStartButton)
+        # signalControlLayout.addWidget(self.toEndButton)
         signalControlLayout.addWidget(self.rewindButton)
 
         self.zoomButton = QPushButton()
