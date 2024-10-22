@@ -2,6 +2,9 @@ import sys
 import numpy as np
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout
+
+from NewGUI.importWindow import ImportWindow
 from SignalViewer import Viewer
 from Core.Data_load import DataLoader
 from selectorPanel import SelectorPanel  # Assuming you have a SelectorPanel class
@@ -10,13 +13,13 @@ from properties import Properties
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
+
     
     # Load data from CSV
-    csv_file_path = 'signals_data/ECG_Abnormal.csv'
+    csv_file_path = '../signals_data/ECG_Abnormal.csv'
     data_loader = DataLoader(csv_file_path)
     data_loader.load_data()
 
-    # Get the loaded data
     data = data_loader.get_data()
     x_data = data[:, 0]
     y_data = data[:, 1]
@@ -25,49 +28,73 @@ def main():
     plot_data_list_1 = [{'x_data': x_data, 'y_data': y_data}]
     plot_data_list_2 = [{'x_data': np.linspace(0, 10, 1000), 'y_data': np.sinh(np.linspace(0, 10, 1000))}]
 
-    # Create the main window
     main_window = QtWidgets.QWidget()
+    main_window.setAttribute(Qt.WA_StyledBackground, True)
+    main_window.setStyleSheet("background-color:#242424;")
     main_window.setWindowTitle("Signal Viewer")
 
-    # Create two viewers, passing channel names
-    viewer1 = Viewer(plot_data_list_1, channel_name="Channel 1")  # Ensure correct parameter names
+    properties = Properties()
+
+    viewer1 = Viewer(plot_data_list_1, channel_name="Channel 1")
     viewer2 = Viewer(plot_data_list_2, channel_name="Channel 2")
 
-    link_bar = ToolBar(viewer1, viewer2)
+    toolBar = ToolBar(viewer1, viewer2)
 
     # Create two selector panels, passing channel names
     selector_panel1 = SelectorPanel(channelName="Channel 1")
+    #selector_panel1.importButton.clicked.connect(lambda: handleImportClick(importWindow))
     selector_panel2 = SelectorPanel(channelName="Channel 2")
 
-    # Set the minimum width for the selector panels
-    selector_panel1.setMinimumWidth(250)  # Adjust width here
-    selector_panel2.setMinimumWidth(250)
+    mainLayout = QHBoxLayout()
+    propertiesPanle = QVBoxLayout()
+    activeArea = QVBoxLayout()
 
-    # Create splitters to make the panels resizable
-    splitter1 = QtWidgets.QSplitter(Qt.Horizontal)
-    splitter1.addWidget(selector_panel1)
-    splitter1.addWidget(viewer1)
-    splitter1.setStretchFactor(0, 3)  # Give selector_panel1 more space
-    splitter1.setStretchFactor(1, 1)  # viewer1 will take less space
+    toolBarLayout = QHBoxLayout()
+    messageBarLayout = QHBoxLayout()
 
-    splitter2 = QtWidgets.QSplitter(Qt.Horizontal)
-    splitter2.addWidget(selector_panel2)
-    splitter2.addWidget(viewer2)
-    splitter2.setStretchFactor(0, 3)  # Give selector_panel2 more space
-    splitter2.setStretchFactor(1, 1)  # viewer2 will take less space
+    channel1Layout = QHBoxLayout()
+    channel2Layout = QHBoxLayout()
 
-    # Create a vertical layout and add both splitters
-    vbox = QtWidgets.QVBoxLayout()
-    vbox.addWidget(link_bar)
-    vbox.addWidget(splitter1)
-    vbox.addWidget(splitter2)
+    selectorChannel1Layout = QVBoxLayout()
+    viewerChannel1Layout = QVBoxLayout()
+
+    selectorChannel2Layout = QVBoxLayout()
+    viewerChannel2Layout = QVBoxLayout()
+
+    propertiesPanle.addWidget(properties)
+    toolBarLayout.addWidget(toolBar)
+    selectorChannel1Layout.addWidget(selector_panel1)
+    selectorChannel2Layout.addWidget(selector_panel2)
+    viewerChannel1Layout.addWidget(viewer1)
+    viewerChannel2Layout.addWidget(viewer2)
+
+    mainLayout.addLayout(activeArea,80)
+    mainLayout.addLayout(propertiesPanle,20)
+    activeArea.addLayout(toolBarLayout,10)
+    activeArea.addLayout(messageBarLayout,2)
+    activeArea.addLayout(channel1Layout,44)
+    activeArea.addLayout(channel2Layout,44)
+    channel1Layout.addLayout(selectorChannel1Layout,30)
+    channel1Layout.addLayout(viewerChannel1Layout,70)
+    channel2Layout.addLayout(selectorChannel2Layout,30)
+    channel2Layout.addLayout(viewerChannel2Layout,70)
+
+
+
+
 
     # Set the layout for the main window
-    main_window.setLayout(vbox)
+    main_window.setLayout(mainLayout)
     main_window.resize(1400, 800)
     main_window.show()
 
     sys.exit(app.exec_())
+
+def handleImportClick(importWindow):
+    if importWindow is None:
+        importWindow = ImportWindow()
+    importWindow.show()
+    print("AnA T3bbbbbbbbt")
 
 if __name__ == "__main__":
     main()
