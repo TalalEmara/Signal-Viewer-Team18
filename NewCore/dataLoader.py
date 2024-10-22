@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from Signal import Signal
+
 
 class DataLoader:
     """Class to load data from a CSV file."""

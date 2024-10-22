@@ -11,17 +11,25 @@ from Core.Data_load import DataLoader
 from matplotlibFig import MplCanvas
 from plotting import Plotting
 import numpy as np
-from importWindow import ImportWindow
+from PyQt5.QtCore import pyqtSignal 
 
-class Viewer(QtWidgets.QWidget):
-    def __init__(self,data_list):
+class Viewer(QWidget):
+    play_signal = pyqtSignal()
+    pause_signal = pyqtSignal()
+    to_start_signal = pyqtSignal()
+    to_end_signal = pyqtSignal()
+    rewind_signal = pyqtSignal()
+
+    def __init__(self, data_list, channel_name="Channel 1"):
         super().__init__()
         
+        self.channel_name = channel_name  # Ensure the channel_name is defined
         self.data_list = data_list
         self.x_data = data_list[0]['x_data']
         self.y_data = data_list[0]['y_data']
-        self.ViewerUi()
-        
+        self.ViewerUi()  
+        self.setup_connections() 
+   
 
     def ViewerUi(self):
         self.setStyleSheet("background-color: #2D2D2D;")
@@ -42,13 +50,13 @@ class Viewer(QtWidgets.QWidget):
         self.plotting_instance = Plotting(self.canvas)
         if self.data_list:
             self.plotting_instance.init_plot(self.data_list)
-        # self.canvas.draw()
+ 
 
 
-
+       
 
         self.titleToolbarLayout = QHBoxLayout()
-        self.signalTitle = QLabel("Channel 1", self.signalViewer)
+        self.signalTitle = QLabel(self.channel_name, self.signalViewer)  
         self.signalTitle.setStyleSheet("color: #87EDF1; font-size: 15px;")
         self.titleToolbarLayout.addWidget(self.signalTitle)
 
@@ -160,6 +168,15 @@ class Viewer(QtWidgets.QWidget):
     def setup_connections(self):
        
         self.plotting_instance.rewind_state_changed.connect(self.update_rewind_button)
+
+    
+        self.play_signal.connect(self.plotting_instance.play)
+        self.pause_signal.connect(self.plotting_instance.pause)
+        self.to_start_signal.connect(self.plotting_instance.to_start)
+        self.to_end_signal.connect(self.plotting_instance.to_end)
+        self.rewind_signal.connect(self.plotting_instance.toggle_rewind)    
+        self.plotting_instance.rewind_state_changed.connect(self.update_rewind_button)
+
 
     def update_rewind_button(self, enabled):
        

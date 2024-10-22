@@ -9,16 +9,20 @@ from Core.Dynamic_polar import MainWindow as NonRectangularWindow
 from SignalViewer import Viewer
 from messageBar import MessageBar
 
+
 class ToolBar(QWidget):
-    def __init__(self):
+    def __init__(self, viewer1, viewer2):
         super().__init__()
-        self.signalViewer = Viewer()
-      
+        self.viewer1 = viewer1  # Save viewer instance 1
+        self.viewer2 = viewer2  # Save viewer instance 2
+
+        
+
         self.timeLabel = QLabel("00:00")
         self.timeLabel.setAlignment(Qt.AlignCenter)
         self.timeLabel.setStyleSheet(labelStyle)
 
-
+        # Signal controls and time
         self.timeLabel = QLabel("00:00")
         self.timeLabel.setAlignment(Qt.AlignCenter)
         self.timeLabel.setStyleSheet(labelStyle)
@@ -141,6 +145,9 @@ class ToolBar(QWidget):
         linkedGroupLayout = QHBoxLayout()
         linkedGroup.setLayout(linkedGroupLayout)
 
+        #linkedGroupLayout.addWidget(self.linkedLabel)
+        #linkedGroupLayout.addWidget(self.channel1LinkOption)
+        #linkedGroupLayout.addWidget(self.channel2LinkOption)
 
         linkedGroupLayout.addWidget(self.linkedButton)
         linkedGroupLayout.addWidget(self.nonRectangleButton)
@@ -153,35 +160,58 @@ class ToolBar(QWidget):
         self.setLayout(toolBarLayout)
 
 
-        self.pauseButton.clicked.connect(self.pauseAction if self.isLinked else self.handleButtonPress)
-        self.pauseButton.clicked.connect(self.pauseAction) 
-        self.playButton.clicked.connect(self.playAction)    
+        # self.pauseButton.clicked.connect(self.pauseAction if self.isLinked else self.handleButtonPress)
+        # self.pauseButton.clicked.connect(self.pauseAction) 
+        # self.playButton.clicked.connect(self.playAction)    
+        # self.toStartButton.clicked.connect(self.toStartAction)
+        # self.toEndButton.clicked.connect(self.toEndAction)
+        # self.rewindButton.clicked.connect(self.handleRewindClick)
+
+        self.pauseButton.clicked.connect(self.pauseAction)
+        self.playButton.clicked.connect(self.playAction)
         self.toStartButton.clicked.connect(self.toStartAction)
         self.toEndButton.clicked.connect(self.toEndAction)
         self.rewindButton.clicked.connect(self.handleRewindClick)
 
     def pauseAction(self):
         if self.isLinked:
-            self.signalViewer.pause_both()
-    
+            self.viewer1.pause_signal.emit()
+            self.viewer2.pause_signal.emit()
+        else:
+            self.handleButtonPress()
 
     def playAction(self):
         if self.isLinked:
-            self.signalViewer.play_both()  
+            self.viewer1.play_signal.emit()
+            self.viewer2.play_signal.emit()
+        else:
+            self.handleButtonPress()
 
     def toStartAction(self):
         if self.isLinked:
-            self.signalViewer.to_start()  
+            self.viewer1.to_start_signal.emit()
+            self.viewer2.to_start_signal.emit()
+
+        else:
+            self.handleButtonPress()
 
     def toEndAction(self):
         if self.isLinked:
-            self.signalViewer.to_end() 
+            self.viewer1.to_end_signal.emit()
+            self.viewer2.to_end_signal.emit()
+
+        else:
+                self.handleButtonPress()
 
     def handleRewindClick(self):
         if self.isLinked:
-            self.signalViewer.rewind_both()  
+            self.viewer1.rewind_signal.emit()
+            self.viewer2.rewind_signal.emit()
 
+        else:
+            self.handleButtonPress()
 
+    
     def handleButtonPress(self, button):
         button.setStyleSheet("""
                         QPushButton{

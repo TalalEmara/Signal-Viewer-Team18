@@ -1,5 +1,5 @@
 
-class Signal:
+class SignalProperties:
     def __init__(self, signalName, signalPath, dataPoints):
         self.name = signalName
         self.location = signalPath

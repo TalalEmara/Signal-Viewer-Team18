@@ -30,7 +30,7 @@ class ClickableLabel(QLabel):
 class SignalElement(QWidget):
     def __init__(self, signal):
         super().__init__()
-
+        self.setMinimumWidth(700)
         self.name= signal.name
         self.signalColor = signal.colorinChannel1
         self.location=signal.location
@@ -51,6 +51,7 @@ class SignalElement(QWidget):
         self.color.setFixedWidth(3)
         self.color.setFixedHeight(14)
         self.color.setEnabled(False)
+        
 
 
         self.location = ClickableLabel(self.location)
@@ -113,6 +114,8 @@ class SelectorPanel(QWidget):
 
     def __init__(self, channelName ="Channel 1"):
         super().__init__()
+
+        
 
         self.setAttribute(Qt.WA_StyledBackground, True)
         self.setStyleSheet("background-color:#222222; font-family: Sofia sans; font-weight: semiBold;")

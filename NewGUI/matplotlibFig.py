@@ -3,6 +3,9 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QPushButton
 from PyQt5.QtGui import QIcon
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QSizePolicy, QWidget, QSpacerItem, QFrame, QFileDialog, QMainWindow
+from PyQt5.QtGui import QIcon
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas, NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
 from PyQt5.QtCore import Qt
 import numpy as np
@@ -33,39 +36,56 @@ class MplCanvas(FigureCanvas):
         self.ax.set_xlim(0, 10)
         self.ax.set_ylim(0, 5)
 
-        self.toolbarLayout = QHBoxLayout()
-        self.toolbarLayout.setAlignment(Qt.AlignTop | Qt.AlignRight)
+        self.toolbarLayout = QVBoxLayout(self)
 
-        # Toolbar buttons (Zoom, Pan)
-        self.zoomInButton = QPushButton("", parent)
-        self.zoomInButton.setIcon(QIcon("NewGUI/Assets/MatPlotToolBar/zoomIn.png"))
-        self.zoomInButton.setStyleSheet("background-color: #242424; color: #FFFFFF; border: none;")
-        self.zoomInButton.setFixedSize(25, 25)
-        self.zoomInButton.clicked.connect(self.zoom_in)
-        self.toolbarLayout.addWidget(self.zoomInButton)
+        self.navToolbarLayout = QHBoxLayout()
+
+        self.navToolbar = NavigationToolbar(self, parent)
+        self.navToolbar.setStyleSheet("background-color: transparent;")
+        self.navToolbar.setFixedHeight(25)  
+        self.navToolbar.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+
+        for action in self.navToolbar.actions():
+            if action.text() in ['Pan', 'Zoom']:
+                action.setVisible(True)
+                if action.text() == 'Pan':
+                    action.setIcon(QIcon('E:\Programming programs\Web dev\Signal-Viewer-Team18\GUI\photos/pan.png'))
+                elif action.text() == 'Zoom':
+                    action.setIcon(QIcon('E:\Programming programs\Web dev\Signal-Viewer-Team18\GUI\photos/zoomIn.png'))
+            else:
+                action.setVisible(False)
+
+       
+        spacer = QSpacerItem(820, 20, QSizePolicy.Fixed, QSizePolicy.Minimum) 
+        self.navToolbarLayout.addItem(spacer)
+
+ 
+        self.navToolbarLayout.addWidget(self.navToolbar)
 
         self.zoomOutButton = QPushButton("", parent)
-        self.zoomOutButton.setIcon(QIcon("NewGUI/Assets/MatPlotToolBar/zoomOut.png"))
+        self.zoomOutButton.setIcon(QtGui.QIcon("E:\Programming programs\Web dev\Signal-Viewer-Team18\GUI\photos/zoomOut.png"))
         self.zoomOutButton.setStyleSheet("background-color: #242424; color: #FFFFFF; border: none;")
         self.zoomOutButton.setFixedSize(25, 25)
         self.zoomOutButton.clicked.connect(self.zoom_out)
-        self.toolbarLayout.addWidget(self.zoomOutButton)
 
-        self.panButton = QPushButton("", parent)
-        self.panButton.setIcon(QIcon("NewGUI/Assets/MatPlotToolBar/pan.png"))
-        self.panButton.setStyleSheet("background-color: #242424; color: #FFFFFF; border: none;")
-        self.panButton.setFixedSize(25, 25)
-        self.panButton.setCheckable(True)
-        self.panButton.clicked.connect(self.toggle_pan_mode)
-        self.toolbarLayout.addWidget(self.panButton)
+      
+        self.navToolbarLayout.addWidget(self.zoomOutButton)
 
-        self.mainLayout = QVBoxLayout(self)
-        self.mainLayout.addLayout(self.toolbarLayout)
-        self.mainLayout.addWidget(self)
-        self.mainLayout.setContentsMargins(0, 0, 0, 0)
+     
+        self.toolbarLayout.addLayout(self.navToolbarLayout)
+        self.toolbarLayout.addWidget(self)
 
-        self.panning = False
-        self.lastMouseX = None
+      
+        self.toolbarLayout.setAlignment(self.navToolbarLayout, QtCore.Qt.AlignTop | QtCore.Qt.AlignRight)
+
+
+
+    def zoom_out(self):
+        xlim = self.ax.get_xlim()
+        ylim = self.ax.get_ylim()
+        self.ax.set_xlim([xlim[0] - 0.5, xlim[1] + 0.5])
+        self.ax.set_ylim([ylim[0] - 0.5, ylim[1] + 0.5])
+        self.draw()
 
     def add_line(self, x_data, y_data, color='#D55877', linewidth=2):
         """Add a new line to the canvas with specified properties."""
@@ -84,44 +104,44 @@ class MplCanvas(FigureCanvas):
             self.ax.autoscale_view()
             self.draw()
 
-    def zoom_in(self):
-        """Zoom in by adjusting the axis limits."""
-        xlim = self.ax.get_xlim()
-        ylim = self.ax.get_ylim()
-        new_xlim = [max(0, xlim[0]), max(0.5, xlim[1] - 0.5)]
-        new_ylim = [max(0, ylim[0] + 0.5), ylim[1] - 0.5]
-        self.ax.set_xlim(new_xlim)
-        self.ax.set_ylim(new_ylim)
-        self.draw()
+    # def zoom_in(self):
+    #     """Zoom in by adjusting the axis limits."""
+    #     xlim = self.ax.get_xlim()
+    #     ylim = self.ax.get_ylim()
+    #     new_xlim = [max(0, xlim[0]), max(0.5, xlim[1] - 0.5)]
+    #     new_ylim = [max(0, ylim[0] + 0.5), ylim[1] - 0.5]
+    #     self.ax.set_xlim(new_xlim)
+    #     self.ax.set_ylim(new_ylim)
+    #     self.draw()
 
-    def zoom_out(self):
-        """Zoom out by adjusting the axis limits."""
-        xlim = self.ax.get_xlim()
-        ylim = self.ax.get_ylim()
-        new_xlim = [max(0, xlim[0]), xlim[1] + 0.5]
-        new_ylim = [max(0, ylim[0] - 0.5), ylim[1] + 0.5]
-        self.ax.set_xlim(new_xlim)
-        self.ax.set_ylim(new_ylim)
-        self.draw()
+    # def zoom_out(self):
+    #     """Zoom out by adjusting the axis limits."""
+    #     xlim = self.ax.get_xlim()
+    #     ylim = self.ax.get_ylim()
+    #     new_xlim = [max(0, xlim[0]), xlim[1] + 0.5]
+    #     new_ylim = [max(0, ylim[0] - 0.5), ylim[1] + 0.5]
+    #     self.ax.set_xlim(new_xlim)
+    #     self.ax.set_ylim(new_ylim)
+    #     self.draw()
 
-    def toggle_pan_mode(self):
-        """Enable or disable panning mode."""
-        self.panning = not self.panning
+    # def toggle_pan_mode(self):
+    #     """Enable or disable panning mode."""
+    #     self.panning = not self.panning
 
-    def mousePressEvent(self, event):
-        if event.button() == Qt.LeftButton and self.panning:
-            self.lastMouseX = event.x()
-        super().mousePressEvent(event)
+    # def mousePressEvent(self, event):
+    #     if event.button() == Qt.LeftButton and self.panning:
+    #         self.lastMouseX = event.x()
+    #     super().mousePressEvent(event)
 
-    def mouseMoveEvent(self, event):
-        if event.buttons() == Qt.LeftButton and self.panning and self.lastMouseX is not None:
-            xlim = self.ax.get_xlim()
-            delta = (event.x() - self.lastMouseX) * 0.01
-            new_xlim = [max(0, xlim[0] - delta), xlim[1] - delta]
-            self.ax.set_xlim(new_xlim)
-            self.draw()
-            self.lastMouseX = event.x()
-        super().mouseMoveEvent(event)
+    # def mouseMoveEvent(self, event):
+    #     if event.buttons() == Qt.LeftButton and self.panning and self.lastMouseX is not None:
+    #         xlim = self.ax.get_xlim()
+    #         delta = (event.x() - self.lastMouseX) * 0.01
+    #         new_xlim = [max(0, xlim[0] - delta), xlim[1] - delta]
+    #         self.ax.set_xlim(new_xlim)
+    #         self.draw()
+    #         self.lastMouseX = event.x()
+    #     super().mouseMoveEvent(event)
 
     def clear_canvas(self):
        
