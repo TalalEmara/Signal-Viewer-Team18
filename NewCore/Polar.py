@@ -1,13 +1,15 @@
 import sys
 import numpy as np
 import pandas as pd
-from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QPushButton, QToolButton
+from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QPushButton, QToolButton, QSizePolicy, \
+    QHBoxLayout
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas, NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
 from matplotlib.animation import FuncAnimation
 from Core import Data_load
+from NewGUI.Styles import signalControlButtonStyle, boxStyle, rewindOffButtonStyle,rewindOnButtonStyle
 
 
 
@@ -49,6 +51,7 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         self.setStyleSheet("background-color:#242424; color: #efefef;")
+        self.setWindowTitle("Polar view")
 
         # Load the data from CSV
         self.csv_file_path = '..\signals_data\EMG_Normal.csv'
@@ -57,20 +60,82 @@ class MainWindow(QMainWindow):
         self.data = self.data_loader.get_data()  # Convert to NumPy array
 
 
-        self.canvas = MplCanvas(self, width=5, height=6, dpi=100)
+        self.canvas = MplCanvas(self, width=5, height=8, dpi=100)
         self.init_plot()
 
 
         self.toolbar = CustomToolbar(self.canvas, self)
 
 
-        self.stop_button = QPushButton("Stop")
-        self.stop_button.clicked.connect(self.stop_signal)
+        #self.stop_button = QPushButton("Stop")
+        #self.stop_button.clicked.connect(self.stop_signal)
+
+        self.pauseButton = QPushButton()
+        self.pauseButton.setStyleSheet(signalControlButtonStyle)
+        self.pauseButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        self.pauseIcon = QIcon(
+            "E:\Programming programs\Web dev\Signal-Viewer-Team18\GUI\Assets\ControlsButtons\pause.png")
+        self.pauseButton.setIcon(self.pauseIcon)
+
+        self.pauseButton.pressed.connect(lambda: self.handleButtonPress(self.pauseButton))
+        self.pauseButton.released.connect(lambda: self.handleButtonRelease(self.pauseButton))
+
+        self.playButton = QPushButton()
+        self.playButton.setStyleSheet(signalControlButtonStyle)
+        self.playButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        self.playIcon = QIcon(
+            "E:\Programming programs\Web dev\Signal-Viewer-Team18\GUI\Assets/ControlsButtons/play.png")
+        self.playButton.setIcon(self.playIcon)
+
+        self.playButton.pressed.connect(lambda: self.handleButtonPress(self.playButton))
+        self.playButton.released.connect(lambda: self.handleButtonRelease(self.playButton))
+
+        self.toStartButton = QPushButton()
+        self.toStartButton.setStyleSheet(signalControlButtonStyle)
+        self.toStartButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        self.toStartIcon = QIcon(
+            "E:\Programming programs\Web dev\Signal-Viewer-Team18\GUI\Assets/ControlsButtons/start.png")
+        self.toStartButton.setIcon(self.toStartIcon)
+
+        self.toStartButton.pressed.connect(lambda: self.handleButtonPress(self.toStartButton))
+        self.toStartButton.released.connect(lambda: self.handleButtonRelease(self.toStartButton))
+
+        self.toEndButton = QPushButton()
+        self.toEndButton.setStyleSheet(signalControlButtonStyle)
+        self.toEndButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        self.toEndIcon = QIcon(
+            "E:\Programming programs\Web dev\Signal-Viewer-Team18\GUI\Assets/ControlsButtons/end.png")
+        self.toEndButton.setIcon(self.toEndIcon)
+
+        self.toEndButton.pressed.connect(lambda: self.handleButtonPress(self.toEndButton))
+        self.toEndButton.released.connect(lambda: self.handleButtonRelease(self.toEndButton))
+
+        self.rewindButton = QPushButton()
+        self.rewindButton.setStyleSheet(rewindOffButtonStyle)
+        self.rewindButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        self.rewindIcon = QIcon(
+            "E:\Programming programs\Web dev\Signal-Viewer-Team18\GUI\Assets/ControlsButtons/rewindOff.png")
+        self.rewindButton.setIcon(self.rewindIcon)
+
+        self.isRewind = False
+        self.rewindButton.clicked.connect(lambda: self.handleRewindClick())
+
+        signalControl = QWidget()
+        signalControl.setStyleSheet(boxStyle)
+        signalControlLayout = QHBoxLayout()
+        signalControl.setLayout(signalControlLayout)
+
+        signalControlLayout.addWidget(self.pauseButton)
+        signalControlLayout.addWidget(self.playButton)
+        signalControlLayout.addWidget(self.toStartButton)
+        signalControlLayout.addWidget(self.toEndButton)
+        signalControlLayout.addWidget(self.rewindButton)
 
         layout = QVBoxLayout()
         layout.addWidget(self.toolbar)
         layout.addWidget(self.canvas)
-        layout.addWidget(self.stop_button)
+        #layout.addWidget(self.stop_button)
+        layout.addWidget(signalControl)
 
         container = QWidget()
         container.setLayout(layout)
