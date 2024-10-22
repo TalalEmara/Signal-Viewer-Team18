@@ -11,6 +11,7 @@ from Core.Data_load import DataLoader
 from matplotlibFig import MplCanvas
 from plotting import Plotting
 import numpy as np
+from importWindow import ImportWindow
 
 class Viewer(QtWidgets.QWidget):
     def __init__(self,data_list):
@@ -175,6 +176,7 @@ def main():
     x_data = np.linspace(0, 10, 1000)
     y_data = np.sin(x_data)
     plot_data_list = [{'x_data': x_data, 'y_data':y_data}]
+    # plot_data_list = ImportWindow.importFile(ImportWindow)
 
     viewer = Viewer(plot_data_list)
     viewer.setWindowTitle("Signal Viewer")

@@ -105,6 +105,7 @@ class ImportWindow(QMainWindow):
 
             print("importedSignal")
             self.close()
+            return signalData
         else: 
             print("No file selected")
 
