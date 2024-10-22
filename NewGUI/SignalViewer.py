@@ -20,15 +20,17 @@ class Viewer(QWidget):
     to_end_signal = pyqtSignal()
     rewind_signal = pyqtSignal()
 
-    def __init__(self, data_list, channel_name="Channel 1"):
+    def __init__(self, data_list, channel_name="Channel 1", show_rewind_button=True):
         super().__init__()
         
         self.channel_name = channel_name  # Ensure the channel_name is defined
         self.data_list = data_list
         self.x_data = data_list[0]['x_data']
         self.y_data = data_list[0]['y_data']
+        self.show_rewind_button = show_rewind_button
         self.ViewerUi()  
         self.setup_connections() 
+        
    
 
     def ViewerUi(self):
@@ -74,10 +76,10 @@ class Viewer(QWidget):
         self.SignalbuttonsLayout = QHBoxLayout()
         self.SignalbuttonsLayout.addStretch(1)
 
-        self.timeLabel = QtWidgets.QLabel("00:00", self.signalViewer)
-        self.timeLabel.setStyleSheet(labelStyle)
-        self.SignalbuttonsLayout.addWidget(self.timeLabel)
-        self.SignalbuttonsLayout.addSpacing(70)
+        # self.timeLabel = QtWidgets.QLabel("00:00", self.signalViewer)
+        # self.timeLabel.setStyleSheet(labelStyle)
+        # self.SignalbuttonsLayout.addWidget(self.timeLabel)
+        # self.SignalbuttonsLayout.addSpacing(70)
 
         self.pauseButton = QtWidgets.QPushButton(self.signalViewer)
         self.pauseButton.setIcon(QtGui.QIcon("NewGUI/Assets/ControlsButtons/pause.png"))
@@ -91,26 +93,29 @@ class Viewer(QWidget):
         self.playButton.clicked.connect(self.plotting_instance.play)
         self.SignalbuttonsLayout.addWidget(self.playButton)
 
-        self.toStartButton = QtWidgets.QPushButton(self.signalViewer)
-        self.toStartButton.setIcon(QtGui.QIcon("NewGUI/Assets/ControlsButtons/start.png"))
-        self.toStartButton.setStyleSheet(signalControlButtonStyle)
-        self.toStartButton.clicked.connect(self.plotting_instance.to_start)
-        self.SignalbuttonsLayout.addWidget(self.toStartButton)
+        # self.toStartButton = QtWidgets.QPushButton(self.signalViewer)
+        # self.toStartButton.setIcon(QtGui.QIcon("NewGUI/Assets/ControlsButtons/start.png"))
+        # self.toStartButton.setStyleSheet(signalControlButtonStyle)
+        # self.toStartButton.clicked.connect(self.plotting_instance.to_start)
+        # self.SignalbuttonsLayout.addWidget(self.toStartButton)
+        #
+        # self.toEndButton = QtWidgets.QPushButton(self.signalViewer)
+        # self.toEndButton.setIcon(QtGui.QIcon("NewGUI/Assets/ControlsButtons/end.png"))
+        # self.toEndButton.setStyleSheet(signalControlButtonStyle)
+        # self.toEndButton.clicked.connect(self.plotting_instance.to_end)
+        # self.SignalbuttonsLayout.addWidget(self.toEndButton)
 
-        self.toEndButton = QtWidgets.QPushButton(self.signalViewer)
-        self.toEndButton.setIcon(QtGui.QIcon("NewGUI/Assets/ControlsButtons/end.png"))
-        self.toEndButton.setStyleSheet(signalControlButtonStyle)
-        self.toEndButton.clicked.connect(self.plotting_instance.to_end)
-        self.SignalbuttonsLayout.addWidget(self.toEndButton)
+        self.rewindButton = None  # Initialize the rewind button to None
 
-        self.rewindButton = QtWidgets.QPushButton(self.signalViewer)
-        self.rewindButton.setIcon(QtGui.QIcon("NewGUI/Assets/ControlsButtons/rewindOff.png"))
-        self.rewindButton.setStyleSheet(rewindOffButtonStyle)
-        self.rewindButton.setCheckable(True)
-        self.rewindButton.toggled.connect(self.plotting_instance.toggle_rewind)
-        self.plotting_instance.rewind_state_changed.connect(self.update_rewind_button)
-        self.SignalbuttonsLayout.addWidget(self.rewindButton)
-
+        # Add the rewind button only if show_rewind_button is True
+        if self.show_rewind_button:
+            self.rewindButton = QtWidgets.QPushButton(self.signalViewer)
+            self.rewindButton.setIcon(QtGui.QIcon("NewGUI/Assets/ControlsButtons/rewindOff.png"))
+            self.rewindButton.setStyleSheet(rewindOffButtonStyle)
+            self.rewindButton.setCheckable(True)
+            self.rewindButton.toggled.connect(self.plotting_instance.toggle_rewind)
+            self.plotting_instance.rewind_state_changed.connect(self.update_rewind_button)
+            self.SignalbuttonsLayout.addWidget(self.rewindButton)
 
         self.SignalbuttonsLayout.addStretch(6)
 
@@ -172,8 +177,8 @@ class Viewer(QWidget):
     
         self.play_signal.connect(self.plotting_instance.play)
         self.pause_signal.connect(self.plotting_instance.pause)
-        self.to_start_signal.connect(self.plotting_instance.to_start)
-        self.to_end_signal.connect(self.plotting_instance.to_end)
+        # self.to_start_signal.connect(self.plotting_instance.to_start)
+        # self.to_end_signal.connect(self.plotting_instance.to_end)
         self.rewind_signal.connect(self.plotting_instance.toggle_rewind)    
         self.plotting_instance.rewind_state_changed.connect(self.update_rewind_button)
 

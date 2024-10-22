@@ -8,7 +8,7 @@ class MessageBar(QWidget):
         self.setStyleSheet('background-color: #242424')
         self.setContentsMargins(10,0,0,0)
 
-        self.message = QLabel("Abdo el hals")
+        self.message = QLabel("")
         self.message.setStyleSheet("""color: #EFEFEF;
                                     font-family: Sofia sans;
                                     font-weight: semiBold;
@@ -22,8 +22,8 @@ class MessageBar(QWidget):
         mainLayout.addStretch()
 
     def showMessage(self,message = None, type = None):
-        self.message = message
-        if(type == "alert"):
-            self.setStyleSheet('background-color: ##D55877')
+        self.message.setText (message)
+        if type == "alert":
+            self.setStyleSheet('background-color: #D55877')  # Correct color value
         else:
-            self.setStyleSheet('background-color: #242424')
+            self.setStyleSheet('background-color: #242424')  # Set 

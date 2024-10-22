@@ -117,7 +117,7 @@ class ImportWindow(QMainWindow):
             times, speeds = Live_signal_processing(liveSignal)  # Get data from processing function
             plot_data_list = [{'x_data': times, 'y_data': speeds}]  # Prepare data for plotting
 
-            self.viewer = Viewer(plot_data_list)  # Create Viewer instance
+            self.viewer = Viewer(plot_data_list, show_rewind_button=False)  # Create Viewer instance
             self.viewer.setWindowTitle("Live Signal Viewer")  # Set the window title
             self.viewer.show()  # Show the viewer window
             self.close()
@@ -130,6 +130,7 @@ class ImportWindow(QMainWindow):
         # Check if a file was selected
         if file_path:
             self.file_path = file_path
+            self.signalName.setText(os.path.basename(self.file_path))
             # print(signal.name)
             # return Signal(file_name, file_path, signalData)
 

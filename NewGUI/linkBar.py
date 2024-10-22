@@ -13,19 +13,20 @@ from messageBar import MessageBar
 class ToolBar(QWidget):
     def __init__(self, viewer1, viewer2):
         super().__init__()
-        self.viewer1 = viewer1  # Save viewer instance 1
-        self.viewer2 = viewer2  # Save viewer instance 2
+        self.messageBar = MessageBar() 
+        self.viewer1 = viewer1 
+        self.viewer2 = viewer2  
 
         
-
-        self.timeLabel = QLabel("00:00")
-        self.timeLabel.setAlignment(Qt.AlignCenter)
-        self.timeLabel.setStyleSheet(labelStyle)
-
-        # Signal controls and time
-        self.timeLabel = QLabel("00:00")
-        self.timeLabel.setAlignment(Qt.AlignCenter)
-        self.timeLabel.setStyleSheet(labelStyle)
+        #
+        # self.timeLabel = QLabel("00:00")
+        # self.timeLabel.setAlignment(Qt.AlignCenter)
+        # self.timeLabel.setStyleSheet(labelStyle)
+        #
+        #
+        # self.timeLabel = QLabel("00:00")
+        # self.timeLabel.setAlignment(Qt.AlignCenter)
+        # self.timeLabel.setStyleSheet(labelStyle)
 
         self.pauseButton = QPushButton()
         self.pauseButton.setStyleSheet(signalControlButtonStyle)
@@ -49,30 +50,30 @@ class ToolBar(QWidget):
         self.playButton.released.connect(lambda: self.handleButtonRelease(self.playButton))
 
        
-
-        self.toStartButton = QPushButton()
-        self.toStartButton.setStyleSheet(signalControlButtonStyle)
-        self.toStartButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        self.toStartIcon = QIcon("E:\Programming programs\Web dev\Signal-Viewer-Team18\GUI\Assets/ControlsButtons/start.png")
-        self.toStartButton.setIcon(self.toStartIcon)
+        #
+        # self.toStartButton = QPushButton()
+        # self.toStartButton.setStyleSheet(signalControlButtonStyle)
+        # self.toStartButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        # self.toStartIcon = QIcon("E:\Programming programs\Web dev\Signal-Viewer-Team18\GUI\Assets/ControlsButtons/start.png")
+        # self.toStartButton.setIcon(self.toStartIcon)
+        #
+        #
+        #
+        #
+        # self.toStartButton.pressed.connect(lambda: self.handleButtonPress(self.toStartButton))
+        # self.toStartButton.released.connect(lambda: self.handleButtonRelease(self.toStartButton))
+        #
+        #
+        # self.toEndButton = QPushButton()
+        # self.toEndButton.setStyleSheet(signalControlButtonStyle)
+        # self.toEndButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        # self.toEndIcon = QIcon("E:\Programming programs\Web dev\Signal-Viewer-Team18\GUI\Assets/ControlsButtons/end.png")
+        # self.toEndButton.setIcon(self.toEndIcon)
         
-        
-
-
-        self.toStartButton.pressed.connect(lambda: self.handleButtonPress(self.toStartButton))
-        self.toStartButton.released.connect(lambda: self.handleButtonRelease(self.toStartButton))
-
-
-        self.toEndButton = QPushButton()
-        self.toEndButton.setStyleSheet(signalControlButtonStyle)
-        self.toEndButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        self.toEndIcon = QIcon("E:\Programming programs\Web dev\Signal-Viewer-Team18\GUI\Assets/ControlsButtons/end.png")
-        self.toEndButton.setIcon(self.toEndIcon)
-        
-
-
-        self.toEndButton.pressed.connect(lambda: self.handleButtonPress(self.toEndButton))
-        self.toEndButton.released.connect(lambda: self.handleButtonRelease(self.toEndButton))
+        #
+        #
+        # self.toEndButton.pressed.connect(lambda: self.handleButtonPress(self.toEndButton))
+        # self.toEndButton.released.connect(lambda: self.handleButtonRelease(self.toEndButton))
 
         self.rewindButton = QPushButton()
         self.rewindButton.setStyleSheet(rewindOffButtonStyle)
@@ -145,10 +146,6 @@ class ToolBar(QWidget):
         linkedGroupLayout = QHBoxLayout()
         linkedGroup.setLayout(linkedGroupLayout)
 
-        #linkedGroupLayout.addWidget(self.linkedLabel)
-        #linkedGroupLayout.addWidget(self.channel1LinkOption)
-        #linkedGroupLayout.addWidget(self.channel2LinkOption)
-
         linkedGroupLayout.addWidget(self.linkedButton)
         linkedGroupLayout.addWidget(self.nonRectangleButton)
 
@@ -160,17 +157,11 @@ class ToolBar(QWidget):
         self.setLayout(toolBarLayout)
 
 
-        # self.pauseButton.clicked.connect(self.pauseAction if self.isLinked else self.handleButtonPress)
-        # self.pauseButton.clicked.connect(self.pauseAction) 
-        # self.playButton.clicked.connect(self.playAction)    
-        # self.toStartButton.clicked.connect(self.toStartAction)
-        # self.toEndButton.clicked.connect(self.toEndAction)
-        # self.rewindButton.clicked.connect(self.handleRewindClick)
 
         self.pauseButton.clicked.connect(self.pauseAction)
         self.playButton.clicked.connect(self.playAction)
-        self.toStartButton.clicked.connect(self.toStartAction)
-        self.toEndButton.clicked.connect(self.toEndAction)
+        # self.toStartButton.clicked.connect(self.toStartAction)
+        # self.toEndButton.clicked.connect(self.toEndAction)
         self.rewindButton.clicked.connect(self.handleRewindClick)
 
     def pauseAction(self):
@@ -178,14 +169,17 @@ class ToolBar(QWidget):
             self.viewer1.pause_signal.emit()
             self.viewer2.pause_signal.emit()
         else:
-            self.handleButtonPress()
+            self.messageBar.showMessage("Not linked", "alert")  
+
+            
 
     def playAction(self):
         if self.isLinked:
             self.viewer1.play_signal.emit()
             self.viewer2.play_signal.emit()
         else:
-            self.handleButtonPress()
+            self.messageBar.showMessage("Not linked", "alert")  
+
 
     def toStartAction(self):
         if self.isLinked:
@@ -193,7 +187,8 @@ class ToolBar(QWidget):
             self.viewer2.to_start_signal.emit()
 
         else:
-            self.handleButtonPress()
+            self.messageBar.showMessage("Not linked", "alert")  
+
 
     def toEndAction(self):
         if self.isLinked:
@@ -201,7 +196,9 @@ class ToolBar(QWidget):
             self.viewer2.to_end_signal.emit()
 
         else:
-            self.handleButtonPress()
+
+            self.messageBar.showMessage("Not linked", "alert")  
+
 
     def handleRewindClick(self):
         if self.isLinked:
