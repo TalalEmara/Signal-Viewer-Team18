@@ -201,7 +201,7 @@ class ToolBar(QWidget):
             self.viewer2.to_end_signal.emit()
 
         else:
-                self.handleButtonPress()
+            self.handleButtonPress()
 
     def handleRewindClick(self):
         if self.isLinked:
@@ -221,6 +221,7 @@ class ToolBar(QWidget):
                             Opacity: .7;
                         }
                         """)
+        
 
     def handleButtonRelease(self, button):
         button.setStyleSheet(signalControlButtonStyle)
