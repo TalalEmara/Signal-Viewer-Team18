@@ -1,45 +1,73 @@
-import matplotlib.pyplot as plt
+import sys
 import numpy as np
+from PyQt5 import QtWidgets
+from PyQt5.QtCore import Qt
+from SignalViewer import Viewer
+from Core.Data_load import DataLoader
+from selectorPanel import SelectorPanel  # Assuming you have a SelectorPanel class
+from linkBar import ToolBar
+from properties import Properties
 
-# Generate sample data
-x = np.linspace(0, 10, 100)
-y = np.sin(x)
+def main():
+    app = QtWidgets.QApplication(sys.argv)
+    
+    # Load data from CSV
+    csv_file_path = 'signals_data/ECG_Abnormal.csv'
+    data_loader = DataLoader(csv_file_path)
+    data_loader.load_data()
 
-# Create a figure and axis
-fig, ax = plt.subplots()
+    # Get the loaded data
+    data = data_loader.get_data()
+    x_data = data[:, 0]
+    y_data = data[:, 1]
 
-# Set initial axis limits to prevent negative values and stop at (0, 0)
-ax.set_xlim(0, None)
-ax.set_ylim(0, None)
+    # Prepare two sets of plot data
+    plot_data_list_1 = [{'x_data': x_data, 'y_data': y_data}]
+    plot_data_list_2 = [{'x_data': np.linspace(0, 10, 1000), 'y_data': np.sinh(np.linspace(0, 10, 1000))}]
 
-# Plot the data
-ax.plot(x, y)
+    # Create the main window
+    main_window = QtWidgets.QWidget()
+    main_window.setWindowTitle("Signal Viewer")
 
-# Disable automatic scaling to maintain fixed limits
-ax.set_autoscale_on(False)
+    # Create two viewers, passing channel names
+    viewer1 = Viewer(plot_data_list_1, channel_name="Channel 1")  # Ensure correct parameter names
+    viewer2 = Viewer(plot_data_list_2, channel_name="Channel 2")
 
-# Add a title and labels
-ax.set_title("Example Plot")
-ax.set_xlabel("X-axis")
-ax.set_ylabel("Y-axis")
+    link_bar = ToolBar(viewer1, viewer2)
 
-# Connect to the pan button event and prevent panning into negative regions
-def on_pan(event):
-    if event.button == 1:  # Left mouse button
-        # Get current axis limits
-        x_min, x_max = ax.get_xlim()
-        y_min, y_max = ax.get_ylim()
+    # Create two selector panels, passing channel names
+    selector_panel1 = SelectorPanel(channelName="Channel 1")
+    selector_panel2 = SelectorPanel(channelName="Channel 2")
 
-        # Prevent panning into negative regions
-        x_min = max(x_min, 0)
-        y_min = max(y_min, 0)
+    # Set the minimum width for the selector panels
+    selector_panel1.setMinimumWidth(250)  # Adjust width here
+    selector_panel2.setMinimumWidth(250)
 
-        # Set the new limits
-        ax.set_xlim(x_min, x_max)
-        ax.set_ylim(y_min, y_max)
-        plt.draw()
+    # Create splitters to make the panels resizable
+    splitter1 = QtWidgets.QSplitter(Qt.Horizontal)
+    splitter1.addWidget(selector_panel1)
+    splitter1.addWidget(viewer1)
+    splitter1.setStretchFactor(0, 3)  # Give selector_panel1 more space
+    splitter1.setStretchFactor(1, 1)  # viewer1 will take less space
 
-cid = fig.canvas.mpl_connect('button_press_event', on_pan)
+    splitter2 = QtWidgets.QSplitter(Qt.Horizontal)
+    splitter2.addWidget(selector_panel2)
+    splitter2.addWidget(viewer2)
+    splitter2.setStretchFactor(0, 3)  # Give selector_panel2 more space
+    splitter2.setStretchFactor(1, 1)  # viewer2 will take less space
 
-# Show the plot
-plt.show()
+    # Create a vertical layout and add both splitters
+    vbox = QtWidgets.QVBoxLayout()
+    vbox.addWidget(link_bar)
+    vbox.addWidget(splitter1)
+    vbox.addWidget(splitter2)
+
+    # Set the layout for the main window
+    main_window.setLayout(vbox)
+    main_window.resize(1400, 800)
+    main_window.show()
+
+    sys.exit(app.exec_())
+
+if __name__ == "__main__":
+    main()
