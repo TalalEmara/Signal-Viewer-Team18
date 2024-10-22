@@ -157,11 +157,11 @@ class Viewer(QtWidgets.QWidget):
         edit_line.focusOutEvent = on_focus_out
     
     def setup_connections(self):
-        # Connect the rewind state change signal to the method that updates the button appearance
+       
         self.plotting_instance.rewind_state_changed.connect(self.update_rewind_button)
 
     def update_rewind_button(self, enabled):
-        # Update the appearance of the rewind button based on its state
+       
         if enabled:
             self.rewindButton.setStyleSheet(rewindOnButtonStyle)
             self.rewindButton.setIcon(QtGui.QIcon("NewGUI/Assets/ControlsButtons/rewindOn.png"))
