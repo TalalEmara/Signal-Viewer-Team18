@@ -20,15 +20,17 @@ class Viewer(QWidget):
     to_end_signal = pyqtSignal()
     rewind_signal = pyqtSignal()
 
-    def __init__(self, data_list, channel_name="Channel 1"):
+    def __init__(self, data_list, channel_name="Channel 1", show_rewind_button=True):
         super().__init__()
         
         self.channel_name = channel_name  # Ensure the channel_name is defined
         self.data_list = data_list
         self.x_data = data_list[0]['x_data']
         self.y_data = data_list[0]['y_data']
+        self.show_rewind_button = show_rewind_button
         self.ViewerUi()  
         self.setup_connections() 
+        
    
 
     def ViewerUi(self):
@@ -103,14 +105,17 @@ class Viewer(QWidget):
         self.toEndButton.clicked.connect(self.plotting_instance.to_end)
         self.SignalbuttonsLayout.addWidget(self.toEndButton)
 
-        self.rewindButton = QtWidgets.QPushButton(self.signalViewer)
-        self.rewindButton.setIcon(QtGui.QIcon("NewGUI/Assets/ControlsButtons/rewindOff.png"))
-        self.rewindButton.setStyleSheet(rewindOffButtonStyle)
-        self.rewindButton.setCheckable(True)
-        self.rewindButton.toggled.connect(self.plotting_instance.toggle_rewind)
-        self.plotting_instance.rewind_state_changed.connect(self.update_rewind_button)
-        self.SignalbuttonsLayout.addWidget(self.rewindButton)
+        self.rewindButton = None  # Initialize the rewind button to None
 
+        # Add the rewind button only if show_rewind_button is True
+        if self.show_rewind_button:
+            self.rewindButton = QtWidgets.QPushButton(self.signalViewer)
+            self.rewindButton.setIcon(QtGui.QIcon("NewGUI/Assets/ControlsButtons/rewindOff.png"))
+            self.rewindButton.setStyleSheet(rewindOffButtonStyle)
+            self.rewindButton.setCheckable(True)
+            self.rewindButton.toggled.connect(self.plotting_instance.toggle_rewind)
+            self.plotting_instance.rewind_state_changed.connect(self.update_rewind_button)
+            self.SignalbuttonsLayout.addWidget(self.rewindButton)
 
         self.SignalbuttonsLayout.addStretch(6)
 

@@ -1,9 +1,8 @@
-from PyQt5.QtCore import QObject, pyqtSignal
+from PyQt5.QtCore import QObject, pyqtSignal 
 from PyQt5.QtWidgets import QApplication
 from matplotlib.animation import FuncAnimation
 import numpy as np
 import sys
-
 
 class Plotting(QObject):
     rewind_state_changed = pyqtSignal(bool)
@@ -35,7 +34,7 @@ class Plotting(QObject):
         self.canvas.ax.clear()
 
         # Determine the minimum and maximum x values for the current window
-        window_size = 50  # Number of data points to show at once
+        window_size = 20  # Number of data points to show at once
         x_min, x_max = None, None
 
         for idx, data in enumerate(self.data_list):
@@ -51,15 +50,25 @@ class Plotting(QObject):
 
         # Set consistent x-axis limits for all signals
         self.canvas.ax.set_xlim(x_min, x_max)
-        self.canvas.ax.legend()
+
+        # Define the number of ticks and set the x-ticks with spacing
+        num_ticks = 10
+        tick_positions = np.linspace(x_min, x_max, num_ticks)
+        self.canvas.ax.set_xticks(tick_positions)
+
+        # Optionally format the tick labels for better readability
+        self.canvas.ax.set_xticklabels([f'{pos:.2f}' for pos in tick_positions])
 
         self.canvas.draw()
 
+        # Check if it's the last frame
         if i == self.total_frames - 1:
             if self.rewind_enabled:
                 self.reset_animation()
             else:
-                self.animation.event_source.stop()
+                # If rewind is not enabled, check if the button was pressed after animation finished
+                if not self.is_paused:
+                    self.is_paused = True  # Pause if rewind is not enabled
 
     def reset_animation(self):
         self.current_frame = 0  
@@ -85,55 +94,39 @@ class Plotting(QObject):
             self.animation.event_source.start()
 
     def to_start(self):
-        self.current_frame = 0  
-        self.update_plot() 
-        self.pause()  
+        current_ylim = self.canvas.ax.get_ylim()
+        self.canvas.ax.set_xlim([0, 0])  
+        self.canvas.ax.set_ylim(current_ylim)  
+        self.canvas.draw() 
 
     def to_end(self):
-        self.current_frame = self.total_frames - 1 
-        self.update_plot() 
-        self.pause() 
+        current_ylim = self.canvas.ax.get_ylim()
+        self.canvas.ax.set_xlim([10, 10])  
+        self.canvas.ax.set_ylim(current_ylim) 
+        self.canvas.draw()
 
     def toggle_rewind(self, checked):
         self.rewind_enabled = checked
         self.rewind_state_changed.emit(checked)
 
+       
         if self.rewind_enabled and self.current_frame == self.total_frames - 1:
             self.reset_animation()
 
-    def update_plot(self):
-        self.animate_cine_mode(self.current_frame)
+    def update_canvas(self, canvas, t, signal):
+        canvas.update_plot(t, signal)
 
-    def plot_live_signal(self, x_data, y_data):
-        self.x_data = x_data  
-        self.y_data = y_data  
-        self.total_frames = len(x_data)
+    def update_plot(self, frame):
+        if not self.is_paused:
+            if self.rewind_enabled:
+                self.current_frame = (frame + 1) % self.total_frames
+            else:
+                self.current_frame = frame
+                if self.current_frame >= self.total_frames - 1:  
+                    self.is_paused = True
 
-        self.animation = FuncAnimation(
-            self.canvas.figure,
-            self.animate_live_signal,
-            frames=self.total_frames,
-            interval=100,
-            repeat=False
-        )
-
-    def animate_live_signal(self, i):
-        self.canvas.ax.clear()
-        self.canvas.ax.plot(self.x_data[:i + 1], self.y_data[:i + 1], label='Live Signal')
-
-        if self.total_frames > 60:
-            minute_ticks = np.arange(0, self.total_frames, 60)  
-            minute_labels = [f'Minute {j}' for j in range(len(minute_ticks))]
-            self.canvas.ax.set_xticks(minute_ticks)  
-            self.canvas.ax.set_xticklabels(minute_labels)
-
-        self.canvas.ax.set_xlim(0, self.total_frames)
-        self.canvas.ax.set_xlabel('Time (Frames)')
-        self.canvas.ax.set_ylabel('KP Values')
-        self.canvas.ax.legend()
-        self.canvas.draw()
-
-        if i == self.total_frames - 1 and self.rewind_enabled:
-            self.reset_animation()  
-
-
+        # Ensure self.signals_widget and its canvas are initialized
+        if hasattr(self, 'signals_widget') and hasattr(self.signals_widget, 'canvas'):
+            self.signals_widget.canvas.update_plot(self.data_list[0]['x_data'][:self.current_frame], 
+                                                    self.data_list[0]['y_data'][:self.current_frame])
+  
