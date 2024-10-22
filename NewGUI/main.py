@@ -78,10 +78,6 @@ def main():
     channel2Layout.addLayout(selectorChannel2Layout,30)
     channel2Layout.addLayout(viewerChannel2Layout,70)
 
-
-
-
-
     # Set the layout for the main window
     main_window.setLayout(mainLayout)
     main_window.resize(1400, 800)

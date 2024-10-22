@@ -88,11 +88,7 @@ class ToolBar(QWidget):
         signalControl.setStyleSheet(boxStyle)
         signalControlLayout = QHBoxLayout()
         signalControl.setLayout(signalControlLayout)
-<<<<<<< HEAD
-
-=======
         #
->>>>>>> 563120728ada2dfc56e79c8abe6c2cfbd77843d7
         # signalControlLayout.addWidget(self.timeLabel)
         signalControlLayout.addWidget(self.pauseButton)
         signalControlLayout.addWidget(self.playButton)
