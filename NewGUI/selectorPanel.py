@@ -1,5 +1,5 @@
 import sys
-
+from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import (
@@ -7,17 +7,10 @@ from PyQt5.QtWidgets import (
     QWidget,
     QVBoxLayout,
     QHBoxLayout,
-    QLabel, QPushButton
-)
+    QLabel, QPushButton)
 from PyQt5.QtCore import pyqtSignal
+from importWindow import ImportWindow
 from Styling.selectorStyles import channelLabelStyle
-# import os
-
-# # Add the root project directory to the system path
-# sys.path.append(os.path.abspath('Signal-Viewer-Team18'))
-
-# from NewCore.Signal import Signal
-# from importWindow import ImportWindow
 
 class ClickableLabel(QLabel):
     clicked = pyqtSignal()  # Signal to be emitted when the label is clicked
@@ -108,55 +101,65 @@ class SignalElement(QWidget):
         # Retrieve the signal location when location label is clicked
         print("Signal Location:", self.location.text())
 
-class SelectorPanel(QWidget):    
+class SelectorPanel(QWidget):
 
     signal_map = {}
 
-    def __init__(self, channelName ="Channel 1"):
+    def __init__(self, channelName="Channel 1"):
         super().__init__()
-
-        
 
         self.setAttribute(Qt.WA_StyledBackground, True)
         self.setStyleSheet("background-color:#222222; font-family: Sofia sans; font-weight: semiBold;")
 
+        # Channel Label
         self.channelLabel = QLabel(channelName)
         self.channelLabel.setStyleSheet(channelLabelStyle)
-       
+
+        # Headers
         self.nameHeader = QLabel("Name")
         self.nameHeader.setStyleSheet("font-size:12px; color:#7c7c7c;")
         self.locationHeader = QLabel("Location")
         self.locationHeader.setStyleSheet("font-size:12px; color:#7c7c7c;")
 
+        # Header layout
         self.headerLayout = QHBoxLayout()
-        self.headerLayout.addWidget(self.nameHeader,25)
-        self.headerLayout.addWidget(self.locationHeader,65)
+        self.headerLayout.addWidget(self.nameHeader, 25)
+        self.headerLayout.addWidget(self.locationHeader, 65)
 
+        # Active Area
         self.activeArea = QWidget()
         self.activeArea.setStyleSheet("border-top: 1px solid #76D4D4;")
         self.activeLayout = QVBoxLayout()
-
         self.activeLayout.addStretch()
-
         self.activeArea.setLayout(self.activeLayout)
 
+        # "Import" Button
+        self.importButton = QPushButton("Import")
+        self.importButton.setStyleSheet(
+            "background-color: #87EDF1; color: #0D0D0D; border: none; border-radius: 5px; font-size: 11px; font-weight: normal; height: 25px;"
+        )
+        self.importButton.clicked.connect(self.createSignal)  # Connect the button to a method
+
+        # Main Layout
         self.mainLayout = QVBoxLayout()
-        self.mainLayout.addWidget(self.channelLabel,7)
-        self.mainLayout.addLayout(self.headerLayout,3)
-        self.mainLayout.addWidget(self.activeArea,90)
+        self.mainLayout.addWidget(self.channelLabel, 7)
+        self.mainLayout.addLayout(self.headerLayout, 3)
+        self.mainLayout.addWidget(self.activeArea, 80)  # Adjusted size to fit the button
+
+        # Add the button at the bottom of the main layout
+        self.mainLayout.addWidget(self.importButton, 10)  # Add the button with a relative size of 10
 
         self.setLayout(self.mainLayout)
 
-    def update_signal_dict(self):
-        self.update_signal_elements(self)
+    def createSignal(self):
+        self.importWindow = ImportWindow()  # Create an instance
+        self.importWindow.show()
 
     def update_signal_elements(self):
         self.activeLayout = QVBoxLayout()
         self.activeArea = QWidget()
         self.activeArea.setStyleSheet("border-top: 1px solid #76D4D4;")
         self.mainLayout = QVBoxLayout()
-
-        # self.setLayout(self.mainLayout)
 
         # Clear existing widgets
         for i in reversed(range(self.activeLayout.count())):
