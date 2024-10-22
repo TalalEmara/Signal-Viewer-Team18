@@ -2,7 +2,7 @@ import sys
 import numpy as np
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout
+from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QPushButton
 
 from NewGUI.importWindow import ImportWindow
 from SignalViewer import Viewer
@@ -10,6 +10,7 @@ from Core.Data_load import DataLoader
 from selectorPanel import SelectorPanel  # Assuming you have a SelectorPanel class
 from linkBar import ToolBar
 from properties import Properties
+from Styling.importWindowStyles import importButtonStyle
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
@@ -68,12 +69,23 @@ def main():
     viewerChannel1Layout.addWidget(viewer1)
     viewerChannel2Layout.addWidget(viewer2)
 
+    buttonLayout = QHBoxLayout()
+    importButton = QPushButton("Import")
+    importButton.setStyleSheet(importButtonStyle)
+    importButton.setFixedWidth(200)
+    importButton.setFixedHeight(50)
+    importButton.clicked.connect(lambda :handleImportClick())
+
+    buttonLayout.addWidget(importButton)
+    buttonLayout.addStretch()
+
     mainLayout.addLayout(activeArea,80)
     mainLayout.addLayout(propertiesPanle,20)
     activeArea.addLayout(toolBarLayout,10)
     activeArea.addLayout(messageBarLayout,2)
-    activeArea.addLayout(channel1Layout,44)
-    activeArea.addLayout(channel2Layout,44)
+    activeArea.addLayout(channel1Layout,45)
+    activeArea.addLayout(channel2Layout,45)
+    activeArea.addLayout(buttonLayout,8)
     channel1Layout.addLayout(selectorChannel1Layout,30)
     channel1Layout.addLayout(viewerChannel1Layout,70)
     channel2Layout.addLayout(selectorChannel2Layout,30)
@@ -90,9 +102,8 @@ def main():
 
     sys.exit(app.exec_())
 
-def handleImportClick(importWindow):
-    if importWindow is None:
-        importWindow = ImportWindow()
+def handleImportClick():
+    importWindow = ImportWindow()
     importWindow.show()
     print("AnA T3bbbbbbbbt")
 
