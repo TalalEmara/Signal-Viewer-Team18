@@ -64,7 +64,7 @@ class Viewer(QWidget):
 
        
         self.signalTitleEditButton = QPushButton(self.signalViewer)
-        self.signalTitleEditButton.setIcon(QtGui.QIcon("NewGUI/Assets/MatPlotToolBar/edit.png"))
+        self.signalTitleEditButton.setIcon(QtGui.QIcon("../Assets/MatPlotToolBar/edit.png"))
         self.signalTitleEditButton.setStyleSheet("background-color: #2D2D2D; border: none;")
         self.signalTitleEditButton.setFixedSize(20, 20)
         self.signalTitleEditButton.clicked.connect(lambda: self.editTitle(self.signalTitle, self.titleToolbarLayout))
@@ -82,13 +82,13 @@ class Viewer(QWidget):
         # self.SignalbuttonsLayout.addSpacing(70)
 
         self.pauseButton = QtWidgets.QPushButton(self.signalViewer)
-        self.pauseButton.setIcon(QtGui.QIcon("NewGUI/Assets/ControlsButtons/pause.png"))
+        self.pauseButton.setIcon(QtGui.QIcon("../Assets/ControlsButtons/pause.png"))
         self.pauseButton.setStyleSheet(signalControlButtonStyle)
         self.pauseButton.clicked.connect(self.plotting_instance.pause)
         self.SignalbuttonsLayout.addWidget(self.pauseButton)
 
         self.playButton = QtWidgets.QPushButton(self.signalViewer)
-        self.playButton.setIcon(QtGui.QIcon("NewGUI/Assets/ControlsButtons/play.png"))
+        self.playButton.setIcon(QtGui.QIcon("../Assets/ControlsButtons/play.png"))
         self.playButton.setStyleSheet(signalControlButtonStyle)
         self.playButton.clicked.connect(self.plotting_instance.play)
         self.SignalbuttonsLayout.addWidget(self.playButton)
@@ -110,7 +110,7 @@ class Viewer(QWidget):
         # Add the rewind button only if show_rewind_button is True
         if self.show_rewind_button:
             self.rewindButton = QtWidgets.QPushButton(self.signalViewer)
-            self.rewindButton.setIcon(QtGui.QIcon("NewGUI/Assets/ControlsButtons/rewindOff.png"))
+            self.rewindButton.setIcon(QtGui.QIcon("../Assets/ControlsButtons/rewindOff.png"))
             self.rewindButton.setStyleSheet(rewindOffButtonStyle)
             self.rewindButton.setCheckable(True)
             self.rewindButton.toggled.connect(self.plotting_instance.toggle_rewind)
@@ -187,10 +187,10 @@ class Viewer(QWidget):
        
         if enabled:
             self.rewindButton.setStyleSheet(rewindOnButtonStyle)
-            self.rewindButton.setIcon(QtGui.QIcon("NewGUI/Assets/ControlsButtons/rewindOn.png"))
+            self.rewindButton.setIcon(QtGui.QIcon("../Assets/ControlsButtons/rewindOn.png"))
         else:
             self.rewindButton.setStyleSheet(rewindOffButtonStyle)
-            self.rewindButton.setIcon(QtGui.QIcon("NewGUI/Assets/ControlsButtons/rewindOff.png"))
+            self.rewindButton.setIcon(QtGui.QIcon("../Assets/ControlsButtons/rewindOff.png"))
         
 def main():
     app = QtWidgets.QApplication(sys.argv)
