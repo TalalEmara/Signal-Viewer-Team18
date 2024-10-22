@@ -30,20 +30,7 @@ class MplCanvas(FigureCanvas):
         super(MplCanvas, self).__init__(fig)
 
 
-class CustomToolbar(NavigationToolbar):
-    def __init__(self, canvas, parent):
-        super().__init__(canvas, parent)
-        self.zoom_out_button = QToolButton(self)
-        self.zoom_out_button.setIcon(QIcon('photos/zoomOut.png'))  # Path to your zoom out icon
-        self.zoom_out_button.clicked.connect(self.zoom_out)
-        self.addWidget(self.zoom_out_button)
 
-    def zoom_out(self):
-
-        rlim = self.canvas.ax.get_ylim()
-        # Zoom out by a factor of 1.5
-        self.canvas.ax.set_ylim([rlim[0] - (rlim[1] - rlim[0]) * 0.5, rlim[1] + (rlim[1] - rlim[0]) * 0.5])
-        self.canvas.draw()
 
 
 class MainWindow(QMainWindow):
@@ -64,7 +51,7 @@ class MainWindow(QMainWindow):
         self.init_plot()
 
 
-        self.toolbar = CustomToolbar(self.canvas, self)
+
 
 
         #self.stop_button = QPushButton("Stop")
@@ -132,7 +119,7 @@ class MainWindow(QMainWindow):
         signalControlLayout.addWidget(self.rewindButton)
 
         layout = QVBoxLayout()
-        layout.addWidget(self.toolbar)
+
         layout.addWidget(self.canvas)
         #layout.addWidget(self.stop_button)
         layout.addWidget(signalControl)
@@ -182,6 +169,35 @@ class MainWindow(QMainWindow):
 
 
             self.canvas.draw()
+
+        def pause(self):
+            self.is_paused = True
+            if self.animation:
+                self.animation.event_source.stop()
+
+        def play(self):
+            self.is_paused = False
+            if self.animation:
+                self.animation.event_source.start()
+
+        def to_start(self):
+            current_ylim = self.canvas.ax.get_ylim()
+            self.canvas.ax.set_xlim([0, 0])
+            self.canvas.ax.set_ylim(current_ylim)
+            self.canvas.draw()
+
+        def to_end(self):
+            current_ylim = self.canvas.ax.get_ylim()
+            self.canvas.ax.set_xlim([10, 10])
+            self.canvas.ax.set_ylim(current_ylim)
+            self.canvas.draw()
+
+        def toggle_rewind(self, checked):
+            self.rewind_enabled = checked
+            self.rewind_state_changed.emit(checked)
+
+            if self.rewind_enabled and self.current_frame == self.total_frames - 1:
+                self.reset_animation()
 
     def stop_signal(self):
         self.running = False

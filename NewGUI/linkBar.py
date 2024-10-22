@@ -18,15 +18,15 @@ class ToolBar(QWidget):
         self.viewer2 = viewer2  
 
         
-
-        self.timeLabel = QLabel("00:00")
-        self.timeLabel.setAlignment(Qt.AlignCenter)
-        self.timeLabel.setStyleSheet(labelStyle)
-
-     
-        self.timeLabel = QLabel("00:00")
-        self.timeLabel.setAlignment(Qt.AlignCenter)
-        self.timeLabel.setStyleSheet(labelStyle)
+        #
+        # self.timeLabel = QLabel("00:00")
+        # self.timeLabel.setAlignment(Qt.AlignCenter)
+        # self.timeLabel.setStyleSheet(labelStyle)
+        #
+        #
+        # self.timeLabel = QLabel("00:00")
+        # self.timeLabel.setAlignment(Qt.AlignCenter)
+        # self.timeLabel.setStyleSheet(labelStyle)
 
         self.pauseButton = QPushButton()
         self.pauseButton.setStyleSheet(signalControlButtonStyle)
@@ -50,30 +50,30 @@ class ToolBar(QWidget):
         self.playButton.released.connect(lambda: self.handleButtonRelease(self.playButton))
 
        
-
-        self.toStartButton = QPushButton()
-        self.toStartButton.setStyleSheet(signalControlButtonStyle)
-        self.toStartButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        self.toStartIcon = QIcon("E:\Programming programs\Web dev\Signal-Viewer-Team18\GUI\Assets/ControlsButtons/start.png")
-        self.toStartButton.setIcon(self.toStartIcon)
+        #
+        # self.toStartButton = QPushButton()
+        # self.toStartButton.setStyleSheet(signalControlButtonStyle)
+        # self.toStartButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        # self.toStartIcon = QIcon("E:\Programming programs\Web dev\Signal-Viewer-Team18\GUI\Assets/ControlsButtons/start.png")
+        # self.toStartButton.setIcon(self.toStartIcon)
+        #
+        #
+        #
+        #
+        # self.toStartButton.pressed.connect(lambda: self.handleButtonPress(self.toStartButton))
+        # self.toStartButton.released.connect(lambda: self.handleButtonRelease(self.toStartButton))
+        #
+        #
+        # self.toEndButton = QPushButton()
+        # self.toEndButton.setStyleSheet(signalControlButtonStyle)
+        # self.toEndButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        # self.toEndIcon = QIcon("E:\Programming programs\Web dev\Signal-Viewer-Team18\GUI\Assets/ControlsButtons/end.png")
+        # self.toEndButton.setIcon(self.toEndIcon)
         
-        
-
-
-        self.toStartButton.pressed.connect(lambda: self.handleButtonPress(self.toStartButton))
-        self.toStartButton.released.connect(lambda: self.handleButtonRelease(self.toStartButton))
-
-
-        self.toEndButton = QPushButton()
-        self.toEndButton.setStyleSheet(signalControlButtonStyle)
-        self.toEndButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        self.toEndIcon = QIcon("E:\Programming programs\Web dev\Signal-Viewer-Team18\GUI\Assets/ControlsButtons/end.png")
-        self.toEndButton.setIcon(self.toEndIcon)
-        
-
-
-        self.toEndButton.pressed.connect(lambda: self.handleButtonPress(self.toEndButton))
-        self.toEndButton.released.connect(lambda: self.handleButtonRelease(self.toEndButton))
+        #
+        #
+        # self.toEndButton.pressed.connect(lambda: self.handleButtonPress(self.toEndButton))
+        # self.toEndButton.released.connect(lambda: self.handleButtonRelease(self.toEndButton))
 
         self.rewindButton = QPushButton()
         self.rewindButton.setStyleSheet(rewindOffButtonStyle)
@@ -160,8 +160,8 @@ class ToolBar(QWidget):
 
         self.pauseButton.clicked.connect(self.pauseAction)
         self.playButton.clicked.connect(self.playAction)
-        self.toStartButton.clicked.connect(self.toStartAction)
-        self.toEndButton.clicked.connect(self.toEndAction)
+        # self.toStartButton.clicked.connect(self.toStartAction)
+        # self.toEndButton.clicked.connect(self.toEndAction)
         self.rewindButton.clicked.connect(self.handleRewindClick)
 
     def pauseAction(self):

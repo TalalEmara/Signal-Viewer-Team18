@@ -76,10 +76,10 @@ class Viewer(QWidget):
         self.SignalbuttonsLayout = QHBoxLayout()
         self.SignalbuttonsLayout.addStretch(1)
 
-        self.timeLabel = QtWidgets.QLabel("00:00", self.signalViewer)
-        self.timeLabel.setStyleSheet(labelStyle)
-        self.SignalbuttonsLayout.addWidget(self.timeLabel)
-        self.SignalbuttonsLayout.addSpacing(70)
+        # self.timeLabel = QtWidgets.QLabel("00:00", self.signalViewer)
+        # self.timeLabel.setStyleSheet(labelStyle)
+        # self.SignalbuttonsLayout.addWidget(self.timeLabel)
+        # self.SignalbuttonsLayout.addSpacing(70)
 
         self.pauseButton = QtWidgets.QPushButton(self.signalViewer)
         self.pauseButton.setIcon(QtGui.QIcon("NewGUI/Assets/ControlsButtons/pause.png"))
@@ -93,17 +93,17 @@ class Viewer(QWidget):
         self.playButton.clicked.connect(self.plotting_instance.play)
         self.SignalbuttonsLayout.addWidget(self.playButton)
 
-        self.toStartButton = QtWidgets.QPushButton(self.signalViewer)
-        self.toStartButton.setIcon(QtGui.QIcon("NewGUI/Assets/ControlsButtons/start.png"))
-        self.toStartButton.setStyleSheet(signalControlButtonStyle)
-        self.toStartButton.clicked.connect(self.plotting_instance.to_start)
-        self.SignalbuttonsLayout.addWidget(self.toStartButton)
-
-        self.toEndButton = QtWidgets.QPushButton(self.signalViewer)
-        self.toEndButton.setIcon(QtGui.QIcon("NewGUI/Assets/ControlsButtons/end.png"))
-        self.toEndButton.setStyleSheet(signalControlButtonStyle)
-        self.toEndButton.clicked.connect(self.plotting_instance.to_end)
-        self.SignalbuttonsLayout.addWidget(self.toEndButton)
+        # self.toStartButton = QtWidgets.QPushButton(self.signalViewer)
+        # self.toStartButton.setIcon(QtGui.QIcon("NewGUI/Assets/ControlsButtons/start.png"))
+        # self.toStartButton.setStyleSheet(signalControlButtonStyle)
+        # self.toStartButton.clicked.connect(self.plotting_instance.to_start)
+        # self.SignalbuttonsLayout.addWidget(self.toStartButton)
+        #
+        # self.toEndButton = QtWidgets.QPushButton(self.signalViewer)
+        # self.toEndButton.setIcon(QtGui.QIcon("NewGUI/Assets/ControlsButtons/end.png"))
+        # self.toEndButton.setStyleSheet(signalControlButtonStyle)
+        # self.toEndButton.clicked.connect(self.plotting_instance.to_end)
+        # self.SignalbuttonsLayout.addWidget(self.toEndButton)
 
         self.rewindButton = None  # Initialize the rewind button to None
 
@@ -177,8 +177,8 @@ class Viewer(QWidget):
     
         self.play_signal.connect(self.plotting_instance.play)
         self.pause_signal.connect(self.plotting_instance.pause)
-        self.to_start_signal.connect(self.plotting_instance.to_start)
-        self.to_end_signal.connect(self.plotting_instance.to_end)
+        # self.to_start_signal.connect(self.plotting_instance.to_start)
+        # self.to_end_signal.connect(self.plotting_instance.to_end)
         self.rewind_signal.connect(self.plotting_instance.toggle_rewind)    
         self.plotting_instance.rewind_state_changed.connect(self.update_rewind_button)
 
