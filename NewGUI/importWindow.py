@@ -130,6 +130,7 @@ class ImportWindow(QMainWindow):
         # Check if a file was selected
         if file_path:
             self.file_path = file_path
+            self.signalName.setText(os.path.basename(self.file_path))
             # print(signal.name)
             # return Signal(file_name, file_path, signalData)
 
