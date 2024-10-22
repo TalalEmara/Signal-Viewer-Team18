@@ -4,7 +4,7 @@ from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout
 
-from NewGUI.importWindow import ImportWindow
+from importWindow import ImportWindow
 from SignalViewer import Viewer
 from Core.Data_load import DataLoader
 from selectorPanel import SelectorPanel  # Assuming you have a SelectorPanel class
@@ -35,8 +35,8 @@ def main():
 
     properties = Properties()
 
-    viewer1 = Viewer(plot_data_list_1, channel_name="Channel 1")
-    viewer2 = Viewer(plot_data_list_2, channel_name="Channel 2")
+    viewer1 = Viewer(plot_data_list_1, channel_name="Channel 1", show_rewind_button=True)
+    viewer2 = Viewer(plot_data_list_2, channel_name="Channel 2", show_rewind_button=True)
 
     toolBar = ToolBar(viewer1, viewer2)
 
