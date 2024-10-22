@@ -8,11 +8,11 @@ from PyQt5.QtWidgets import QMainWindow, QApplication, QTabWidget, QWidget, QLab
     QHBoxLayout, QLineEdit
 import pandas as pd
 from Styling.importWindowStyles import importButtonStyle, browseButtonStyle,tabStyle
-from NewCore.Signal import Signal
+from NewCore.Signal import SignalProperties
 from NewCore.dataLoader import DataLoader
 from selectorPanel import SelectorPanel
 
-from NewCore.live_signals import plot_live_data, Live_signal_processing
+from NewCore.live_signals import  Live_signal_processing
 from plotting import Plotting
 from SignalViewer import Viewer
 class ImportWindow(QMainWindow):
@@ -97,7 +97,7 @@ class ImportWindow(QMainWindow):
         if self.file_path:
             file_name = os.path.basename(self.file_path)
             signalData = DataLoader(self.file_path).get_data()
-            signal = Signal(file_name, self.file_path, signalData)
+            signal = SignalProperties(file_name, self.file_path, signalData)
             SelectorPanel.signal_map[signal.name] = signal
             
             # self.fileSelected.emit(self.file_path)

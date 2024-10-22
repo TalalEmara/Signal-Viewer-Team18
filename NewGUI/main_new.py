@@ -7,7 +7,7 @@ from Core.Data_load import DataLoader
 def main():
     app = QtWidgets.QApplication(sys.argv)
     
-    csv_file_path = 'Signal-Viewer-Team18\signals_data\ECG_Abnormal.csv'
+    csv_file_path = 'signals_data/ECG_Abnormal.csv'
     data_loader = DataLoader(csv_file_path)
     data_loader.load_data()
 

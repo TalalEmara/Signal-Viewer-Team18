@@ -11,7 +11,7 @@ from Core.Data_load import DataLoader
 from matplotlibFig import MplCanvas
 from plotting import Plotting
 import numpy as np
-from importWindow import ImportWindow
+
 
 class Viewer(QtWidgets.QWidget):
     def __init__(self,data_list):

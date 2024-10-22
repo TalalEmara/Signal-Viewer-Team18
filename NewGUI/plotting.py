@@ -39,8 +39,8 @@ class Plotting(QObject):
             amplitude = data['y_data']
             self.canvas.ax.plot(time[:i + 1], amplitude[:i + 1], label=f'Signal {idx + 1}')
 
-        self.canvas.ax.set_xlim(min(self.data_list[0]['x_data']), max(self.data_list[0]['x_data']))
-        self.canvas.ax.set_ylim(min(np.min([data['y_data'] for data in self.data_list])), max(np.max([data['y_data'] for data in self.data_list])))
+        # self.canvas.ax.set_xlim(min(self.data_list[0]['x_data']), max(self.data_list[0]['x_data']))
+        # self.canvas.ax.set_ylim(min(np.min([data['y_data'] for data in self.data_list])), max(np.max([data['y_data'] for data in self.data_list])))
         self.canvas.draw()
 
         if i == self.total_frames - 1:
