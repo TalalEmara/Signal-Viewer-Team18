@@ -1,7 +1,6 @@
 import os
 import sys
 sys.path.append(os.path.abspath('Signal-Viewer-Team18'))
-
 from PyQt5.QtCore import Qt
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QMainWindow, QApplication, QTabWidget, QWidget, QLabel, QPushButton, QCheckBox, QVBoxLayout, \
@@ -10,17 +9,16 @@ import pandas as pd
 from Styling.importWindowStyles import importButtonStyle, browseButtonStyle,tabStyle
 from NewCore.Signal import SignalProperties
 from NewCore.dataLoader import DataLoader
-from selectorPanel import SelectorPanel
-
-from NewCore.live_signals import  Live_signal_processing
-from plotting import Plotting
+from NewCore.live_signals import Live_signal_processing
 from SignalViewer import Viewer
+
 class ImportWindow(QMainWindow):
     fileSelected = QtCore.pyqtSignal(str)
 
     def __init__(self):
         super().__init__()
         self.file_path = None
+        self.channel = 0
         self.setWindowTitle("Import a Signal")
         self.resize(400,100)
         self.setStyleSheet("background-color:#2D2D2D; color:#EFEFEF; font-family: Sofia sans; font-weight: semiBold;")
@@ -93,17 +91,26 @@ class ImportWindow(QMainWindow):
 
         self.tabs.addTab(self.liveTab,"Live")
 
+    def checkbox_state_changed(self):
+        # Get the state of both checkboxes
+        channel1_checked = self.channel1CheckBox.isChecked()
+        channel2_checked = self.channel2CheckBox.isChecked()
+        if channel1_checked:
+            self.channel = 1
+        elif channel2_checked:
+            self.channel = 2
+
     def importFile(self):
+        from selectorPanel import SelectorPanel
         if self.file_path:
             file_name = os.path.basename(self.file_path)
             signalData = DataLoader(self.file_path).get_data()
-            signal = SignalProperties(file_name, self.file_path, signalData)
+            signal = SignalProperties(file_name, self.file_path, signalData, self.channel)
             SelectorPanel.signal_map[signal.name] = signal
             
-            # self.fileSelected.emit(self.file_path)
-            SelectorPanel.update_signal_dict(SelectorPanel)
+            SelectorPanel.update_signal_elements(SelectorPanel)
 
-            print("importedSignal")
+            print(signal.isOnChannel1)
             self.close()
             return signalData
         else: 
@@ -117,7 +124,7 @@ class ImportWindow(QMainWindow):
             times, speeds = Live_signal_processing(liveSignal)  # Get data from processing function
             plot_data_list = [{'x_data': times, 'y_data': speeds}]  # Prepare data for plotting
 
-            self.viewer = Viewer(plot_data_list)  # Create Viewer instance
+            self.viewer = Viewer(plot_data_list, show_rewind_button=False)  # Create Viewer instance
             self.viewer.setWindowTitle("Live Signal Viewer")  # Set the window title
             self.viewer.show()  # Show the viewer window
             self.close()

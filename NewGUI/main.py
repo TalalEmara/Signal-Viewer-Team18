@@ -4,20 +4,19 @@ from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QPushButton
 
-from NewGUI.importWindow import ImportWindow
+from importWindow import ImportWindow
 from SignalViewer import Viewer
 from Core.Data_load import DataLoader
-from selectorPanel import SelectorPanel  # Assuming you have a SelectorPanel class
+from selectorPanel import SelectorPanel
 from linkBar import ToolBar
 from properties import Properties
 from Styling.importWindowStyles import importButtonStyle
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
-
     
     # Load data from CSV
-    csv_file_path = '../signals_data/ECG_Abnormal.csv'
+    csv_file_path = 'D:\Projects\DSP\Signal-Viewer-Team18\signals_data\EEG_Normal.csv'
     data_loader = DataLoader(csv_file_path)
     data_loader.load_data()
 
@@ -36,8 +35,8 @@ def main():
 
     properties = Properties()
 
-    viewer1 = Viewer(plot_data_list_1, channel_name="Channel 1")
-    viewer2 = Viewer(plot_data_list_2, channel_name="Channel 2")
+    viewer1 = Viewer(plot_data_list_1, channel_name="Channel 1", show_rewind_button=True)
+    viewer2 = Viewer(plot_data_list_2, channel_name="Channel 2", show_rewind_button=True)
 
     toolBar = ToolBar(viewer1, viewer2)
 
@@ -90,10 +89,6 @@ def main():
     channel1Layout.addLayout(viewerChannel1Layout,70)
     channel2Layout.addLayout(selectorChannel2Layout,30)
     channel2Layout.addLayout(viewerChannel2Layout,70)
-
-
-
-
 
     # Set the layout for the main window
     main_window.setLayout(mainLayout)
