@@ -6,6 +6,8 @@ from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QPushButton
 
 from importWindow import ImportWindow
 from SignalViewer import Viewer
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from Core.Data_load import DataLoader
 from selectorPanel import SelectorPanel
 from linkBar import ToolBar
@@ -16,7 +18,7 @@ def main():
     app = QtWidgets.QApplication(sys.argv)
     
     # Load data from CSV
-    csv_file_path = 'D:\Projects\DSP\Signal-Viewer-Team18\signals_data\EEG_Normal.csv'
+    csv_file_path = 'signals_data/ECG_Normal.csv'
     data_loader = DataLoader(csv_file_path)
     data_loader.load_data()
 
@@ -100,7 +102,6 @@ def main():
 def handleImportClick():
     importWindow = ImportWindow()
     importWindow.show()
-    print("AnA T3bbbbbbbbt")
 
 if __name__ == "__main__":
     main()

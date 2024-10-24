@@ -15,6 +15,7 @@ class Properties(QWidget):
 
         self.signalNameInput = "ECG Signal"
         self.colorChoosen = "#D55877"  # Default color
+        self.colorList = [self.colorChoosen]  # List to hold color hex values
 
         self.setAttribute(Qt.WA_StyledBackground, True)
         self.setStyleSheet('background-color: #2E2E2E')
@@ -41,10 +42,7 @@ class Properties(QWidget):
 
         self.signalColorChooseList = QComboBox()
         self.signalColorChooseList.setStyleSheet(colorSignalChooseStyle)
-        self.signalColorChooseList.addItem("Red", "#D55877")
-        self.signalColorChooseList.addItem("Blue", "#76D4D4")
-        self.signalColorChooseList.addItem("Add New Color")
-        self.signalColorChooseList.setItemData("Add New Color")
+        self.update_color_combobox()  # Update the color combobox initially
         self.signalColorChooseList.currentIndexChanged.connect(self.changeSignalColor)
 
         propertiesTitleRow = QHBoxLayout()
@@ -111,7 +109,6 @@ class Properties(QWidget):
         propertiesPanel.addLayout(speedPropertyRow1)  
         propertiesPanel.addLayout(speedPropertyRow2)
 
-       
         self.statsPanel = QVBoxLayout()
         self.statsPanel.setAlignment(Qt.AlignTop)
         self.setupStatistics()
@@ -124,6 +121,13 @@ class Properties(QWidget):
 
         self.setLayout(mainLayout)
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
+
+    def update_color_combobox(self):
+        self.signalColorChooseList.clear()  # Clear the existing items
+        # Add colors from the color list to the combobox
+        for color in self.colorList:
+            self.signalColorChooseList.addItem(color, color)
+        self.signalColorChooseList.addItem("Add New Color", None)
 
     def setupStatistics(self):
         statsTitle = QLabel("Statistics")
@@ -158,26 +162,30 @@ class Properties(QWidget):
         self.emit_properties_change()
 
     def changeSignalColor(self, index):
-        if index == 2:
-            self.openColorDialog() 
+        if index == self.signalColorChooseList.count() - 1:  # If "Add New Color" is selected
+            self.openColorDialog()
+            # Set the current index back to the last selected color
+            self.signalColorChooseList.setCurrentIndex(self.signalColorChooseList.count() - 2)
         else:
             self.colorChoosen = self.signalColorChooseList.itemData(index)
             self.signalColorChooseSquare.setStyleSheet(f"background-color: {self.colorChoosen}")
             self.emit_properties_change()
 
     def openColorDialog(self):
-        
         color = QColorDialog.getColor()
         if color.isValid():
             self.colorChoosen = color.name()
             self.signalColorChooseSquare.setStyleSheet(f"background-color: {self.colorChoosen}")
+            if self.colorChoosen not in self.colorList:  # Add color if it's new
+                self.colorList.append(self.colorChoosen)
+                self.update_color_combobox()  # Update the combo box to show the new color
             self.emit_properties_change()
 
     def emit_properties_change(self):
-        
         thickness = self.thicknessSlider.value()
         speed = self.speedSlider.value()
         self.signal_properties_changed.emit(self.colorChoosen, thickness, speed)
+
 
 import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow
@@ -189,11 +197,9 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Right Panel")
         self.setGeometry(100, 100, 400, 600)
 
-       
         self.properties = Properties()
         self.setCentralWidget(self.properties)
 
-        
         self.properties.signal_properties_changed.connect(self.on_properties_changed)
 
     def on_properties_changed(self, color, thickness, speed):

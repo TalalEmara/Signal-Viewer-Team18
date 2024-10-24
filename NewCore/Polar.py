@@ -1,5 +1,7 @@
 import sys
 import numpy as np
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QPushButton, QSizePolicy, QHBoxLayout
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
@@ -38,7 +40,7 @@ class NonRectangularWindow(QMainWindow):
         self.setWindowTitle("Polar view")
 
         # Load the data from CSV
-        self.csv_file_path = '..\signals_data\EMG_Normal.csv'
+        self.csv_file_path = 'signals_data/EMG_Normal.csv'
         self.data_loader = Data_load.DataLoader(self.csv_file_path)
         self.data_loader.load_data()
         self.data = self.data_loader.get_data()
@@ -90,9 +92,8 @@ class NonRectangularWindow(QMainWindow):
         self.speedSlider.setMinimum(5)
         self.speedSlider.setMaximum(100)
         self.speedSlider.setSingleStep(5)
-        self.speedSlider.setValue(10)
-        #self.ani.event_source.interval = 10
-        #self.speedSlider.valueChanged.connect(self.updateSpeedValue)
+        self.speedSlider.setValue(10)  # Default speed
+        self.speedSlider.valueChanged.connect(self.updateSpeedValue)  # Uncomment this line
 
         self.speedValueBox = QLineEdit("10")
         self.speedValueBox.setStyleSheet(valueBoxStyle)
@@ -237,11 +238,8 @@ class NonRectangularWindow(QMainWindow):
         self.polar_line.set_linewidth(value)
         self.canvas.draw()
 
-    def updateSpeedValue(self, value):
-        self.speedValueBox.setText(str(value))
-        self.ani.event_source.interval = value  # Update the animation interval directly
-
     def init_plot(self):
+        """Initialize the polar plot."""
         self.polar_line, = self.canvas.ax.plot([], [], marker='.', color="#76D4D4")
         self.canvas.ax.set_title('Polar Plot of Signal Data')
 
@@ -249,8 +247,8 @@ class NonRectangularWindow(QMainWindow):
             r_min = np.min(self.data[:, 1])
             r_max = np.max(self.data[:, 1])
             self.canvas.ax.set_ylim(r_min, r_max * 1.1)
-
     def update_plot(self, frame):
+        """Update the plot with the current batch of data."""
         if self.running and self.data is not None:
             end_index = min(self.current_index + self.batch_size, len(self.data))
             batch_data = self.data[self.current_index:end_index]
@@ -271,6 +269,21 @@ class NonRectangularWindow(QMainWindow):
             self.current_index += self.batch_size
             self.canvas.draw()
 
+    def updateSpeedValue(self, value):
+        """Update animation speed and batch size based on slider value."""
+        self.speedValueBox.setText(str(value))
+
+        # Calculate new interval and batch size
+        speed_factor = value / 100  # Normalize the speed value
+        new_interval = max(1, 50 - int(40 * speed_factor))  # Decrease interval as speed increases
+        new_batch_size = max(1, int(10 + 90 * speed_factor))  # Increase batch size with speed
+
+        self.batch_size = new_batch_size  # Update the batch size
+
+        # Update the animation interval
+        self.ani.event_source.interval = new_interval  # Update the existing animation interval
+        self.ani.event_source.start()  # Restart the animation with the new interval 
+   
     def pause(self):
         self.running = False
 
