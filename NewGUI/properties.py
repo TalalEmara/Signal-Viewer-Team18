@@ -44,6 +44,7 @@ class Properties(QWidget):
         self.signalColorChooseList.addItem("Red", "#D55877")
         self.signalColorChooseList.addItem("Blue", "#76D4D4")
         self.signalColorChooseList.addItem("Add New Color")
+        self.signalColorChooseList.setItemData("Add New Color")
         self.signalColorChooseList.currentIndexChanged.connect(self.changeSignalColor)
 
         propertiesTitleRow = QHBoxLayout()

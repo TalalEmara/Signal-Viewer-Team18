@@ -8,6 +8,13 @@ from matplotlib.figure import Figure
 from matplotlib.animation import FuncAnimation
 from Core import Data_load
 from NewGUI.Styles import signalControlButtonStyle, boxStyle, rewindOffButtonStyle
+from PyQt5.QtWidgets import QPushButton, QLabel, QHBoxLayout, QVBoxLayout, QComboBox, QWidget, QSizePolicy, QSlider, \
+    QLineEdit, QTableWidget, QTableWidgetItem, QAbstractItemView, QHeaderView, QColorDialog
+from PyQt5.QtGui import QColor
+
+from NewGUI.properties_style import signalChooseStyle, labelStyle, titleStyle, colorSignalChooseStyle, sliderStyle, \
+    valueBoxStyle, tableStyle, viewButtonOnStyle, viewButtonOffStyle
+
 
 
 class MplCanvas(FigureCanvas):
@@ -38,6 +45,87 @@ class NonRectangularWindow(QMainWindow):
 
         self.canvas = MplCanvas(self, width=5, height=8, dpi=100)
         self.init_plot()
+
+        self.colorChoosen = "#76D4D4"
+        self.signalColorLabel = QLabel("Signal Color")
+        self.signalColorLabel.setStyleSheet(labelStyle)
+
+        self.signalColorChooseSquare = QPushButton()
+        self.signalColorChooseSquare.setStyleSheet(f"background-color: {self.colorChoosen}")
+        self.signalColorChooseSquare.setFixedHeight(20)
+        self.signalColorChooseSquare.setFixedWidth(20)
+        self.signalColorChooseSquare.clicked.connect(self.openColorDialog)
+
+        self.signalColorChooseList = QComboBox()
+        self.signalColorChooseList.setStyleSheet(colorSignalChooseStyle)
+        self.signalColorChooseList.addItem("Blue", "#76D4D4")
+        self.signalColorChooseList.addItem("Red", "#D55877")
+
+        self.signalColorChooseList.addItem("Add New Color")
+        self.signalColorChooseList.currentIndexChanged.connect(self.changeSignalColor)
+
+        # Thickness Control
+        self.thicknessLabel = QLabel("Line Thickness")
+        self.thicknessLabel.setStyleSheet(labelStyle)
+
+        self.thicknessSlider = QSlider(Qt.Horizontal)
+        self.thicknessSlider.setStyleSheet(sliderStyle)
+        self.thicknessSlider.setMinimum(1)
+        self.thicknessSlider.setMaximum(10)
+        self.thicknessSlider.setSingleStep(1)
+        self.thicknessSlider.setValue(2)  # Default thickness
+        self.thicknessSlider.valueChanged.connect(self.updateThicknessValue)
+
+        self.thicknessValueBox = QLineEdit("2")
+        self.thicknessValueBox.setStyleSheet(valueBoxStyle)
+        self.thicknessValueBox.setFixedWidth(40)
+        self.thicknessValueBox.setAlignment(Qt.AlignCenter)
+
+        # Speed Control
+        self.speedLabel = QLabel("Animation Speed")
+        self.speedLabel.setStyleSheet(labelStyle)
+
+        self.speedSlider = QSlider(Qt.Horizontal)
+        self.speedSlider.setStyleSheet(sliderStyle)
+        self.speedSlider.setMinimum(5)
+        self.speedSlider.setMaximum(100)
+        self.speedSlider.setSingleStep(5)
+        self.speedSlider.setValue(10)
+        #self.ani.event_source.interval = 10
+        #self.speedSlider.valueChanged.connect(self.updateSpeedValue)
+
+        self.speedValueBox = QLineEdit("10")
+        self.speedValueBox.setStyleSheet(valueBoxStyle)
+        self.speedValueBox.setFixedWidth(40)
+        self.speedValueBox.setAlignment(Qt.AlignCenter)
+
+        # Layout for the color, thickness, and speed properties
+        propertiesPanel = QVBoxLayout()
+
+        colorPropertyRow1 = QHBoxLayout()
+        colorPropertyRow1.addWidget(self.signalColorLabel)
+        colorPropertyRow2 = QHBoxLayout()
+        colorPropertyRow2.addWidget(self.signalColorChooseSquare)
+        colorPropertyRow2.addWidget(self.signalColorChooseList)
+
+        thicknessPropertyRow1 = QHBoxLayout()
+        thicknessPropertyRow1.addWidget(self.thicknessLabel)
+        thicknessPropertyRow2 = QHBoxLayout()
+        thicknessPropertyRow2.addWidget(self.thicknessSlider)
+        thicknessPropertyRow2.addWidget(self.thicknessValueBox)
+
+        speedPropertyRow1 = QHBoxLayout()
+        speedPropertyRow1.addWidget(self.speedLabel)
+        speedPropertyRow2 = QHBoxLayout()
+        speedPropertyRow2.addWidget(self.speedSlider)
+        speedPropertyRow2.addWidget(self.speedValueBox)
+
+        propertiesPanel.addLayout(colorPropertyRow1)
+        propertiesPanel.addLayout(colorPropertyRow2)
+        propertiesPanel.addLayout(thicknessPropertyRow1)
+        propertiesPanel.addLayout(thicknessPropertyRow2)
+        propertiesPanel.addLayout(speedPropertyRow1)
+        propertiesPanel.addLayout(speedPropertyRow2)
 
         # Create buttons
         self.pauseButton = QPushButton()
@@ -88,6 +176,7 @@ class NonRectangularWindow(QMainWindow):
         layout = QVBoxLayout()
         layout.addWidget(self.canvas)
         layout.addWidget(signalControl)
+        layout.addLayout(propertiesPanel)
 
         container = QWidget()
         container.setLayout(layout)
@@ -98,8 +187,62 @@ class NonRectangularWindow(QMainWindow):
         self.batch_size = 10
         self.ani = FuncAnimation(self.canvas.figure, self.update_plot, interval=100, blit=False)
 
+    def openColorDialog(self):
+        color = QColorDialog.getColor()
+        if color.isValid():
+            self.colorChoosen = color.name()  # Get the color hex code
+            self.signalColorChooseSquare.setStyleSheet(f"background-color: {self.colorChoosen}")
+
+            # Check if the color is already in the list
+            color_exists = False
+            for i in range(self.signalColorChooseList.count()):
+                if self.signalColorChooseList.itemText(i) == self.colorChoosen:  # Corrected the condition
+                    color_exists = True
+                    break
+
+            # If the color is not in the list, add it
+            if not color_exists:
+                self.signalColorChooseList.insertItem(self.signalColorChooseList.count() - 1, self.colorChoosen,
+                                                      self.colorChoosen)  # Add hex color as both text and data
+
+            # Set the current index to the new color
+            self.signalColorChooseList.setCurrentIndex(self.signalColorChooseList.count() - 2)
+
+            self.changeSignalColor()
+
+    def changeSignalColor(self):
+        # Avoid re-triggering color dialog on "Add New Color"
+        if self.signalColorChooseList.currentText() == "Add New Color":
+            # Temporarily block signals to prevent recursive calls
+            self.signalColorChooseList.blockSignals(True)
+
+            # Open the color dialog and reset the selection after
+            self.openColorDialog()
+
+            # Reset to the last selected color or the first item
+            self.signalColorChooseList.setCurrentIndex(self.signalColorChooseList.count() - 2)
+
+            # Unblock signals after resetting the index
+            self.signalColorChooseList.blockSignals(False)
+        else:
+            # Get the color associated with the selected item
+            self.colorChoosen = self.signalColorChooseList.currentData()
+            if self.colorChoosen:  # Ensure valid color is selected
+                self.signalColorChooseSquare.setStyleSheet(f"background-color: {self.colorChoosen}")
+                self.polar_line.set_color(self.colorChoosen)
+                self.canvas.draw()
+
+    def updateThicknessValue(self, value):
+        self.thicknessValueBox.setText(str(value))
+        self.polar_line.set_linewidth(value)
+        self.canvas.draw()
+
+    def updateSpeedValue(self, value):
+        self.speedValueBox.setText(str(value))
+        self.ani.event_source.interval = value  # Update the animation interval directly
+
     def init_plot(self):
-        self.polar_line, = self.canvas.ax.plot([], [], marker='.')
+        self.polar_line, = self.canvas.ax.plot([], [], marker='.', color="#76D4D4")
         self.canvas.ax.set_title('Polar Plot of Signal Data')
 
         if self.data is not None:
