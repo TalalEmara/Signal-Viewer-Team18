@@ -1,4 +1,6 @@
 import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
@@ -9,6 +11,8 @@ from PyQt5.QtWidgets import (
     QHBoxLayout,
     QLabel, QPushButton)
 from PyQt5.QtCore import pyqtSignal
+from NewCore.Signal import SignalProperties
+from NewCore.dataLoader import DataLoader
 from importWindow import ImportWindow
 from Styling.selectorStyles import channelLabelStyle
 
@@ -48,9 +52,9 @@ class SignalElement(QWidget):
 
 
         self.location = ClickableLabel(self.location)
-        self.hiddenIcon = QIcon("Assets/Selector/hidden.png")
-        self.shownIcon = QIcon("NewGUI/Assets/Selector/hidden.png")
-        self.switchIcon = QIcon("Assets/Selector/swap.png")
+        self.hiddenIcon = QIcon("NewGUI/Assets/Selector/hidden.png")
+        self.shownIcon = QIcon("NewGUI/Assets/Selector/shown.png")
+        self.switchIcon = QIcon("NewGUI/Assets/Selector/swap.png")
 
         self.hideButton = QPushButton("")
         self.hideButton.setFixedSize(16,16)
@@ -151,35 +155,48 @@ class SelectorPanel(QWidget):
 
         self.setLayout(self.mainLayout)
 
+    # def createSignal(self):
+    #     self.importWindow = ImportWindow()  # Create an instance
+    #     self.importWindow.show()
+
+    # def update_signal_elements(self):
+    #     self.activeLayout = QVBoxLayout()
+    #     self.activeArea = QWidget()
+    #     self.activeArea.setStyleSheet("border-top: 1px solid #76D4D4;")
+    #     self.mainLayout = QVBoxLayout()
+
+    #     # Clear existing widgets
+    #     for i in reversed(range(self.activeLayout.count())):
+    #         widget = self.activeLayout.itemAt(i).widget()
+    #         if widget is not None:
+    #             widget.deleteLater()  # Properly delete the widget
+
+    #     # Add updated signal elements
+    #     for signal_name, signal_data in SelectorPanel.signal_map.items():
+    #         signal_element = SignalElement(signal_data)
+    #         print(signal_element)
+    #         self.activeLayout.addWidget(signal_element)
+        
+    #     self.activeLayout.addStretch()  # Add stretch to keep layout neat  
+    #     self.activeArea.setLayout(self.activeLayout)
+    #     self.mainLayout.addWidget(self.activeArea,90)
+
+
+
     def createSignal(self):
-        self.importWindow = ImportWindow()  # Create an instance
+        self.importWindow = ImportWindow()
+        self.importWindow.fileSelected.connect(self.update_signal_elements) 
         self.importWindow.show()
 
-    def update_signal_elements(self):
-        self.activeLayout = QVBoxLayout()
-        self.activeArea = QWidget()
-        self.activeArea.setStyleSheet("border-top: 1px solid #76D4D4;")
-        self.mainLayout = QVBoxLayout()
+    def update_signal_elements(self, signal_name, file_path, channel):
+        signalData = DataLoader(file_path).get_data()
+        signal = SignalProperties(signal_name, file_path, signalData, channel)
+        SelectorPanel.signal_map[signal.name] = signal
 
-        # Clear existing widgets
-        for i in reversed(range(self.activeLayout.count())):
-            widget = self.activeLayout.itemAt(i).widget()
-            if widget is not None:
-                widget.deleteLater()  # Properly delete the widget
+        signal_element = SignalElement(signal)
+        self.activeLayout.insertWidget(0, signal_element) 
 
-        # Add updated signal elements
-        for signal_name, signal_data in SelectorPanel.signal_map.items():
-            signal_element = SignalElement(signal_data)
-            print(signal_element)
-            self.activeLayout.addWidget(signal_element)
-        
-        self.activeLayout.addStretch()  # Add stretch to keep layout neat  
-        self.activeArea.setLayout(self.activeLayout)
-        self.mainLayout.addWidget(self.activeArea,90)
-
-
-
-
+        self.activeLayout.addStretch()
 
 
 

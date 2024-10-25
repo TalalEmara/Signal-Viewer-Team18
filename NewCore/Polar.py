@@ -315,64 +315,60 @@ class NonRectangularWindow(QMainWindow):
 
     def zoom_in(self):
         current_ylim = self.canvas.ax.get_ylim()
-        new_ylim = (current_ylim[0] / 2, current_ylim[1] / 2)  # Zoom in by half
+        new_ylim = (current_ylim[0] / 2, current_ylim[1] / 2)  
 
-        # Adjust the radial limits of the polar plot
+      
         r_min, r_max = new_ylim
         self.canvas.ax.set_ylim(r_min, r_max)
-        self.canvas.ax.set_yticks(np.linspace(r_min, r_max, num=5))  # Update y-ticks
+        self.canvas.ax.set_yticks(np.linspace(r_min, r_max, num=5)) 
 
-        self.canvas.draw()  # Update the canvas with the new zoom level
+        self.canvas.draw()  
 
     def zoom_out(self):
         current_ylim = self.canvas.ax.get_ylim()
-        new_ylim = (current_ylim[0] * 2, current_ylim[1] * 2)  # Zoom out by doubling the range
+        new_ylim = (current_ylim[0] * 2, current_ylim[1] * 2)  
 
-        # Adjust the radial limits of the polar plot
+     
         r_min, r_max = new_ylim
         self.canvas.ax.set_ylim(r_min, r_max)
-        self.canvas.ax.set_yticks(np.linspace(r_min, r_max, num=5))  # Update y-ticks
+        self.canvas.ax.set_yticks(np.linspace(r_min, r_max, num=5)) 
 
-        self.canvas.draw()  # Update the canvas with the new zoom level
+        self.canvas.draw()  
 
     def rewind(self):
         self.rewind_active = not self.rewind_active
         if self.rewind_active:
             self.rewindButton.setStyleSheet(rewindOnButtonStyle)
-            # self.current_index = 0
-            # self.polar_line.set_data([], [])  
-            # self.canvas.draw() 
-            # self.running = True 
         else:
             self.rewindButton.setStyleSheet(rewindOffButtonStyle)
 
     def on_mouse_press(self, event):
-        """Handle mouse button press event."""
-        if event.inaxes == self.canvas.ax:  # Use self.canvas.ax instead of self.ax
+       
+        if event.inaxes == self.canvas.ax:  
             self.is_panning = True
             self.last_mouse_position = (event.xdata, event.ydata)
 
     def on_mouse_move(self, event):
-        """Handle mouse movement event."""
-        if self.is_panning and event.inaxes == self.canvas.ax:  # Use self.canvas.ax instead of self.ax
+      
+        if self.is_panning and event.inaxes == self.canvas.ax:  
             dx = event.xdata - self.last_mouse_position[0]
             dy = event.ydata - self.last_mouse_position[1]
 
-            # Update the plot based on mouse movement
-            self.canvas.ax.set_theta_offset(self.canvas.ax.get_theta_offset() + dx * 0.1)  # Adjust the angle offset
-            self.canvas.ax.set_ylim(self.canvas.ax.get_ylim()[0] + dy * 0.1, self.canvas.ax.get_ylim()[1] + dy * 0.1)  # Adjust the radius
+          
+            self.canvas.ax.set_theta_offset(self.canvas.ax.get_theta_offset() + dx * 0.1) 
+            self.canvas.ax.set_ylim(self.canvas.ax.get_ylim()[0] + dy * 0.1, self.canvas.ax.get_ylim()[1] + dy * 0.1)  
 
             self.last_mouse_position = (event.xdata, event.ydata)
             self.canvas.draw_idle()
 
     def on_mouse_release(self, event):
-        """Handle mouse button release event."""
+     
         self.is_panning = False
           
     def on_scroll(self, event):
-        """Handle mouse scroll event for zooming."""
+     
         if event.inaxes == self.canvas.ax:
-            # Get current limits
+            
             r_min, r_max = self.canvas.ax.get_ylim()
 
             

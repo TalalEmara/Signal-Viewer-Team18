@@ -1,6 +1,6 @@
 import os
 import sys
-sys.path.append(os.path.abspath('Signal-Viewer-Team18'))
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from PyQt5.QtCore import Qt
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QMainWindow, QApplication, QTabWidget, QWidget, QLabel, QPushButton, QCheckBox, QVBoxLayout, \
@@ -13,7 +13,8 @@ from NewCore.live_signals import Live_signal_processing
 from SignalViewer import Viewer
 
 class ImportWindow(QMainWindow):
-    fileSelected = QtCore.pyqtSignal(str)
+    # fileSelected = QtCore.pyqtSignal(str)
+    fileSelected = QtCore.pyqtSignal(str, str, int)
 
     def __init__(self):
         super().__init__()
@@ -100,21 +101,56 @@ class ImportWindow(QMainWindow):
         elif channel2_checked:
             self.channel = 2
 
+    # def importFile(self):
+    #     from selectorPanel import SelectorPanel
+    #     if self.file_path:
+    #         file_name = os.path.basename(self.file_path)
+    #         signalData = DataLoader(self.file_path).get_data()
+    #         signal = SignalProperties(file_name, self.file_path, signalData, self.channel)
+    #         SelectorPanel.signal_map[signal.name] = signal
+            
+    #         SelectorPanel.update_signal_elements(SelectorPanel)
+
+    #         print(signal.isOnChannel1)
+    #         self.close()
+    #         return signalData
+    #     else: 
+    #         print("No file selected")
+    
+
+        # # function to import csv file    
+    # def open_file_dialog(self):
+    #     # Open a file dialog restricted to .csv files
+    #     file_path, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Open CSV File", "", "CSV Files (*.csv);;All Files (*)")
+
+    #     # Check if a file was selected
+    #     if file_path:
+    #         self.file_path = file_path
+    #         self.signalName.setText(os.path.basename(self.file_path))
+    #         # print(signal.name)
+    #         # return Signal(file_name, file_path, signalData)
+
+    #     else:
+    #         print("No file selected.")
+
     def importFile(self):
         from selectorPanel import SelectorPanel
         if self.file_path:
             file_name = os.path.basename(self.file_path)
             signalData = DataLoader(self.file_path).get_data()
             signal = SignalProperties(file_name, self.file_path, signalData, self.channel)
-            SelectorPanel.signal_map[signal.name] = signal
-            
-            SelectorPanel.update_signal_elements(SelectorPanel)
-
-            print(signal.isOnChannel1)
+            self.fileSelected.emit(signal.name, self.file_path, self.channel) 
             self.close()
-            return signalData
-        else: 
+        else:
             print("No file selected")
+
+    def open_file_dialog(self):
+        file_path, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Open CSV File", "", "CSV Files (*.csv);;All Files (*)")
+        if file_path:
+            self.file_path = file_path
+            self.signalName.setText(os.path.basename(self.file_path))
+
+
 
     def plotLiveSignal(self):
         print("LiveSignal")
@@ -129,20 +165,8 @@ class ImportWindow(QMainWindow):
             self.viewer.show()  # Show the viewer window
             self.close()
 
-    # function to import csv file    
-    def open_file_dialog(self):
-        # Open a file dialog restricted to .csv files
-        file_path, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Open CSV File", "", "CSV Files (*.csv);;All Files (*)")
 
-        # Check if a file was selected
-        if file_path:
-            self.file_path = file_path
-            self.signalName.setText(os.path.basename(self.file_path))
-            # print(signal.name)
-            # return Signal(file_name, file_path, signalData)
 
-        else:
-            print("No file selected.")
 
 if __name__ == "__main__":
     import sys
