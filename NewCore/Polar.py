@@ -40,7 +40,7 @@ class NonRectangularWindow(QMainWindow):
         self.setWindowTitle("Polar view")
         self.rewind_active = False
 
-        # Load the data from CSV
+        
         self.csv_file_path = 'signals_data/EMG_Normal.csv'
         self.data_loader = Data_load.DataLoader(self.csv_file_path)
         self.data_loader.load_data()
@@ -53,7 +53,7 @@ class NonRectangularWindow(QMainWindow):
         self.is_panning = False
         self.last_mouse_position = None
 
-        # Connect mouse events
+       
         self.canvas.mpl_connect('button_press_event', self.on_mouse_press)
         self.canvas.mpl_connect('motion_notify_event', self.on_mouse_move)
         self.canvas.mpl_connect('button_release_event', self.on_mouse_release)
@@ -78,7 +78,7 @@ class NonRectangularWindow(QMainWindow):
         self.signalColorChooseList.addItem("Add New Color")
         self.signalColorChooseList.currentIndexChanged.connect(self.changeSignalColor)
 
-        # Thickness Control
+   
         self.thicknessLabel = QLabel("Line Thickness")
         self.thicknessLabel.setStyleSheet(labelStyle)
 
@@ -95,7 +95,7 @@ class NonRectangularWindow(QMainWindow):
         self.thicknessValueBox.setFixedWidth(40)
         self.thicknessValueBox.setAlignment(Qt.AlignCenter)
 
-        # Speed Control
+        
         self.speedLabel = QLabel("Animation Speed")
         self.speedLabel.setStyleSheet(labelStyle)
 
@@ -104,15 +104,15 @@ class NonRectangularWindow(QMainWindow):
         self.speedSlider.setMinimum(5)
         self.speedSlider.setMaximum(100)
         self.speedSlider.setSingleStep(5)
-        self.speedSlider.setValue(10)  # Default speed
-        self.speedSlider.valueChanged.connect(self.updateSpeedValue)  # Uncomment this line
+        self.speedSlider.setValue(10)  
+        self.speedSlider.valueChanged.connect(self.updateSpeedValue)  
 
         self.speedValueBox = QLineEdit("10")
         self.speedValueBox.setStyleSheet(valueBoxStyle)
         self.speedValueBox.setFixedWidth(40)
         self.speedValueBox.setAlignment(Qt.AlignCenter)
 
-        # Layout for the color, thickness, and speed properties
+      
         propertiesPanel = QVBoxLayout()
 
         colorPropertyRow1 = QHBoxLayout()
@@ -140,7 +140,7 @@ class NonRectangularWindow(QMainWindow):
         propertiesPanel.addLayout(speedPropertyRow1)
         propertiesPanel.addLayout(speedPropertyRow2)
 
-        # Create buttons
+      
         self.pauseButton = QPushButton()
         self.pauseButton.setStyleSheet(signalControlButtonStyle)
         self.pauseButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
@@ -162,7 +162,7 @@ class NonRectangularWindow(QMainWindow):
         self.zoomInButton.setIcon(self.zoomInIcon)
         self.zoomInButton.clicked.connect(self.zoom_in)
 
-        # Zoom Out Button
+        
         self.zoomOutButton = QPushButton()
         self.zoomOutButton.setStyleSheet(signalControlButtonStyle)
         self.zoomOutButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
@@ -206,44 +206,44 @@ class NonRectangularWindow(QMainWindow):
     def openColorDialog(self):
         color = QColorDialog.getColor()
         if color.isValid():
-            self.colorChoosen = color.name()  # Get the color hex code
+            self.colorChoosen = color.name()  
             self.signalColorChooseSquare.setStyleSheet(f"background-color: {self.colorChoosen}")
 
-            # Check if the color is already in the list
+           
             color_exists = False
             for i in range(self.signalColorChooseList.count()):
-                if self.signalColorChooseList.itemText(i) == self.colorChoosen:  # Corrected the condition
+                if self.signalColorChooseList.itemText(i) == self.colorChoosen:  
                     color_exists = True
                     break
 
-            # If the color is not in the list, add it
+            
             if not color_exists:
                 self.signalColorChooseList.insertItem(self.signalColorChooseList.count() - 1, self.colorChoosen,
-                                                      self.colorChoosen)  # Add hex color as both text and data
+                                                      self.colorChoosen) 
 
-            # Set the current index to the new color
+           
             self.signalColorChooseList.setCurrentIndex(self.signalColorChooseList.count() - 2)
 
             self.changeSignalColor()
 
     def changeSignalColor(self):
-        # Avoid re-triggering color dialog on "Add New Color"
+        
         if self.signalColorChooseList.currentText() == "Add New Color":
-            # Temporarily block signals to prevent recursive calls
+           
             self.signalColorChooseList.blockSignals(True)
 
-            # Open the color dialog and reset the selection after
+           
             self.openColorDialog()
 
-            # Reset to the last selected color or the first item
+           
             self.signalColorChooseList.setCurrentIndex(self.signalColorChooseList.count() - 2)
 
-            # Unblock signals after resetting the index
+            
             self.signalColorChooseList.blockSignals(False)
         else:
-            # Get the color associated with the selected item
+            
             self.colorChoosen = self.signalColorChooseList.currentData()
-            if self.colorChoosen:  # Ensure valid color is selected
+            if self.colorChoosen:  
                 self.signalColorChooseSquare.setStyleSheet(f"background-color: {self.colorChoosen}")
                 self.polar_line.set_color(self.colorChoosen)
                 self.canvas.draw()
@@ -254,7 +254,7 @@ class NonRectangularWindow(QMainWindow):
         self.canvas.draw()
 
     def init_plot(self):
-        """Initialize the polar plot."""
+     
         self.polar_line, = self.canvas.ax.plot([], [], marker='.', color="#76D4D4")
         self.canvas.ax.set_title('Polar Plot of Signal Data')
 
@@ -264,7 +264,7 @@ class NonRectangularWindow(QMainWindow):
             self.canvas.ax.set_ylim(r_min, r_max * 1.1)
 
     def update_plot(self, frame):
-        """Update the plot with the current batch of data."""
+    
         if self.running and self.data is not None:
             end_index = min(self.current_index + self.batch_size, len(self.data))
             batch_data = self.data[self.current_index:end_index]
@@ -292,56 +292,9 @@ class NonRectangularWindow(QMainWindow):
                     self.canvas.draw()  # Redraw the canvas
                     self.running = True 
 
-    def updateSpeedValue(self, value):
-        """Update animation speed and batch size based on slider value."""
-        self.speedValueBox.setText(str(value))
-
-        # Calculate new interval and batch size
-        speed_factor = value / 100  # Normalize the speed value
-        new_interval = max(1, 50 - int(40 * speed_factor))  # Decrease interval as speed increases
-        new_batch_size = max(1, int(10 + 90 * speed_factor))  # Increase batch size with speed
-
-        self.batch_size = new_batch_size  # Update the batch size
-
-        # Update the animation interval
-        self.ani.event_source.interval = new_interval  # Update the existing animation interval
-        self.ani.event_source.start()  # Restart the animation with the new interval 
-   
-    def pause(self):
-        self.running = False
-
-    def play(self):
-        self.running = True
-
-    def zoom_in(self):
-        current_ylim = self.canvas.ax.get_ylim()
-        new_ylim = (current_ylim[0] / 2, current_ylim[1] / 2)  
-
-      
-        r_min, r_max = new_ylim
-        self.canvas.ax.set_ylim(r_min, r_max)
-        self.canvas.ax.set_yticks(np.linspace(r_min, r_max, num=5)) 
-
-        self.canvas.draw()  
-
-    def zoom_out(self):
-        current_ylim = self.canvas.ax.get_ylim()
-        new_ylim = (current_ylim[0] * 2, current_ylim[1] * 2)  
-
-     
-        r_min, r_max = new_ylim
-        self.canvas.ax.set_ylim(r_min, r_max)
-        self.canvas.ax.set_yticks(np.linspace(r_min, r_max, num=5)) 
-
-        self.canvas.draw()  
-
-    def rewind(self):
-        self.rewind_active = not self.rewind_active
-        if self.rewind_active:
-            self.rewindButton.setStyleSheet(rewindOnButtonStyle)
-        else:
-            self.rewindButton.setStyleSheet(rewindOffButtonStyle)
-
+    
+    
+    
     def on_mouse_press(self, event):
        
         if event.inaxes == self.canvas.ax:  
@@ -396,6 +349,57 @@ class NonRectangularWindow(QMainWindow):
             r_max = np.max(self.data[:, 1]) * 1.1
             self.canvas.ax.set_ylim(r_min, r_max)
             self.canvas.draw()
+    
+    def updateSpeedValue(self, value):
+       
+        self.speedValueBox.setText(str(value))
+
+        
+        speed_factor = value / 100  
+        new_interval = max(1, 50 - int(40 * speed_factor))  
+        new_batch_size = max(1, int(10 + 90 * speed_factor))  
+
+        self.batch_size = new_batch_size  
+
+     
+        self.ani.event_source.interval = new_interval 
+        self.ani.event_source.start() 
+   
+    def pause(self):
+        self.running = False
+
+    def play(self):
+        self.running = True
+
+    def zoom_in(self):
+        current_ylim = self.canvas.ax.get_ylim()
+        new_ylim = (current_ylim[0] / 2, current_ylim[1] / 2)  
+
+      
+        r_min, r_max = new_ylim
+        self.canvas.ax.set_ylim(r_min, r_max)
+        self.canvas.ax.set_yticks(np.linspace(r_min, r_max, num=5)) 
+
+        self.canvas.draw()  
+
+    def zoom_out(self):
+        current_ylim = self.canvas.ax.get_ylim()
+        new_ylim = (current_ylim[0] * 2, current_ylim[1] * 2)  
+
+     
+        r_min, r_max = new_ylim
+        self.canvas.ax.set_ylim(r_min, r_max)
+        self.canvas.ax.set_yticks(np.linspace(r_min, r_max, num=5)) 
+
+        self.canvas.draw()  
+
+    def rewind(self):
+        self.rewind_active = not self.rewind_active
+        if self.rewind_active:
+            self.rewindButton.setStyleSheet(rewindOnButtonStyle)
+        else:
+            self.rewindButton.setStyleSheet(rewindOffButtonStyle)
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
