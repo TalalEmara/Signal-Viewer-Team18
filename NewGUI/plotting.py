@@ -20,8 +20,10 @@ class Plotting(QObject):
 
     def init_plot(self, data_list):
         self.data_list = data_list
-        self.total_frames = len(data_list[0]['x_data'])  
-      
+        self.total_frames = max(len(data['x_data']) for data in data_list)
+
+        self.canvas.ax.clear()  # Clear the previous plots
+
         self.animation = FuncAnimation(
             self.canvas.figure,
             self.animate_cine_mode,
@@ -29,6 +31,8 @@ class Plotting(QObject):
             interval=100,
             repeat=False
         )
+        self.canvas.draw()
+
 
     def animate_cine_mode(self, i):
         self.current_frame = i
@@ -42,7 +46,7 @@ class Plotting(QObject):
             time = data['x_data']
             amplitude = data['y_data']
             self.canvas.ax.plot(time[:i + 1], amplitude[:i + 1], label=f'Signal {idx + 1}')
-          
+
             # Update x_min and x_max based on the data range in this window
             if i < window_size:
                 x_min, x_max = time[0], time[window_size] if x_max is None else max(x_max, time[window_size])
@@ -57,10 +61,11 @@ class Plotting(QObject):
         tick_positions = np.linspace(x_min, x_max, num_ticks)
         self.canvas.ax.set_xticks(tick_positions)
 
-        # Optionally format the tick labels for better readability
-        self.canvas.ax.set_xticklabels([f'{pos:.2f}' for pos in tick_positions])
+        # # Optionally format the tick labels for better readability
+        # self.canvas.ax.set_xticklabels([f'{pos:.2f}' for pos in tick_positions])
 
         self.canvas.draw()
+
 
         # Check if it's the last frame
         if i == self.total_frames - 1:

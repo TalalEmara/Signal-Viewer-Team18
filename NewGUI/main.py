@@ -13,22 +13,29 @@ from selectorPanel import SelectorPanel
 from linkBar import ToolBar
 from properties import Properties
 from Styling.importWindowStyles import importButtonStyle
+import pandas as pd
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
     
     # Load data from CSV
-    csv_file_path = 'D:\Faculty\SBE 24-25\DSP\Signal-Viewer-Team18\signals_data\ECG_Normal.csv'
-    data_loader = DataLoader(csv_file_path)
-    data_loader.load_data()
+    csv_file_path = ('..\signals_data\EEG_Abnormal.csv')
+    data_loader_1 = DataLoader(csv_file_path)
+    data_loader_1.load_data()
 
-    data = data_loader.get_data()
-    x_data = data[:, 0]
-    y_data = data[:, 1]
+    data = data_loader_1.get_data()
+    x1_data = data[:, 0]
+    y1_data = data[:, 1]
+    csv_file_path2 = ('..\signals_data\EEG_Normal.csv')
+    data_loader_2 = DataLoader(csv_file_path2)
+    data_loader_2.load_data()
 
+    data1 = data_loader_2.get_data()
+    x2_data = data1[:, 0]
+    y2_data = data1[:, 1]
     # Prepare two sets of plot data
-    plot_data_list_1 = [{'x_data': x_data, 'y_data': y_data}]
-    plot_data_list_2 = [{'x_data': np.linspace(0, 10, 1000), 'y_data': np.sinh(np.linspace(0, 10, 1000))}]
+    plot_data_list_1 = [{'x_data': x1_data, 'y_data': y1_data}]
+    plot_data_list_2 = [{'x_data': x2_data, 'y_data': y2_data}]
 
     main_window = QtWidgets.QWidget()
     main_window.setAttribute(Qt.WA_StyledBackground, True)
@@ -48,6 +55,8 @@ def main():
     #selector_panel1.importButton.clicked.connect(lambda: handleImportClick(importWindow))
     selector_panel2 = SelectorPanel(channelName="Channel 2")
     selector_panel2.setMaximumWidth(450)
+    selector_panel1.sentSignal.connect(lambda signalData: update_viewer(viewer1, signalData))
+    selector_panel2.sentSignal.connect(lambda signalData: update_viewer(viewer2, signalData))
 
     mainLayout = QHBoxLayout()
     propertiesPanle = QVBoxLayout()
@@ -93,6 +102,15 @@ def main():
 def handleImportClick():
     importWindow = ImportWindow()
     importWindow.show()
+
+
+
+def update_viewer(viewer, signalData):
+    try:
+        print("Updating viewer with data:", signalData)
+        viewer.update_data([{'x_data': signalData[:, 0], 'y_data': signalData[:, 1]}])
+    except Exception as e:
+        print(f"Error in update_viewer: {e}")
 
 if __name__ == "__main__":
     main()

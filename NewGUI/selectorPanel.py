@@ -195,7 +195,8 @@ class SelectorPanel(QWidget):
 
     def update_signal_elements(self, signal_name, file_path, channel):
         signalData = DataLoader(file_path).get_data()
-        self.sentSignal.emit(signalData) 
+        self.sentSignal.emit(signalData)
+
         signal = SignalProperties(signal_name, file_path, signalData, channel)
         SelectorPanel.signal_map[signal.name] = signal
 

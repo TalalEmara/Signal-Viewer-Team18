@@ -27,8 +27,8 @@ class Viewer(QWidget):
         
         self.channel_name = channel_name  # Ensure the channel_name is defined
         self.data_list = data_list
-        self.x_data = data_list[0]['x_data']
-        self.y_data = data_list[0]['y_data']
+        # self.x_data = data_list[0]['x_data']
+        # self.y_data = data_list[0]['y_data']
         self.show_rewind_button = show_rewind_button
         self.ViewerUi()  
         self.setup_connections()
@@ -181,6 +181,18 @@ class Viewer(QWidget):
     def get_current_frame_data(self):
         """Retrieve the current frame's x and y data from the plotting instance."""
         return self.plotting_instance.get_current_data()
+
+
+    def update_data(self, data_list):
+        # Update the viewer with the new plot data
+
+        self.data_list.extend(data_list)  # Append new data to existing data
+        self.plotting_instance.canvas.ax.clear()
+
+        self.plotting_instance.init_plot(self.data_list)  # Re-initialize the plot with updated data
+
+
+
 def main():
     app = QtWidgets.QApplication(sys.argv)
 
