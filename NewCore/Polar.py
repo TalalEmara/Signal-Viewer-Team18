@@ -41,7 +41,7 @@ class NonRectangularWindow(QMainWindow):
         self.rewind_active = False
 
         
-        self.csv_file_path = 'signals_data/EMG_Normal.csv'
+        self.csv_file_path = 'signals_data/ECG_Normal.csv'
         self.data_loader = Data_load.DataLoader(self.csv_file_path)
         self.data_loader.load_data()
         self.data = self.data_loader.get_data()

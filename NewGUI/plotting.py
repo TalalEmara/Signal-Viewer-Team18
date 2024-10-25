@@ -84,6 +84,14 @@ class Plotting(QObject):
         )
         self.animation.event_source.start()
 
+    def on_slider_change(self, value):
+        """Handle slider value change."""
+        # Assuming x_data is in the range of 0 to 10
+        x_data_range = self.canvas.ax.get_xlim()[1] - self.canvas.ax.get_xlim()[0]
+        new_xlim = [value, value + x_data_range]
+        self.canvas.ax.set_xlim(new_xlim)
+        self.canvas.draw_idle()  # Update the canvas
+
     def pause(self):
         self.is_paused = True
         if self.animation:

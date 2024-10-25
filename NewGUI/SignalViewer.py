@@ -12,6 +12,7 @@ from matplotlibFig import MplCanvas
 from plotting import Plotting
 import numpy as np
 from PyQt5.QtCore import pyqtSignal 
+from PyQt5.QtWidgets import QSlider
 
 class Viewer(QWidget):
     play_signal = pyqtSignal()
@@ -94,6 +95,13 @@ class Viewer(QWidget):
             self.rewindButton.toggled.connect(self.plotting_instance.toggle_rewind)
             self.plotting_instance.rewind_state_changed.connect(self.update_rewind_button)
             self.SignalbuttonsLayout.addWidget(self.rewindButton)
+
+     
+        self.slider = QSlider(QtCore.Qt.Horizontal, self.signalViewer)
+        self.slider.setRange(0, 100)  # Set the range based on your data
+        self.slider.setValue(0)  # Initial position
+        self.slider.valueChanged.connect(self.plotting_instance.on_slider_change)  # Connect to the slider change method
+        self.SignalbuttonsLayout.addWidget(self.slider)
 
         self.SignalbuttonsLayout.addStretch(6)
 
