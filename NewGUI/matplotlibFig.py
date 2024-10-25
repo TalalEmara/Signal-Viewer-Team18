@@ -48,9 +48,9 @@ class MplCanvas(FigureCanvas):
             if action.text() in ['Pan', 'Zoom']:
                 action.setVisible(True)
                 if action.text() == 'Pan':
-                    action.setIcon(QIcon('E:\Programming programs\Web dev\Signal-Viewer-Team18\GUI\photos/pan.png'))
+                    action.setIcon(QIcon('D:\Faculty\SBE 24-25\DSP\Signal-Viewer-Team18\GUI\photos\pan.png'))
                 elif action.text() == 'Zoom':
-                    action.setIcon(QIcon('E:\Programming programs\Web dev\Signal-Viewer-Team18\GUI\photos/zoomIn.png'))
+                    action.setIcon(QIcon('D:\Faculty\SBE 24-25\DSP\Signal-Viewer-Team18\GUI\photos\zoomIn.png'))
             else:
                 action.setVisible(False)
 
@@ -60,7 +60,7 @@ class MplCanvas(FigureCanvas):
         self.navToolbarLayout.addWidget(self.navToolbar)
 
         self.zoomOutButton = QPushButton("", parent)
-        self.zoomOutButton.setIcon(QtGui.QIcon("E:\Programming programs\Web dev\Signal-Viewer-Team18\GUI\photos/zoomOut.png"))
+        self.zoomOutButton.setIcon(QtGui.QIcon("D:\Faculty\SBE 24-25\DSP\Signal-Viewer-Team18\GUI\photos\zoomOut.png"))
         self.zoomOutButton.setStyleSheet("background-color: #242424; color: #FFFFFF; border: none;")
         self.zoomOutButton.setFixedSize(25, 25)
         self.zoomOutButton.clicked.connect(self.zoom_out)
@@ -157,10 +157,23 @@ class MplCanvas(FigureCanvas):
 
     def zoom_out(self):
         """Zoom out by adjusting the axis limits."""
+
+        # Get current axis limits
         xlim = self.ax.get_xlim()
         ylim = self.ax.get_ylim()
-        new_xlim = [max(0, xlim[0]), xlim[1] + 0.5]
-        new_ylim = [max(0, ylim[0] - 0.5), ylim[1] + 0.5]
+        print(f"Current xlim: {xlim}, Current ylim: {ylim}")  # Debug print
+
+        # Calculate new axis limits
+        new_xlim = [max(0, xlim[0]- 0.05), xlim[1] + 0.05]
+        new_ylim = [ ylim[0] - 0.05, ylim[1] + 0.05]
+        print(f"New xlim: {new_xlim}, New ylim: {new_ylim}")  # Debug print
+
+        # Set new axis limits
         self.ax.set_xlim(new_xlim)
         self.ax.set_ylim(new_ylim)
+
+        # Print to confirm the limits were set
+        print(f"Updated xlim: {self.ax.get_xlim()}, Updated ylim: {self.ax.get_ylim()}")  # Debug print
+
+        # Trigger deferred drawing
         self.draw_idle()  # Defer drawing until idle
