@@ -108,6 +108,7 @@ class SignalElement(QWidget):
 class SelectorPanel(QWidget):
 
     signal_map = {}
+    sentSignal = QtCore.pyqtSignal(object)
 
     def __init__(self, channelName="Channel 1"):
         super().__init__()
@@ -190,6 +191,7 @@ class SelectorPanel(QWidget):
 
     def update_signal_elements(self, signal_name, file_path, channel):
         signalData = DataLoader(file_path).get_data()
+        self.sentSignal.emit(signalData) 
         signal = SignalProperties(signal_name, file_path, signalData, channel)
         SelectorPanel.signal_map[signal.name] = signal
 

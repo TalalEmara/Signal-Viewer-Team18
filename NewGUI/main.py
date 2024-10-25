@@ -18,7 +18,7 @@ def main():
     app = QtWidgets.QApplication(sys.argv)
     
     # Load data from CSV
-    csv_file_path = 'signals_data/ECG_Normal.csv'
+    csv_file_path = 'Signal-Viewer-Team18/signals_data/ECG_Abnormal.csv'
     data_loader = DataLoader(csv_file_path)
     data_loader.load_data()
 
