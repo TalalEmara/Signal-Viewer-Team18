@@ -18,7 +18,7 @@ def main():
     app = QtWidgets.QApplication(sys.argv)
     
     # Load data from CSV
-    csv_file_path = 'Signal-Viewer-Team18/signals_data/ECG_Abnormal.csv'
+    csv_file_path = 'D:\Faculty\SBE 24-25\DSP\Signal-Viewer-Team18\signals_data\ECG_Normal.csv'
     data_loader = DataLoader(csv_file_path)
     data_loader.load_data()
 
@@ -44,8 +44,10 @@ def main():
 
     # Create two selector panels, passing channel names
     selector_panel1 = SelectorPanel(channelName="Channel 1")
+    selector_panel1.setMaximumWidth(450)
     #selector_panel1.importButton.clicked.connect(lambda: handleImportClick(importWindow))
     selector_panel2 = SelectorPanel(channelName="Channel 2")
+    selector_panel2.setMaximumWidth(450)
 
     mainLayout = QHBoxLayout()
     propertiesPanle = QVBoxLayout()
@@ -70,23 +72,12 @@ def main():
     viewerChannel1Layout.addWidget(viewer1)
     viewerChannel2Layout.addWidget(viewer2)
 
-    buttonLayout = QHBoxLayout()
-    importButton = QPushButton("Import")
-    importButton.setStyleSheet(importButtonStyle)
-    importButton.setFixedWidth(200)
-    importButton.setFixedHeight(50)
-    importButton.clicked.connect(lambda :handleImportClick())
-
-    buttonLayout.addWidget(importButton)
-    buttonLayout.addStretch()
-
     mainLayout.addLayout(activeArea,80)
     mainLayout.addLayout(propertiesPanle,20)
     activeArea.addLayout(toolBarLayout,10)
     activeArea.addLayout(messageBarLayout,2)
     activeArea.addLayout(channel1Layout,45)
     activeArea.addLayout(channel2Layout,45)
-    activeArea.addLayout(buttonLayout,8)
     channel1Layout.addLayout(selectorChannel1Layout,30)
     channel1Layout.addLayout(viewerChannel1Layout,70)
     channel2Layout.addLayout(selectorChannel2Layout,30)

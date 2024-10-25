@@ -44,14 +44,16 @@ class SignalElement(QWidget):
         """)
 
         self.name = ClickableLabel(self.name)
+        self.name.setMaximumWidth(100)
         self.color = QPushButton("")
         self.color.setFixedWidth(3)
         self.color.setFixedHeight(14)
         self.color.setEnabled(False)
-        
+
 
 
         self.location = ClickableLabel(self.location)
+        self.location.setMaximumWidth(200)
         self.hiddenIcon = QIcon("NewGUI/Assets/Selector/hidden.png")
         self.shownIcon = QIcon("NewGUI/Assets/Selector/shown.png")
         self.switchIcon = QIcon("NewGUI/Assets/Selector/swap.png")
@@ -78,11 +80,13 @@ class SignalElement(QWidget):
         self.layout = QHBoxLayout()
         self.layout.addWidget(self.color,3)
         self.layout.addWidget(self.name,17)
-        self.layout.addWidget(self.location,50)
+        self.layout.addWidget(self.location)
+        self.layout.addStretch()
         self.layout.addWidget(self.hideButton,15)
         self.layout.addWidget(self.switchButton,15)
 
         self.setLayout(self.layout)
+        self.setFixedWidth(430)
 
         def toogleHidden():
             if self.isShown:
