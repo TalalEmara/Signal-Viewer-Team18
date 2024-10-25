@@ -54,9 +54,7 @@ class NonRectangularWindow(QMainWindow):
         self.last_mouse_position = None
 
        
-        self.canvas.mpl_connect('button_press_event', self.on_mouse_press)
-        self.canvas.mpl_connect('motion_notify_event', self.on_mouse_move)
-        self.canvas.mpl_connect('button_release_event', self.on_mouse_release)
+
         self.canvas.mpl_connect('scroll_event', self.on_scroll)
 
 
@@ -87,10 +85,10 @@ class NonRectangularWindow(QMainWindow):
         self.thicknessSlider.setMinimum(1)
         self.thicknessSlider.setMaximum(10)
         self.thicknessSlider.setSingleStep(1)
-        self.thicknessSlider.setValue(2)  # Default thickness
+        self.thicknessSlider.setValue(1)  # Default thickness
         self.thicknessSlider.valueChanged.connect(self.updateThicknessValue)
 
-        self.thicknessValueBox = QLineEdit("2")
+        self.thicknessValueBox = QLineEdit("1")
         self.thicknessValueBox.setStyleSheet(valueBoxStyle)
         self.thicknessValueBox.setFixedWidth(40)
         self.thicknessValueBox.setAlignment(Qt.AlignCenter)
@@ -286,37 +284,13 @@ class NonRectangularWindow(QMainWindow):
             self.canvas.draw()
             if self.current_index >= len(self.data):
                 if self.rewind_active:
-                    # Automatically rewind if the rewind button is active
-                    self.current_index = 0  # Reset to the beginning
-                    self.polar_line.set_data([], [])  # Clear the plot
-                    self.canvas.draw()  # Redraw the canvas
+                    self.current_index = 0  
+                    self.polar_line.set_data([], []) 
+                    self.canvas.draw()  
                     self.running = True 
 
     
-    
-    
-    def on_mouse_press(self, event):
-       
-        if event.inaxes == self.canvas.ax:  
-            self.is_panning = True
-            self.last_mouse_position = (event.xdata, event.ydata)
 
-    def on_mouse_move(self, event):
-      
-        if self.is_panning and event.inaxes == self.canvas.ax:  
-            dx = event.xdata - self.last_mouse_position[0]
-            dy = event.ydata - self.last_mouse_position[1]
-
-          
-            self.canvas.ax.set_theta_offset(self.canvas.ax.get_theta_offset() + dx * 0.1) 
-            self.canvas.ax.set_ylim(self.canvas.ax.get_ylim()[0] + dy * 0.1, self.canvas.ax.get_ylim()[1] + dy * 0.1)  
-
-            self.last_mouse_position = (event.xdata, event.ydata)
-            self.canvas.draw_idle()
-
-    def on_mouse_release(self, event):
-     
-        self.is_panning = False
           
     def on_scroll(self, event):
      
@@ -343,7 +317,6 @@ class NonRectangularWindow(QMainWindow):
                 self.canvas.draw_idle()  
 
     def reset_zoom(self):
-        """Reset the zoom to initial limits."""
         if self.data is not None:
             r_min = np.min(self.data[:, 1])
             r_max = np.max(self.data[:, 1]) * 1.1

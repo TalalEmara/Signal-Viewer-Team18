@@ -15,7 +15,8 @@ class Plotting(QObject):
         self.current_frame = 0
         self.total_frames = 0
         self.data_list = []  
-        self.rewind_enabled = False  
+        self.rewind_enabled = False 
+        self.canvas.mpl_connect('scroll_event', self.on_scroll) 
 
     def init_plot(self, data_list):
         self.data_list = data_list
@@ -145,3 +146,35 @@ class Plotting(QObject):
             return current_x_data[indices], current_y_data[indices]
 
         return None, None  # No data available yet
+
+    def on_scroll(self, event):
+        if event.inaxes == self.canvas.ax:
+            # Get current y-axis limits
+            r_min, r_max = self.canvas.ax.get_ylim()
+
+            # Define a zoom factor
+            zoom_factor = 0.2
+            if event.button == 'up':  # Zoom in
+                r_min *= (1 - zoom_factor)
+                r_max *= (1 - zoom_factor)
+            elif event.button == 'down':  # Zoom out
+                r_min *= (1 + zoom_factor)
+                r_max *= (1 + zoom_factor)
+
+            # Ensure y limits are valid
+            r_min = max(r_min, 0)  # Prevent going below 0
+            if self.data_list:  # Check if there's data available
+                y_data = np.concatenate([data['y_data'] for data in self.data_list])
+                r_max = min(r_max, np.max(y_data) * 1.5)  # Use the maximum y value from the data
+
+            # Set the new limits if valid
+            if r_min < r_max:
+                self.canvas.ax.set_ylim(r_min, r_max)
+                self.canvas.draw_idle()  # Update the canvas
+
+    def reset_zoom(self):
+        if self.data is not None:
+            r_min = np.min(self.data[:, 1])
+            r_max = np.max(self.data[:, 1]) * 1.1
+            self.canvas.ax.set_ylim(r_min, r_max)
+            self.canvas.draw()
