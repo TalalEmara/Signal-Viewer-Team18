@@ -9,7 +9,7 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 from matplotlib.animation import FuncAnimation
 from Core import Data_load
-from NewGUI.Styles import signalControlButtonStyle, boxStyle, rewindOffButtonStyle
+from NewGUI.Styles import signalControlButtonStyle, boxStyle, rewindOffButtonStyle,rewindOnButtonStyle
 from PyQt5.QtWidgets import QPushButton, QLabel, QHBoxLayout, QVBoxLayout, QComboBox, QWidget, QSizePolicy, QSlider, \
     QLineEdit, QTableWidget, QTableWidgetItem, QAbstractItemView, QHeaderView, QColorDialog
 from PyQt5.QtGui import QColor
@@ -36,8 +36,9 @@ class MplCanvas(FigureCanvas):
 class NonRectangularWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setStyleSheet("background-color:#242424; color: #efefef;")
+        self.setStyleSheet("background-color:#2D2D2D; color: #efefef;")
         self.setWindowTitle("Polar view")
+        self.rewind_active = False
 
         # Load the data from CSV
         self.csv_file_path = 'signals_data/EMG_Normal.csv'
@@ -47,6 +48,17 @@ class NonRectangularWindow(QMainWindow):
 
         self.canvas = MplCanvas(self, width=5, height=8, dpi=100)
         self.init_plot()
+
+
+        self.is_panning = False
+        self.last_mouse_position = None
+
+        # Connect mouse events
+        self.canvas.mpl_connect('button_press_event', self.on_mouse_press)
+        self.canvas.mpl_connect('motion_notify_event', self.on_mouse_move)
+        self.canvas.mpl_connect('button_release_event', self.on_mouse_release)
+        self.canvas.mpl_connect('scroll_event', self.on_scroll)
+
 
         self.colorChoosen = "#76D4D4"
         self.signalColorLabel = QLabel("Signal Color")
@@ -60,8 +72,8 @@ class NonRectangularWindow(QMainWindow):
 
         self.signalColorChooseList = QComboBox()
         self.signalColorChooseList.setStyleSheet(colorSignalChooseStyle)
-        self.signalColorChooseList.addItem("Blue", "#76D4D4")
-        self.signalColorChooseList.addItem("Red", "#D55877")
+        self.signalColorChooseList.addItem("#76D4D4", "#76D4D4")
+        self.signalColorChooseList.addItem("#D55877", "#D55877")
 
         self.signalColorChooseList.addItem("Add New Color")
         self.signalColorChooseList.currentIndexChanged.connect(self.changeSignalColor)
@@ -132,34 +144,37 @@ class NonRectangularWindow(QMainWindow):
         self.pauseButton = QPushButton()
         self.pauseButton.setStyleSheet(signalControlButtonStyle)
         self.pauseButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        self.pauseIcon = QIcon("../Assets/ControlsButtons/pause.png")
+        self.pauseIcon = QIcon("NewGUI/Assets/ControlsButtons/pause.png")
         self.pauseButton.setIcon(self.pauseIcon)
         self.pauseButton.clicked.connect(self.pause)
 
         self.playButton = QPushButton()
         self.playButton.setStyleSheet(signalControlButtonStyle)
         self.playButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        self.playIcon = QIcon("../Assets/ControlsButtons/play.png")
+        self.playIcon = QIcon("NewGUI/Assets/ControlsButtons/play.png")
         self.playButton.setIcon(self.playIcon)
         self.playButton.clicked.connect(self.play)
 
-        # Zoom In Button
-        self.zoomInButton = QPushButton("Zoom In")
+        self.zoomInButton = QPushButton()
         self.zoomInButton.setStyleSheet(signalControlButtonStyle)
         self.zoomInButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        self.zoomInIcon = QIcon("NewGUI/Assets/ControlsButtons/zoomInPolar.png")
+        self.zoomInButton.setIcon(self.zoomInIcon)
         self.zoomInButton.clicked.connect(self.zoom_in)
 
         # Zoom Out Button
-        self.zoomOutButton = QPushButton("Zoom Out")
+        self.zoomOutButton = QPushButton()
         self.zoomOutButton.setStyleSheet(signalControlButtonStyle)
         self.zoomOutButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        self.zoomOutIcon = QIcon("NewGUI/Assets/ControlsButtons/zoomOutPolar.png")
+        self.zoomOutButton.setIcon(self.zoomOutIcon)
         self.zoomOutButton.clicked.connect(self.zoom_out)
 
 
         self.rewindButton = QPushButton()
         self.rewindButton.setStyleSheet(rewindOffButtonStyle)
         self.rewindButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        self.rewindIcon = QIcon("../Assets/ControlsButtons/rewindOff.png")
+        self.rewindIcon = QIcon("NewGUI/Assets/ControlsButtons/rewindOff.png")
         self.rewindButton.setIcon(self.rewindIcon)
         self.rewindButton.clicked.connect(self.rewind)
 
@@ -247,6 +262,7 @@ class NonRectangularWindow(QMainWindow):
             r_min = np.min(self.data[:, 1])
             r_max = np.max(self.data[:, 1])
             self.canvas.ax.set_ylim(r_min, r_max * 1.1)
+
     def update_plot(self, frame):
         """Update the plot with the current batch of data."""
         if self.running and self.data is not None:
@@ -268,6 +284,13 @@ class NonRectangularWindow(QMainWindow):
 
             self.current_index += self.batch_size
             self.canvas.draw()
+            if self.current_index >= len(self.data):
+                if self.rewind_active:
+                    # Automatically rewind if the rewind button is active
+                    self.current_index = 0  # Reset to the beginning
+                    self.polar_line.set_data([], [])  # Clear the plot
+                    self.canvas.draw()  # Redraw the canvas
+                    self.running = True 
 
     def updateSpeedValue(self, value):
         """Update animation speed and batch size based on slider value."""
@@ -313,11 +336,70 @@ class NonRectangularWindow(QMainWindow):
         self.canvas.draw()  # Update the canvas with the new zoom level
 
     def rewind(self):
-        self.current_index = 0
-        self.polar_line.set_data([], [])  # Clear existing plot data
-        self.canvas.draw()  # Update the canvas to reflect changes
-        self.running = True  # Resume the animation after rewinding
+        self.rewind_active = not self.rewind_active
+        if self.rewind_active:
+            self.rewindButton.setStyleSheet(rewindOnButtonStyle)
+            # self.current_index = 0
+            # self.polar_line.set_data([], [])  
+            # self.canvas.draw() 
+            # self.running = True 
+        else:
+            self.rewindButton.setStyleSheet(rewindOffButtonStyle)
 
+    def on_mouse_press(self, event):
+        """Handle mouse button press event."""
+        if event.inaxes == self.canvas.ax:  # Use self.canvas.ax instead of self.ax
+            self.is_panning = True
+            self.last_mouse_position = (event.xdata, event.ydata)
+
+    def on_mouse_move(self, event):
+        """Handle mouse movement event."""
+        if self.is_panning and event.inaxes == self.canvas.ax:  # Use self.canvas.ax instead of self.ax
+            dx = event.xdata - self.last_mouse_position[0]
+            dy = event.ydata - self.last_mouse_position[1]
+
+            # Update the plot based on mouse movement
+            self.canvas.ax.set_theta_offset(self.canvas.ax.get_theta_offset() + dx * 0.1)  # Adjust the angle offset
+            self.canvas.ax.set_ylim(self.canvas.ax.get_ylim()[0] + dy * 0.1, self.canvas.ax.get_ylim()[1] + dy * 0.1)  # Adjust the radius
+
+            self.last_mouse_position = (event.xdata, event.ydata)
+            self.canvas.draw_idle()
+
+    def on_mouse_release(self, event):
+        """Handle mouse button release event."""
+        self.is_panning = False
+          
+    def on_scroll(self, event):
+        """Handle mouse scroll event for zooming."""
+        if event.inaxes == self.canvas.ax:
+            # Get current limits
+            r_min, r_max = self.canvas.ax.get_ylim()
+
+            
+            zoom_factor = 0.2
+            if event.button == 'up': 
+                r_min *= (1 - zoom_factor)
+                r_max *= (1 - zoom_factor)
+            elif event.button == 'down':  
+                r_min *= (1 + zoom_factor)
+                r_max *= (1 + zoom_factor)
+
+            
+            r_min = max(r_min, 0)  
+            r_max = min(r_max, np.max(self.data[:, 1]) * 1.5) 
+
+            
+            if r_min < r_max:
+                self.canvas.ax.set_ylim(r_min, r_max)
+                self.canvas.draw_idle()  
+
+    def reset_zoom(self):
+        """Reset the zoom to initial limits."""
+        if self.data is not None:
+            r_min = np.min(self.data[:, 1])
+            r_max = np.max(self.data[:, 1]) * 1.1
+            self.canvas.ax.set_ylim(r_min, r_max)
+            self.canvas.draw()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
