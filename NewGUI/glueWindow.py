@@ -97,6 +97,8 @@ class GlueWindow(QMainWindow):
 
         self.signal1 = []
         self.signal2 = []
+        self.signal = []
+        self.time = []
 
         self.mpl_canvas = MplCanvas(self)
 
@@ -211,7 +213,7 @@ class GlueWindow(QMainWindow):
     def update_plot(self, x, y):
         """Update the plot with new data."""
         self.mpl_canvas.ax.clear()
-        self.mpl_canvas.ax.plot(x, y, color='blue')
+        self.mpl_canvas.ax.plot(x, y, color='green')
         self.mpl_canvas.line.set_xdata(x)
         self.mpl_canvas.line.set_ydata(y)
         self.mpl_canvas.ax.set_xlim(min(x), max(x))
@@ -221,29 +223,28 @@ class GlueWindow(QMainWindow):
         self.mpl_canvas.draw()
 
     def forward(self):
-        time, signal = move_forward(self.signal1, self.signal2)
-        self.update_plot(time, signal)
+        self.time, self.signal = move_forward(self.signal1, self.signal2)
+        self.update_plot(self.time, self.signal)
 
     def backward(self):
-        time, signal = move_backward(self.signal1, self.signal2)
-        self.update_plot(time, signal)
-                                                 
-    def take_snapshot(self):
-        t = np.linspace(0, 2 * np.pi, 400)
-        signal = np.sin(t)
+        self.time, self.signal = move_backward(self.signal1, self.signal2)
+        self.update_plot(self.time, self.signal)
 
+    def take_snapshot(self):
+        # t = np.linspace(0, 2 * np.pi, 400)
+        # signal = np.sin(t)
         snapshot = {
-            'mean': np.mean(signal),
-            'std': np.std(signal),
-            'min': np.min(signal),
-            'max': np.max(signal),
-            'duration': t[-1] - t[0],
+            'mean': np.mean(self.signal),
+            'std': np.std(self.signal),
+            'min': np.min(self.signal),
+            'max': np.max(self.signal),
+            'duration': self.time[-1] - self.time[0],
             'image_path': f'snapshot_{len(self.snapshots)}.png'  
         }
 
         self.snapshots.append(snapshot)
        
-        self.mpl_canvas.update_plot(t, signal)
+        self.mpl_canvas.update_plot(self.time, self.signal)
         self.mpl_canvas.figure.savefig(snapshot['image_path'])  
 
     def export_to_pdf(self):
