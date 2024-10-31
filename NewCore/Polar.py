@@ -142,21 +142,21 @@ class NonRectangularWindow(QMainWindow):
         self.pauseButton = QPushButton()
         self.pauseButton.setStyleSheet(signalControlButtonStyle)
         self.pauseButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        self.pauseIcon = QIcon("NewGUI/Assets/ControlsButtons/pause.png")
+        self.pauseIcon = QIcon("Assets/ControlsButtons/pause.png")
         self.pauseButton.setIcon(self.pauseIcon)
         self.pauseButton.clicked.connect(self.pause)
 
         self.playButton = QPushButton()
         self.playButton.setStyleSheet(signalControlButtonStyle)
         self.playButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        self.playIcon = QIcon("NewGUI/Assets/ControlsButtons/play.png")
+        self.playIcon = QIcon("Assets/ControlsButtons/play.png")
         self.playButton.setIcon(self.playIcon)
         self.playButton.clicked.connect(self.play)
 
         self.zoomInButton = QPushButton()
         self.zoomInButton.setStyleSheet(signalControlButtonStyle)
         self.zoomInButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        self.zoomInIcon = QIcon("NewGUI/Assets/ControlsButtons/zoomInPolar.png")
+        self.zoomInIcon = QIcon("Assets/ControlsButtons/zoomInPolar.png")
         self.zoomInButton.setIcon(self.zoomInIcon)
         self.zoomInButton.clicked.connect(self.zoom_in)
 
@@ -164,7 +164,7 @@ class NonRectangularWindow(QMainWindow):
         self.zoomOutButton = QPushButton()
         self.zoomOutButton.setStyleSheet(signalControlButtonStyle)
         self.zoomOutButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        self.zoomOutIcon = QIcon("NewGUI/Assets/ControlsButtons/zoomOutPolar.png")
+        self.zoomOutIcon = QIcon("Assets/ControlsButtons/zoomOutPolar.png")
         self.zoomOutButton.setIcon(self.zoomOutIcon)
         self.zoomOutButton.clicked.connect(self.zoom_out)
 
@@ -172,7 +172,7 @@ class NonRectangularWindow(QMainWindow):
         self.rewindButton = QPushButton()
         self.rewindButton.setStyleSheet(rewindOffButtonStyle)
         self.rewindButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        self.rewindIcon = QIcon("NewGUI/Assets/ControlsButtons/rewindOff.png")
+        self.rewindIcon = QIcon("Assets/ControlsButtons/rewindOff.png")
         self.rewindButton.setIcon(self.rewindIcon)
         self.rewindButton.clicked.connect(self.rewind)
 

@@ -96,14 +96,14 @@ class ToolBar(QWidget):
         # signalControlLayout.addWidget(self.toEndButton)
         signalControlLayout.addWidget(self.rewindButton)
 
-        self.zoomButton = QPushButton()
-        self.zoomButton.setStyleSheet(signalControlButtonStyle)
-        self.zoomButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        self.zoomIcon = QIcon("Assets/ToolBox/zoom.png")
-        self.zoomButton.setIcon(self.zoomIcon)
-
-        self.zoomButton.pressed.connect(lambda: self.handleButtonPress(self.zoomButton))
-        self.zoomButton.released.connect(lambda: self.handleButtonRelease(self.zoomButton))
+        # self.zoomButton = QPushButton()
+        # self.zoomButton.setStyleSheet(signalControlButtonStyle)
+        # self.zoomButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        # self.zoomIcon = QIcon("Assets/ToolBox/zoom.png")
+        # self.zoomButton.setIcon(self.zoomIcon)
+        #
+        # self.zoomButton.pressed.connect(lambda: self.handleButtonPress(self.zoomButton))
+        # self.zoomButton.released.connect(lambda: self.handleButtonRelease(self.zoomButton))
 
 
         self.glueButton = QPushButton()
@@ -124,7 +124,7 @@ class ToolBar(QWidget):
         toolBoxLayout = QHBoxLayout()
         toolBox.setLayout(toolBoxLayout)
 
-        toolBoxLayout.addWidget(self.zoomButton)
+        # toolBoxLayout.addWidget(self.zoomButton)
         toolBoxLayout.addWidget(self.glueButton)
         toolBoxLayout.addStretch()
 
@@ -206,7 +206,7 @@ class ToolBar(QWidget):
             self.viewer2.rewind_signal.emit()
 
         else:
-            self.handleButtonPress()
+            self.handleButtonPress(self.rewindButton)
 
     
     def handleButtonPress(self, button):

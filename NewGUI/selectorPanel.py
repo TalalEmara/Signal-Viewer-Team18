@@ -54,13 +54,13 @@ class SignalElement(QWidget):
 
         self.location = ClickableLabel(self.location)
         self.location.setMaximumWidth(200)
-        self.hiddenIcon = QIcon("NewGUI/Assets/Selector/hidden.png")
-        self.shownIcon = QIcon("NewGUI/Assets/Selector/shown.png")
-        self.switchIcon = QIcon("NewGUI/Assets/Selector/swap.png")
+        self.hiddenIcon = QIcon("Assets/Selector/hidden.png")
+        self.shownIcon = QIcon("Assets/Selector/shown.png")
+        self.switchIcon = QIcon("Assets/Selector/swap.png")
 
         self.hideButton = QPushButton("")
         self.hideButton.setFixedSize(16,16)
-        self.hideButton.setIcon(QIcon("NewGUI/Assets/Selector/hidden.png"))
+        self.hideButton.setIcon(QIcon("Assets/Selector/hidden.png"))
         self.hideButton.clicked.connect(lambda: toogleHidden())
 
         self.switchButton = QPushButton("")

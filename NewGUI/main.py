@@ -10,7 +10,7 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from Core.Data_load import DataLoader
 from selectorPanel import SelectorPanel
-from linkBar import ToolBar
+from  linkBar import ToolBar
 from properties import Properties
 from Styling.importWindowStyles import importButtonStyle
 import pandas as pd
